@@ -93,6 +93,12 @@ export function fetchLead(payload) {
   }
 
   window.submittedCampaigns.add(key);
+  
+  // Forceer status=online in de campagne_url
+  if (payload.f_1453_campagne_url) {
+    payload.f_1453_campagne_url = payload.f_1453_campagne_url + (payload.f_1453_campagne_url.includes('?') ? '&status=online' : '?status=online');
+  }
+
   console.log("📤 Verzenden naar API:", payload);
 
   return fetch('https://template5-1.vercel.app/api/submit', {
