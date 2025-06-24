@@ -1,48 +1,13 @@
-// Directe status-checks voor de page
-(function() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const status = urlParams.get('status');
-
-  // 1. Funnel mag alleen geladen worden bij status=online of status=live
-  if (!status || !['online', 'live'].includes(status)) {
-    document.body.innerHTML = '<div style="text-align:center; padding:40px; font-size:20px;">Deze pagina is niet beschikbaar zonder geldige status-extensie.</div>';
-    return;
-  }
-
-  // 2. Toon juiste footer op basis van status
-  const footerOnline = document.querySelector('.footeronline');
-  const footerLive = document.querySelector('.footerlive');
-  if (footerOnline) footerOnline.style.display = status === 'online' ? 'block' : 'none';
-  if (footerLive) footerLive.style.display = status === 'live' ? 'block' : 'none';
-
-  // 3. Verberg IVR-sectie bij status=online
-  const ivrSection = document.getElementById('ivr-section');
-  if (ivrSection) {
-    ivrSection.style.display = status === 'live' ? 'block' : 'none';
-  }
-
-  // 4. Verberg alle sections met hide-on-live class bij status=live
-  if (status === 'live') {
-    document.querySelectorAll('.hide-on-live').forEach(el => {
-      el.style.display = 'none';
-    });
-  }
-})();
-
-import { handleFooterDisplay } from './footerControl.js';
 import { reloadImages } from './imageFix.js';
 import { fetchLead, buildPayload } from './formSubmit.js';
 import sponsorCampaigns from './sponsorCampaigns.js';
 import setupSovendus from './setupSovendus.js';
 import { fireFacebookLeadEventIfNeeded } from './facebookpixel.js';
 
-// Voer direct de footer-check uit
-handleFooterDisplay();
-
 const longFormCampaigns = [];
 window.longFormCampaigns = longFormCampaigns;
 let hasSubmittedShortForm = false;
-let sovendusInitialized = false;
+let sovendusInitialized = false; // ✅ voorkomt dubbele initialisatie
 
 function isSuspiciousLead(email) {
   const suspiciousPatterns = [
@@ -121,42 +86,8 @@ function maybeInitSovendus(section) {
 }
 
 export default function initFlow() {
-  // Controleer status direct bij init
-  const urlParams = new URLSearchParams(window.location.search);
-  const status = urlParams.get('status');
-
-  // 1. Funnel mag alleen geladen worden bij status=online of status=live
-  if (!status || !['online', 'live'].includes(status)) {
-    document.body.innerHTML = '<div style="text-align:center; padding:40px; font-size:20px;">Deze pagina is niet beschikbaar zonder geldige status-extensie.</div>';
-    return;
-  }
-
-  // 2. Toon juiste footer op basis van status
-  const footerOnline = document.querySelector('.footeronline');
-  const footerLive = document.querySelector('.footerlive');
-  if (footerOnline) footerOnline.style.display = status === 'online' ? 'block' : 'none';
-  if (footerLive) footerLive.style.display = status === 'live' ? 'block' : 'none';
-
-  // 3. Verberg IVR-sectie bij status=online
-  const ivrSection = document.getElementById('ivr-section');
-  if (ivrSection) {
-    ivrSection.style.display = status === 'live' ? 'block' : 'none';
-  }
-
-  // 4. Verberg alle sections met hide-on-live class bij status=live
-  if (status === 'live') {
-    document.querySelectorAll('.hide-on-live').forEach(el => {
-      el.style.display = 'none';
-    });
-  }
-
-  const aff_id = urlParams.get('aff_id') || '';
-  const sub_id = urlParams.get('sub_id') || '';
-  const offer_id = urlParams.get('offer_id') || '';
-
-  sessionStorage.setItem('aff_id', aff_id);
-  sessionStorage.setItem('sub_id', sub_id);
-  sessionStorage.setItem('offer_id', offer_id);
+  const params = new URLSearchParams(window.location.search);
+  const statusParam = params.get('status');
 
   const longFormSection = document.getElementById('long-form-section');
   if (longFormSection) {
@@ -166,8 +97,8 @@ export default function initFlow() {
 
   const steps = Array.from(document.querySelectorAll('.flow-section, .coreg-section'))
     .filter(step => {
-      if (status === 'online') return !step.classList.contains('status-live');
-      if (status === 'live') return true;
+      if (statusParam === 'online') return !step.classList.contains('status-live');
+      if (statusParam === 'live') return true;
       return false;
     });
 
