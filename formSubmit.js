@@ -45,6 +45,11 @@ export function buildPayload(campaign, options = { includeSponsors: true }) {
 
   const isShortForm = campaign.cid === 925;
 
+  // Haal tracking parameters uit URL
+  const aff_id = urlParams.get('aff_id') || '';
+  const sub_id = urlParams.get('sub_id') || '';
+  const offer_id = urlParams.get('offer_id') || '';
+
   const payload = {
     cid: campaign.cid,
     sid: campaign.sid,
@@ -58,7 +63,10 @@ export function buildPayload(campaign, options = { includeSponsors: true }) {
     dob_year,
     f_5_dob: dob_iso,
     campaignId: Object.keys(sponsorCampaigns).find(key => sponsorCampaigns[key].cid === campaign.cid),
-    f_1453_campagne_url: `${window.location.origin}${window.location.pathname}?status=online`
+    f_1453_campagne_url: `${window.location.origin}${window.location.pathname}?status=online`,
+    f_1684_sub_id: sub_id,
+    f_1685_aff_id: aff_id,
+    f_1687_offer_id: offer_id
   };
 
   // Log de gebouwde URL
