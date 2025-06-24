@@ -89,13 +89,24 @@ export default async function handler(req, res) {
       f_55_optindate: optindate,
       f_1322_transaction_id: safeTId,
       f_2014_coreg_answer: f_2014_coreg_answer || '',
+      // Zorg ervoor dat de URL altijd correct is
       f_1453_campagne_url: f_1453_campagne_url || `${window.location.origin}${window.location.pathname}?status=online`,
+      
+      // Extra logging voor debugging
+      console.log("API URL:", {
+        fromPayload: f_1453_campagne_url,
+        fallback: `${window.location.origin}${window.location.pathname}?status=online`
+      });
+      
       f_1684_sub_id: f_1684_sub_id || '',
       f_1685_aff_id: f_1685_aff_id || '',
       f_1687_offer_id: f_1687_offer_id || '',
       f_2047_EM_CO_sponsors: f_2047_EM_CO_sponsors || ''
     });
 
+    console.log("API URL:", {
+      fromPayload: f_1453_campagne_url,
+    });
     // Extra logging voor debugging
     console.log("API parameters:", {
       f_1453_campagne_url: f_1453_campagne_url,
