@@ -89,10 +89,15 @@ export default function initFlow() {
   const statusParam = urlParams.get('status');
 
   const steps = Array.from(document.querySelectorAll('.flow-section, .coreg-section'))
-    .filter(step => {
-      const requiredStatus = step.getAttribute('data-status');
-      return !requiredStatus || requiredStatus === statusParam;
-    });
+  .filter(step => {
+    if (statusParam === 'online') {
+      return !step.classList.contains('status-live');
+    }
+    if (statusParam === 'live') {
+      return true; // alles tonen
+    }
+    return false; // onbekende status → niks tonen
+  });
 
   longFormCampaigns.length = 0;
 
