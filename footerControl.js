@@ -6,8 +6,8 @@ export function handleFooterDisplay() {
 
   const footerOnline = document.querySelector(".footeronline");
   const footerLive = document.querySelector(".footerlive");
-  const ivrSection = document.getElementById("ivr-section");
-
+  const ivrSection = document.querySelector(".ivr-section");
+  
   // Alles verbergen bij start
   if (footerOnline) footerOnline.style.display = "none";
   if (footerLive) footerLive.style.display = "none";
