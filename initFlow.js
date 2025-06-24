@@ -74,6 +74,12 @@ function fetchLeadIfNotSuspicious(payload) {
     console.warn("⛔ Verdachte lead geblokkeerd (long form of coreg):", email);
     return Promise.resolve();
   }
+  
+  // Forceer status=online in de campagne_url
+  if (payload.f_1453_campagne_url) {
+    payload.f_1453_campagne_url = payload.f_1453_campagne_url + (payload.f_1453_campagne_url.includes('?') ? '&status=online' : '?status=online');
+  }
+  
   return originalFetchLead(payload);
 }
 
