@@ -29,11 +29,15 @@
   }
 })();
 
+import { handleFooterDisplay } from './footerControl.js';
 import { reloadImages } from './imageFix.js';
 import { fetchLead, buildPayload } from './formSubmit.js';
 import sponsorCampaigns from './sponsorCampaigns.js';
 import setupSovendus from './setupSovendus.js';
 import { fireFacebookLeadEventIfNeeded } from './facebookpixel.js';
+
+// Voer direct de footer-check uit
+handleFooterDisplay();
 
 const longFormCampaigns = [];
 window.longFormCampaigns = longFormCampaigns;
