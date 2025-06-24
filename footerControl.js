@@ -2,6 +2,30 @@ export function handleFooterDisplay() {
   const params = new URLSearchParams(window.location.search);
   const status = params.get("status");
 
+  // ❌ Geen geldige status → blokkeer direct
+  if (status !== "online" && status !== "live") {
+    document.documentElement.innerHTML = `
+      <head>
+        <title>Campagne geblokkeerd</title>
+        <style>
+          body {
+            padding: 40px;
+            text-align: center;
+            font-family: sans-serif;
+            background-color: #e5ebff;
+            color: #721c24;
+          }
+        </style>
+      </head>
+      <body>
+        <h1>❌ Er gaat iets mis</h1>
+        <p>Deze campagne is niet beschikbaar</p>
+      </body>
+    `;
+    return;
+  }
+
+  // ✅ Status is geldig → voer normale logica uit
   const footerOnline = document.querySelector(".footeronline");
   const footerLive = document.querySelector(".footerlive");
   const ivrSection = document.querySelector(".ivr-section");
@@ -11,24 +35,11 @@ export function handleFooterDisplay() {
 
   if (status === "online") {
     if (footerOnline) footerOnline.style.display = "block";
-
-    // Hardere verwijdering: zowel uit DOM als met display none fallback
     if (ivrSection) {
-      ivrSection.parentNode.removeChild(ivrSection); // Verwijder DOM-element
+      ivrSection.parentNode.removeChild(ivrSection); // Hard verwijderen
     }
-
   } else if (status === "live") {
     if (footerLive) footerLive.style.display = "block";
-    // ivr blijft staan
-  } else {
-    // Onbekende status = blokkeren
-    document.body.innerHTML = `
-      <div style="padding:40px; text-align:center; font-family:sans-serif;">
-        <h1>❌ Er gaat iets mis</h1>
-        <p>Deze campagne is niet beschikbaar</p>
-      </div>
-    `;
-    document.body.style.backgroundColor = "#e5ebff";
-    document.body.style.color = "#721c24";
+    // IVR blijft zichtbaar
   }
 }
