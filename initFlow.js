@@ -78,6 +78,12 @@ function fetchLeadIfNotSuspicious(payload) {
   return originalFetchLead(payload);
 }
 
+function maybeInitSovendus(section) {
+  if (section?.id === 'sovendus-section') {
+    setupSovendus();
+  }
+}
+
 export default function initFlow() {
   const params = new URLSearchParams(window.location.search);
   const statusParam = params.get('status');
@@ -119,6 +125,7 @@ export default function initFlow() {
           const next = steps[stepIndex + 2];
           if (next) {
             next.style.display = 'block';
+            maybeInitSovendus(next);
             reloadImages(next);
           }
           window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -172,6 +179,7 @@ export default function initFlow() {
               const next = skipNext ? steps[stepIndex + 2] : steps[stepIndex + 1];
               if (next) {
                 next.style.display = 'block';
+                maybeInitSovendus(next);
                 reloadImages(next);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }
@@ -184,7 +192,7 @@ export default function initFlow() {
               const next = skipNext ? steps[stepIndex + 2] : steps[stepIndex + 1];
               if (next) {
                 next.style.display = 'block';
-                if (next.id === 'sovendus-section') setupSovendus();
+                maybeInitSovendus(next);
                 reloadImages(next);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }
@@ -203,7 +211,7 @@ export default function initFlow() {
         const next = skipNext ? steps[stepIndex + 2] : steps[stepIndex + 1];
         if (next) {
           next.style.display = 'block';
-          if (next.id === 'sovendus-section') setupSovendus();
+          maybeInitSovendus(next);
           reloadImages(next);
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -251,6 +259,7 @@ export default function initFlow() {
         const next = steps[steps.indexOf(step) + 1];
         if (next) {
           next.style.display = 'block';
+          maybeInitSovendus(next);
           reloadImages(next);
         }
 
@@ -295,6 +304,7 @@ function initGenericCoregSponsorFlow(sponsorId, coregAnswerKey) {
           const nextSection = document.getElementById(nextStepId);
           if (nextSection) {
             nextSection.style.display = 'block';
+            maybeInitSovendus(nextSection);
           } else {
             handleGenericNextCoregSponsor(sponsorId, coregAnswerKey);
           }
@@ -341,6 +351,7 @@ function checkIfLongFormShouldBeShown() {
     const next = longFormSection?.nextElementSibling;
     if (next) {
       next.style.display = 'block';
+      maybeInitSovendus(next);
       reloadImages(next);
     }
   }
