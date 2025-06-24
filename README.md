@@ -41,3 +41,35 @@ Elke SwipePages-campagne bestaat uit een serie `<section>`-blokken met specifiek
 | Bedankpagina        | `.flow-section`    | Funnel-afsluiting |
 
 De logica wordt aangestuurd via `main.js` en modules zoals `initFlow.js`, `formSubmit.js`, `memory.js` en `ivr.js`.
+
+---
+
+## 📁 Projectstructuur
+
+|----------------------------|---------|
+| `/assets/`                 | Icons voor memory game |
+| `/api/submit.js`           | POST-lead naar Databowl (incl. fraudecheck) |
+| `/api/sovendus.js`         | Token ophalen voor Sovendus |
+| `/main.js`                 | Initieert de flow, formulierlogica, game en IVR |
+| `/initFlow.js`             | Leidt de stappenstructuur in SwipePages |
+| `/formSubmit.js`           | Bouwt payloads en handelt lead submit af |
+| `/ivr/ivr.js` + `ivr.css`  | Beheer en weergave van PIN |
+| `/memory.js` + `memorygame.css` | Game-ervaring met thematische kaarten |
+| `/setupSovendus.js`        | Zet iframe op voor Sovendus-voordeel |
+| `/sponsorCampaigns.js`     | Definitie van alle actieve sponsorcampagnes |
+
+---
+
+## ✅ Status en Toekomst
+
+Deze versie is stabiel en in productie voor Nederlandstalige funnels. Voor internationale varianten (UK, BE, etc.) kan de structuur hergebruikt worden door vertalingen en campagnecodes aan te passen.
+
+> Zie ook: https://template5-2.vercel.app/
+
+---
+
+## 📬 Vragen of feedback?
+
+Neem contact op via:
+- **E-mail**: yuri@crsadvertising.com
+- **Werkruimte**: Werkruimte van Yuri Schouten
