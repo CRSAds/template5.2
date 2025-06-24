@@ -96,7 +96,13 @@ export function fetchLead(payload) {
   
   // De URL heeft al status=online, geen extra toevoegen nodig
 
-  console.log("📤 Verzenden naar API:", payload);
+  console.log("📤 Verzenden naar API:", {
+    ...payload,
+    f_1453_campagne_url: payload.f_1453_campagne_url
+  });
+  
+  // Extra logging voor f_1453_campagne_url
+  console.log("✅ f_1453_campagne_url:", payload.f_1453_campagne_url);
 
   return fetch('https://template5-1.vercel.app/api/submit', {
     method: 'POST',
