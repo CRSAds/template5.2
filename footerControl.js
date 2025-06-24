@@ -1,5 +1,3 @@
-// footerControl.js
-
 export function handleFooterDisplay() {
   const params = new URLSearchParams(window.location.search);
   const status = params.get("status");
@@ -7,20 +5,23 @@ export function handleFooterDisplay() {
   const footerOnline = document.querySelector(".footeronline");
   const footerLive = document.querySelector(".footerlive");
   const ivrSection = document.querySelector(".ivr-section");
-  
-  // Alles verbergen bij start
+
   if (footerOnline) footerOnline.style.display = "none";
   if (footerLive) footerLive.style.display = "none";
 
-  // Logica per status
   if (status === "online") {
     if (footerOnline) footerOnline.style.display = "block";
-    if (ivrSection) ivrSection.remove(); // volledig verwijderen uit DOM
+
+    // Hardere verwijdering: zowel uit DOM als met display none fallback
+    if (ivrSection) {
+      ivrSection.parentNode.removeChild(ivrSection); // Verwijder DOM-element
+    }
+
   } else if (status === "live") {
     if (footerLive) footerLive.style.display = "block";
-    // ivr-section blijft zichtbaar
+    // ivr blijft staan
   } else {
-    // Blokkeer toegang
+    // Onbekende status = blokkeren
     document.body.innerHTML = `
       <div style="padding:40px; text-align:center; font-family:sans-serif;">
         <h1>❌ Toegang niet toegestaan</h1>
