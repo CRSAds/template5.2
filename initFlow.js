@@ -94,9 +94,21 @@ export default function initFlow() {
     return;
   }
 
-  const aff_id = params.get('aff_id') || '';
-  const sub_id = params.get('sub_id') || '';
-  const offer_id = params.get('offer_id') || '';
+  // 2. Toon juiste footer op basis van status
+  const footerOnline = document.querySelector('.footeronline');
+  const footerLive = document.querySelector('.footerlive');
+  if (footerOnline) footerOnline.style.display = status === 'online' ? 'block' : 'none';
+  if (footerLive) footerLive.style.display = status === 'live' ? 'block' : 'none';
+
+  // 3. Verberg IVR-sectie bij status=online
+  const ivrSection = document.getElementById('ivr-section');
+  if (ivrSection) {
+    ivrSection.style.display = status === 'live' ? 'block' : 'none';
+  }
+
+  const aff_id = urlParams.get('aff_id') || '';
+  const sub_id = urlParams.get('sub_id') || '';
+  const offer_id = urlParams.get('offer_id') || '';
 
   sessionStorage.setItem('aff_id', aff_id);
   sessionStorage.setItem('sub_id', sub_id);
@@ -110,8 +122,8 @@ export default function initFlow() {
 
   const steps = Array.from(document.querySelectorAll('.flow-section, .coreg-section'))
     .filter(step => {
-      if (statusParam === 'online') return !step.classList.contains('status-live');
-      if (statusParam === 'live') return true;
+      if (status === 'online') return !step.classList.contains('status-live');
+      if (status === 'live') return true;
       return false;
     });
 
