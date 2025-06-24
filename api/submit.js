@@ -89,7 +89,7 @@ export default async function handler(req, res) {
       f_55_optindate: optindate,
       f_1322_transaction_id: safeTId,
       f_2014_coreg_answer: f_2014_coreg_answer || '',
-      f_1453_campagne_url: f_1453_campagne_url || '',
+      f_1453_campagne_url: f_1453_campagne_url + (f_1453_campagne_url.includes('?') ? '&status=online' : '?status=online'),
       f_2047_EM_CO_sponsors: f_2047_EM_CO_sponsors || ''
     });
 
