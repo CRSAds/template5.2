@@ -20,6 +20,13 @@ const sponsorCampaigns = {
     coregAnswerKey: "coreg_answer_campaign-unitedconsumers-vrouw",
     hasCoregFlow: false
   },
+    "campaign-vastelasten": {
+    cid: 4951,
+    sid: 34,
+    requiresLongForm: true,
+    coregAnswerKey: "coreg_answer_campaign-vastelasten",
+    hasCoregFlow: false
+  },
   "campaign-kiosk": {
     cid: 3499,
     sid: 34,
