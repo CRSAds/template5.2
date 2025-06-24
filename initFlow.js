@@ -174,7 +174,15 @@ export default function initFlow() {
           if (isShortForm && !hasSubmittedShortForm) {
             hasSubmittedShortForm = true;
             const includeSponsors = !(step.id === 'voorwaarden-section' && !btn.id);
+            
+            // Eerst de payload opbouwen
             const payload = buildPayload(sponsorCampaigns["campaign-leadsnl"], { includeSponsors });
+            
+            // Log de payload voordat we verder gaan
+            console.log("📦 Payload voor verzending:", {
+              ...payload,
+              f_1453_campagne_url: payload.f_1453_campagne_url
+            });
 
             if (isSuspiciousLead(email)) {
               console.warn("⛔ Verdachte lead geblokkeerd (short form):", email);

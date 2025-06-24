@@ -35,6 +35,16 @@ document.addEventListener('DOMContentLoaded', () => {
 export function buildPayload(campaign, options = { includeSponsors: true }) {
   const urlParams = new URLSearchParams(window.location.search);
   const t_id = urlParams.get("t_id") || crypto.randomUUID();
+  const aff_id = urlParams.get('aff_id') || '';
+  const sub_id = urlParams.get('sub_id') || '';
+  const offer_id = urlParams.get('offer_id') || '';
+
+  // Zorg ervoor dat de URL altijd correct is
+  const url = `${window.location.origin}${window.location.pathname}?status=online`;
+  console.log("✅ URL met status=online:", url);
+
+  // Sla de URL op in sessionStorage voor later gebruik
+  sessionStorage.setItem('campaign_url', url);
 
   const dob_day = sessionStorage.getItem('dob_day');
   const dob_month = sessionStorage.getItem('dob_month');
@@ -44,23 +54,6 @@ export function buildPayload(campaign, options = { includeSponsors: true }) {
     : '';
 
   const isShortForm = campaign.cid === 925;
-
-  // Haal tracking parameters uit URL
-  const aff_id = urlParams.get('aff_id') || '';
-  const sub_id = urlParams.get('sub_id') || '';
-  const offer_id = urlParams.get('offer_id') || '';
-
-  // Haal tracking parameters uit URL
-  const trackingAffId = urlParams.get('aff_id') || '';
-  const trackingSubId = urlParams.get('sub_id') || '';
-  const trackingOfferId = urlParams.get('offer_id') || '';
-
-  // Zorg ervoor dat de URL altijd correct is
-  const url = `${window.location.origin}${window.location.pathname}?status=online`;
-  console.log("✅ URL met status=online:", url);
-
-  // Sla de URL op in sessionStorage voor later gebruik
-  sessionStorage.setItem('campaign_url', url);
 
   const payload = {
     cid: campaign.cid,
@@ -76,16 +69,15 @@ export function buildPayload(campaign, options = { includeSponsors: true }) {
     f_5_dob: dob_iso,
     campaignId: Object.keys(sponsorCampaigns).find(key => sponsorCampaigns[key].cid === campaign.cid),
     f_1453_campagne_url: url,
-    f_1684_sub_id: trackingSubId,
-    f_1685_aff_id: trackingAffId,
-    f_1687_offer_id: trackingOfferId
+    f_1684_sub_id: sub_id,
+    f_1685_aff_id: aff_id,
+    f_1687_offer_id: offer_id
   };
 
-  // Log de tracking parameters
-  console.log("🎯 Tracking parameters:", {
-    f_1684_sub_id: trackingSubId,
-    f_1685_aff_id: trackingAffId,
-    f_1687_offer_id: trackingOfferId
+  // Log de payload voordat we verder gaan
+  console.log("📦 Payload opgebouwd:", {
+    ...payload,
+    f_1453_campagne_url: payload.f_1453_campagne_url
   });
 
   if (!isShortForm) {
