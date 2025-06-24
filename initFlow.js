@@ -7,8 +7,8 @@ import { fireFacebookLeadEventIfNeeded } from './facebookpixel.js';
 const longFormCampaigns = [];
 window.longFormCampaigns = longFormCampaigns;
 let hasSubmittedShortForm = false;
+let sovendusInitialized = false; // ✅ voorkomt dubbele initialisatie
 
-// Anti-fraude checks
 function isSuspiciousLead(email) {
   const suspiciousPatterns = [
     /(?:[a-z]{3,}@teleworm\.us)/i,
@@ -67,7 +67,6 @@ function validateForm(form) {
   return valid;
 }
 
-// Blokkeer ook long form leads
 const originalFetchLead = fetchLead;
 function fetchLeadIfNotSuspicious(payload) {
   const email = sessionStorage.getItem('email') || '';
@@ -79,7 +78,9 @@ function fetchLeadIfNotSuspicious(payload) {
 }
 
 function maybeInitSovendus(section) {
-  if (section?.id === 'sovendus-section') {
+  if (section?.id === 'sovendus-section' && !sovendusInitialized) {
+    sovendusInitialized = true;
+    console.log("✅ setupSovendus gestart (éénmalig)");
     setupSovendus();
   }
 }
@@ -96,12 +97,8 @@ export default function initFlow() {
 
   const steps = Array.from(document.querySelectorAll('.flow-section, .coreg-section'))
     .filter(step => {
-      if (statusParam === 'online') {
-        return !step.classList.contains('status-live');
-      }
-      if (statusParam === 'live') {
-        return true;
-      }
+      if (statusParam === 'online') return !step.classList.contains('status-live');
+      if (statusParam === 'live') return true;
       return false;
     });
 
@@ -227,13 +224,6 @@ export default function initFlow() {
         const answer = button.innerText.toLowerCase();
         const isPositive = ['ja', 'yes', 'akkoord'].some(word => answer.includes(word));
 
-        console.log("📮 Antwoord:", {
-          campaignId,
-          answer,
-          isPositive,
-          requiresLongForm: campaign.requiresLongForm
-        });
-
         if (campaign.coregAnswerKey) {
           sessionStorage.setItem(campaign.coregAnswerKey, answer);
         }
@@ -241,16 +231,13 @@ export default function initFlow() {
         if (campaign.requiresLongForm && isPositive) {
           if (!longFormCampaigns.find(c => c.cid === campaign.cid)) {
             longFormCampaigns.push(campaign);
-            console.log("➕ Toegevoegd aan longFormCampaigns:", campaign.cid);
           }
         }
 
         if (!campaign.requiresLongForm) {
           const coregPayload = buildPayload(campaign);
           const email = sessionStorage.getItem('email') || '';
-          if (isSuspiciousLead(email)) {
-            console.warn("⛔ Verdachte coreg lead geblokkeerd:", email);
-          } else {
+          if (!isSuspiciousLead(email)) {
             fetchLead(coregPayload);
           }
         }
@@ -334,12 +321,6 @@ function checkIfLongFormShouldBeShown() {
   const alreadyShown = longFormSection?.getAttribute('data-displayed') === 'true';
   const remainingCoregs = Array.from(document.querySelectorAll('.coreg-section'))
     .filter(s => window.getComputedStyle(s).display !== 'none');
-
-  console.log("🔍 Long form check:", {
-    longFormCampaigns,
-    remainingCoregs,
-    alreadyShown
-  });
 
   if (remainingCoregs.length > 0 || alreadyShown) return;
 
