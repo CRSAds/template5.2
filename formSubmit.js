@@ -58,7 +58,7 @@ export function buildPayload(campaign, options = { includeSponsors: true }) {
     dob_year,
     f_5_dob: dob_iso,
     campaignId: Object.keys(sponsorCampaigns).find(key => sponsorCampaigns[key].cid === campaign.cid),
-    f_1453_campagne_url: window.location.origin + window.location.pathname + '?status=online'
+    f_1453_campagne_url: `${window.location.origin}${window.location.pathname}?status=online`
   };
 
   if (!isShortForm) {

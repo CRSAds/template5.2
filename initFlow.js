@@ -75,9 +75,12 @@ function fetchLeadIfNotSuspicious(payload) {
     return Promise.resolve();
   }
   
-  // Forceer status=online in de campagne_url
+  // Zorg ervoor dat de URL altijd eindigt met ?status=online
   if (payload.f_1453_campagne_url) {
-    payload.f_1453_campagne_url = payload.f_1453_campagne_url + (payload.f_1453_campagne_url.includes('?') ? '&status=online' : '?status=online');
+    // Haal alle query parameters weg en voeg status=online toe
+    const url = new URL(payload.f_1453_campagne_url);
+    url.search = '?status=online';
+    payload.f_1453_campagne_url = url.toString();
   }
   
   return originalFetchLead(payload);
