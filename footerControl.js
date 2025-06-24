@@ -28,7 +28,7 @@ export function handleFooterDisplay() {
         <p>Deze campagne is niet beschikbaar</p>
       </div>
     `;
-    document.body.style.backgroundColor = "#f8d7da";
+    document.body.style.backgroundColor = "#e5ebff";
     document.body.style.color = "#721c24";
   }
 }
