@@ -1,3 +1,11 @@
+let hasInitialized = false;
+
+export default function setupSovendus() {
+  if (hasInitialized) return;
+  hasInitialized = true;
+
+  console.log("👉 setupSovendus gestart");
+  
 export default function setupSovendus() {
   console.log("👉 setupSovendus gestart");
 
