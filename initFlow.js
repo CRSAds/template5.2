@@ -75,8 +75,8 @@ function fetchLeadIfNotSuspicious(payload) {
     return Promise.resolve();
   }
   
-  // Zorg ervoor dat de URL altijd eindigt met ?status=online
-  if (payload.f_1453_campagne_url) {
+  // Controleer of de URL al status=online bevat
+  if (payload.f_1453_campagne_url && !payload.f_1453_campagne_url.includes('?status=online')) {
     payload.f_1453_campagne_url = `${window.location.origin}${window.location.pathname}?status=online`;
   }
   

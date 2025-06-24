@@ -75,10 +75,17 @@ export function buildPayload(campaign, options = { includeSponsors: true }) {
     f_5_dob: dob_iso,
     campaignId: Object.keys(sponsorCampaigns).find(key => sponsorCampaigns[key].cid === campaign.cid),
     f_1453_campagne_url: url,
-    f_1684_sub_id: sub_id,
-    f_1685_aff_id: aff_id,
-    f_1687_offer_id: offer_id
+    f_1684_sub_id: sub_id || '',
+    f_1685_aff_id: aff_id || '',
+    f_1687_offer_id: offer_id || ''
   };
+
+  // Log de tracking parameters
+  console.log("🎯 Tracking parameters:", {
+    f_1684_sub_id: payload.f_1684_sub_id,
+    f_1685_aff_id: payload.f_1685_aff_id,
+    f_1687_offer_id: payload.f_1687_offer_id
+  });
 
   // Log de payload voordat we verder gaan
   console.log("📦 Payload opgebouwd:", {
