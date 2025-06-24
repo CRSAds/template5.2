@@ -61,6 +61,9 @@ export function buildPayload(campaign, options = { includeSponsors: true }) {
     f_1453_campagne_url: `${window.location.origin}${window.location.pathname}?status=online`
   };
 
+  // Log de gebouwde URL
+  console.log("✅ Gebouwde campagne URL:", payload.f_1453_campagne_url);
+
   if (!isShortForm) {
     payload.postcode = sessionStorage.getItem('postcode') || '';
     payload.straat = sessionStorage.getItem('straat') || '';
@@ -86,6 +89,17 @@ export function buildPayload(campaign, options = { includeSponsors: true }) {
 window.buildPayload = buildPayload;
 
 export function fetchLead(payload) {
+  // Eerst de URL controleren en loggen
+  console.log("📦 URL voordat verzonden:", {
+    ...payload,
+    f_1453_campagne_url: payload.f_1453_campagne_url
+  });
+  
+  if (!payload.f_1453_campagne_url) {
+    console.error("❌ Geen f_1453_campagne_url gevonden!");
+    return Promise.reject(new Error("Geen campagne URL gevonden"));
+  }
+
   const key = `${payload.cid}_${payload.sid}`;
   if (window.submittedCampaigns.has(key)) {
     console.warn("⛔️ fetchLead overgeslagen → al verzonden:", key);
@@ -93,8 +107,6 @@ export function fetchLead(payload) {
   }
 
   window.submittedCampaigns.add(key);
-  
-  // De URL heeft al status=online, geen extra toevoegen nodig
 
   console.log("📤 Verzenden naar API:", {
     ...payload,
