@@ -24,8 +24,8 @@ export function handleFooterDisplay() {
     // Onbekende status = blokkeren
     document.body.innerHTML = `
       <div style="padding:40px; text-align:center; font-family:sans-serif;">
-        <h1>❌ Toegang niet toegestaan</h1>
-        <p>Deze campagne is alleen beschikbaar via een geldige kanaal-URL.</p>
+        <h1>Pagina niet bereikbaar</h1>
+        <p>Helaas, we kunnen deze pagina niet vinden.</p>
       </div>
     `;
     document.body.style.backgroundColor = "#f8d7da";
