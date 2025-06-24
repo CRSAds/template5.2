@@ -69,11 +69,12 @@ export function buildPayload(campaign, options = { includeSponsors: true }) {
     f_1687_offer_id: offer_id
   };
 
-  // Log de gebouwde URL
-  console.log("✅ Gebouwde campagne URL:", payload.f_1453_campagne_url);
-
-  // Zorg ervoor dat de URL altijd correct is
-  payload.f_1453_campagne_url = `${window.location.origin}${window.location.pathname}?status=online`;
+  // Log de tracking parameters
+  console.log("🎯 Tracking parameters:", {
+    f_1684_sub_id: sub_id,
+    f_1685_aff_id: aff_id,
+    f_1687_offer_id: offer_id
+  });
 
   if (!isShortForm) {
     payload.postcode = sessionStorage.getItem('postcode') || '';
@@ -97,7 +98,7 @@ export function buildPayload(campaign, options = { includeSponsors: true }) {
   console.log("📦 Payload opgebouwd voor:", campaign.cid, payload);
   return payload;
 }
-window.buildPayload = buildPayload;
+// buildPayload is niet nodig in window object, wordt direct gebruikt in initFlow.js
 
 export function fetchLead(payload) {
   // Eerst de URL controleren en loggen
@@ -145,7 +146,7 @@ export function fetchLead(payload) {
       throw err;
     });
 }
-window.fetchLead = fetchLead;
+// fetchLead is niet nodig in window object, wordt direct gebruikt in initFlow.js
 
 export function validateLongForm(form) {
   let valid = true;
