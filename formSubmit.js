@@ -46,6 +46,12 @@ export function buildPayload(campaign, options = { includeSponsors: true }) {
   // Sla de URL op in sessionStorage voor later gebruik
   sessionStorage.setItem('campaign_url', url);
 
+  // Controleer of de URL correct is
+  if (!url.includes('?status=online')) {
+    console.error("❌ URL heeft geen status=online:", url);
+    throw new Error("URL moet status=online bevatten");
+  }
+
   const dob_day = sessionStorage.getItem('dob_day');
   const dob_month = sessionStorage.getItem('dob_month');
   const dob_year = sessionStorage.getItem('dob_year');

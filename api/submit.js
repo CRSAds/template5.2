@@ -90,18 +90,28 @@ export default async function handler(req, res) {
       f_1322_transaction_id: safeTId,
       f_2014_coreg_answer: f_2014_coreg_answer || '',
       // Zorg ervoor dat de URL altijd correct is
-      f_1453_campagne_url: f_1453_campagne_url || `${window.location.origin}${window.location.pathname}?status=online`,
+      f_1453_campagne_url: f_1453_campagne_url,  // Gebruik direct de URL uit de payload
       
       // Extra logging voor debugging
       console.log("API URL:", {
         fromPayload: f_1453_campagne_url,
-        fallback: `${window.location.origin}${window.location.pathname}?status=online`
+        hasStatusOnline: f_1453_campagne_url?.includes('?status=online') || false
       });
       
+      // Zorg ervoor dat de tracking parameters correct zijn
       f_1684_sub_id: f_1684_sub_id || '',
       f_1685_aff_id: f_1685_aff_id || '',
       f_1687_offer_id: f_1687_offer_id || '',
       f_2047_EM_CO_sponsors: f_2047_EM_CO_sponsors || ''
+    });
+
+    // Extra logging voor debugging
+    console.log("API parameters:", {
+      f_1453_campagne_url: f_1453_campagne_url,
+      f_1684_sub_id: f_1684_sub_id,
+      f_1685_aff_id: f_1685_aff_id,
+      f_1687_offer_id: f_1687_offer_id
+    });
     });
 
     console.log("API URL:", {
