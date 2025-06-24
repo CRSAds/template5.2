@@ -1,12 +1,12 @@
 let hasInitialized = false;
 
 export default function setupSovendus() {
-  if (hasInitialized) return;
+  if (hasInitialized) {
+    console.log("⚠️ setupSovendus al uitgevoerd — wordt overgeslagen");
+    return;
+  }
   hasInitialized = true;
 
-  console.log("👉 setupSovendus gestart");
-  
-export default function setupSovendus() {
   console.log("👉 setupSovendus gestart");
 
   const containerId = 'sovendus-container-1';
