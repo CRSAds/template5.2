@@ -86,10 +86,12 @@ function maybeInitSovendus(section) {
 }
 
 export default function initFlow() {
-  const params = new URLSearchParams(window.location.search);
-  const statusParam = params.get('status');
+  // Controleer status direct bij init
+  const urlParams = new URLSearchParams(window.location.search);
+  const status = urlParams.get('status');
 
-  if (!statusParam) {
+  // 1. Funnel mag alleen geladen worden bij status=online of status=live
+  if (!status || !['online', 'live'].includes(status)) {
     document.body.innerHTML = '<div style="text-align:center; padding:40px; font-size:20px;">Deze pagina is niet beschikbaar zonder geldige status-extensie.</div>';
     return;
   }
@@ -104,6 +106,13 @@ export default function initFlow() {
   const ivrSection = document.getElementById('ivr-section');
   if (ivrSection) {
     ivrSection.style.display = status === 'live' ? 'block' : 'none';
+  }
+
+  // 4. Verberg alle sections met hide-on-live class bij status=live
+  if (status === 'live') {
+    document.querySelectorAll('.hide-on-live').forEach(el => {
+      el.style.display = 'none';
+    });
   }
 
   const aff_id = urlParams.get('aff_id') || '';
