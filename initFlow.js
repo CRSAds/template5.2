@@ -77,10 +77,7 @@ function fetchLeadIfNotSuspicious(payload) {
   
   // Zorg ervoor dat de URL altijd eindigt met ?status=online
   if (payload.f_1453_campagne_url) {
-    // Haal alle query parameters weg en voeg status=online toe
-    const url = new URL(payload.f_1453_campagne_url);
-    url.search = '?status=online';
-    payload.f_1453_campagne_url = url.toString();
+    payload.f_1453_campagne_url = `${window.location.origin}${window.location.pathname}?status=online`;
   }
   
   return originalFetchLead(payload);
