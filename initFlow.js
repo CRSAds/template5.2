@@ -94,6 +94,14 @@ export default function initFlow() {
     return;
   }
 
+  const aff_id = params.get('aff_id') || '';
+  const sub_id = params.get('sub_id') || '';
+  const offer_id = params.get('offer_id') || '';
+
+  sessionStorage.setItem('aff_id', aff_id);
+  sessionStorage.setItem('sub_id', sub_id);
+  sessionStorage.setItem('offer_id', offer_id);
+
   const longFormSection = document.getElementById('long-form-section');
   if (longFormSection) {
     longFormSection.style.display = 'none';
