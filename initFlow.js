@@ -85,7 +85,15 @@ export default function initFlow() {
     longFormSection.setAttribute('data-displayed', 'false');
   }
 
-  const steps = Array.from(document.querySelectorAll('.flow-section, .coreg-section'));
+  const urlParams = new URLSearchParams(window.location.search);
+  const statusParam = urlParams.get('status');
+
+  const steps = Array.from(document.querySelectorAll('.flow-section, .coreg-section'))
+    .filter(step => {
+      const requiredStatus = step.getAttribute('data-status');
+      return !requiredStatus || requiredStatus === statusParam;
+    });
+
   longFormCampaigns.length = 0;
 
   if (!window.location.hostname.includes("swipepages.com")) {
@@ -136,7 +144,6 @@ export default function initFlow() {
           const dob_month = form.querySelector('#dob-month')?.value || '';
           const dob_year = form.querySelector('#dob-year')?.value || '';
           const email = form.querySelector('#email')?.value.trim() || '';
-          const urlParams = new URLSearchParams(window.location.search);
           const t_id = urlParams.get('t_id') || crypto.randomUUID();
 
           sessionStorage.setItem('gender', gender);
