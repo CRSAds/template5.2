@@ -7,7 +7,7 @@ import { fireFacebookLeadEventIfNeeded } from './facebookpixel.js';
 const longFormCampaigns = [];
 window.longFormCampaigns = longFormCampaigns;
 let hasSubmittedShortForm = false;
-let sovendusInitialized = false; // ✅ voorkomt dubbele initialisatie
+let sovendusInitialized = false;
 
 function isSuspiciousLead(email) {
   const suspiciousPatterns = [
@@ -88,6 +88,11 @@ function maybeInitSovendus(section) {
 export default function initFlow() {
   const params = new URLSearchParams(window.location.search);
   const statusParam = params.get('status');
+
+  if (!statusParam) {
+    document.body.innerHTML = '<div style="text-align:center; padding:40px; font-size:20px;">Deze pagina is niet beschikbaar zonder geldige status-extensie.</div>';
+    return;
+  }
 
   const longFormSection = document.getElementById('long-form-section');
   if (longFormSection) {
