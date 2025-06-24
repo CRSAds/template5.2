@@ -1,7 +1,6 @@
-// main.js
-import { getStatus } from './statusCheck.js';
-
-const status = getStatus();
+// statusCheck.js
+const urlParams = new URLSearchParams(window.location.search);
+const status = urlParams.get('status');
 
 // 1. Funnel mag alleen geladen worden bij status=online of status=live
 if (!status || !['online', 'live'].includes(status)) {
@@ -28,12 +27,5 @@ if (status === 'live') {
   });
 }
 
-import { handleFooterDisplay } from './footerControl.js';
-import initFlow from './initFlow.js';
-import { setupFormSubmit } from './formSubmit.js';
-import { setupImageFix } from './imageFix.js';
-
-setupImageFix();
-handleFooterDisplay();
-initFlow();
-setupFormSubmit();
+// Exporteer de status voor andere modules
+export const getStatus = () => status;
