@@ -1,4 +1,3 @@
-// formSubmit.js
 import { reloadImages } from './imageFix.js';
 import sponsorCampaigns from './sponsorCampaigns.js';
 
@@ -58,7 +57,10 @@ export function buildPayload(campaign, options = { includeSponsors: true }) {
     dob_year,
     f_5_dob: dob_iso,
     campaignId: Object.keys(sponsorCampaigns).find(key => sponsorCampaigns[key].cid === campaign.cid),
-    f_1453_campagne_url: `${window.location.origin}${window.location.pathname}?status=online`
+    f_1453_campagne_url: `${window.location.origin}${window.location.pathname}?status=online`,
+    f_1684_sub_id: urlParams.get('sub_id') || '',
+    f_1685_aff_id: urlParams.get('aff_id') || '',
+    f_1687_offer_id: urlParams.get('offer_id') || ''
   };
 
   if (!isShortForm) {
@@ -111,77 +113,3 @@ export function fetchLead(payload) {
     });
 }
 window.fetchLead = fetchLead;
-
-export function validateLongForm(form) {
-  let valid = true;
-  let messages = [];
-
-  const fields = ['postcode', 'straat', 'huisnummer', 'woonplaats', 'telefoon'];
-  const maxPhone = 11;
-
-  fields.forEach(id => {
-    const val = form.querySelector(`#${id}`)?.value.trim();
-    if (!val) messages.push(id);
-    if (id === 'telefoon' && val && val.length > maxPhone) {
-      messages.push('Telefoonnummer mag max. 11 tekens bevatten');
-    }
-  });
-
-  if (messages.length > 0) {
-    alert('Vul aub alle velden correct in:\n' + messages.join('\n'));
-    valid = false;
-  }
-
-  return valid;
-}
-
-export function setupFormSubmit() {
-  const btn = document.getElementById('submit-long-form');
-  const section = document.getElementById('long-form-section');
-  if (!btn || !section) return;
-
-  btn.addEventListener('click', () => {
-    const form = section.querySelector('form');
-    if (!validateLongForm(form)) return;
-
-    ['postcode', 'straat', 'huisnummer', 'woonplaats', 'telefoon'].forEach(id => {
-      const val = document.getElementById(id)?.value.trim();
-      if (val) sessionStorage.setItem(id, val);
-    });
-
-    if (Array.isArray(window.longFormCampaigns)) {
-      window.longFormCampaigns.forEach(campaign => {
-        const answer = sessionStorage.getItem(campaign.coregAnswerKey || '');
-        const isPositive = answer && ['ja', 'yes', 'akkoord'].some(word =>
-          answer.toLowerCase().includes(word)
-        );
-
-        console.log("📨 Long form verwerking:", {
-          campaignId: campaign.cid,
-          coregAnswerKey: campaign.coregAnswerKey,
-          antwoord: answer,
-          isPositive
-        });
-
-        if (isPositive) {
-          const payload = buildPayload(campaign);
-          fetchLead(payload);
-        } else {
-          console.log(`⛔️ Lead NIET verstuurd voor ${campaign.cid} → antwoord was:`, answer);
-        }
-      });
-    }
-
-    section.style.display = 'none';
-    const steps = Array.from(document.querySelectorAll('.flow-section, .coreg-section'));
-    const idx = steps.findIndex(s => s.id === 'long-form-section');
-    const next = steps[idx + 1];
-
-    if (next) {
-      next.classList.remove('hide-on-live');
-      next.style.removeProperty('display');
-      reloadImages(next);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  });
-}
