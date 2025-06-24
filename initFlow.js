@@ -189,8 +189,23 @@ export default function initFlow() {
               return;
             }
 
-            fetchLead(payload).then(() => {
-              fireFacebookLeadEventIfNeeded();
+            // Zorg ervoor dat de lead niet dubbel wordt verzonden
+            const key = `${payload.cid}_${payload.sid}`;
+            if (!window.submittedCampaigns.has(key)) {
+              window.submittedCampaigns.add(key);
+              fetchLead(payload).then(() => {
+                fireFacebookLeadEventIfNeeded();
+                step.style.display = 'none';
+                const next = skipNext ? steps[stepIndex + 2] : steps[stepIndex + 1];
+                if (next) {
+                  next.style.display = 'block';
+                  maybeInitSovendus(next);
+                  reloadImages(next);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+              });
+            } else {
+              console.log("✅ Lead al verzonden, overslaan");
               step.style.display = 'none';
               const next = skipNext ? steps[stepIndex + 2] : steps[stepIndex + 1];
               if (next) {
@@ -199,7 +214,7 @@ export default function initFlow() {
                 reloadImages(next);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }
-            });
+            }
 
             return;
           }

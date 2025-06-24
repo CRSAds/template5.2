@@ -112,12 +112,10 @@ export function fetchLead(payload) {
     return Promise.reject(new Error("Geen campagne URL gevonden"));
   }
 
-  // Reset submittedCampaigns voor deze specifieke combinatie
+  // Controleer of de lead al is verzonden
   const key = `${payload.cid}_${payload.sid}`;
-  window.submittedCampaigns.delete(key);
-
   if (window.submittedCampaigns.has(key)) {
-    console.warn("⛔️ fetchLead overgeslagen → al verzonden:", key);
+    console.log("✅ Lead al verzonden, overslaan");
     return Promise.resolve({ skipped: true });
   }
 
