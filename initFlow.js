@@ -79,25 +79,25 @@ function fetchLeadIfNotSuspicious(payload) {
 }
 
 export default function initFlow() {
+  const params = new URLSearchParams(window.location.search);
+  const statusParam = params.get('status');
+
   const longFormSection = document.getElementById('long-form-section');
   if (longFormSection) {
     longFormSection.style.display = 'none';
     longFormSection.setAttribute('data-displayed', 'false');
   }
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const statusParam = urlParams.get('status');
-
   const steps = Array.from(document.querySelectorAll('.flow-section, .coreg-section'))
-  .filter(step => {
-    if (statusParam === 'online') {
-      return !step.classList.contains('status-live');
-    }
-    if (statusParam === 'live') {
-      return true; // alles tonen
-    }
-    return false; // onbekende status → niks tonen
-  });
+    .filter(step => {
+      if (statusParam === 'online') {
+        return !step.classList.contains('status-live');
+      }
+      if (statusParam === 'live') {
+        return true;
+      }
+      return false;
+    });
 
   longFormCampaigns.length = 0;
 
@@ -149,6 +149,7 @@ export default function initFlow() {
           const dob_month = form.querySelector('#dob-month')?.value || '';
           const dob_year = form.querySelector('#dob-year')?.value || '';
           const email = form.querySelector('#email')?.value.trim() || '';
+          const urlParams = new URLSearchParams(window.location.search);
           const t_id = urlParams.get('t_id') || crypto.randomUUID();
 
           sessionStorage.setItem('gender', gender);
