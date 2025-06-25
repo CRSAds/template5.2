@@ -150,8 +150,6 @@ export async function fetchLead(payload) {
     return Promise.resolve({ skipped: true });
   }
 
-  window.submittedCampaigns.add(key);
-
   try {
     // Cache uitschakelen voor API call
     const response = await fetch('/api/submit', {
@@ -165,6 +163,8 @@ export async function fetchLead(payload) {
 
     const result = await response.json();
     console.log("✅ API antwoord:", result);
+
+    window.submittedCampaigns.add(key);
     
     return result;
   } catch (error) {
