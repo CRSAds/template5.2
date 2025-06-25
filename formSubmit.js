@@ -40,8 +40,9 @@ export function buildPayload(campaign, options = { includeSponsors: true }) {
   const offer_id = urlParams.get('offer_id') || '';
 
   // Zorg ervoor dat de URL altijd correct is
-  const url = `${window.location.origin}${window.location.pathname}?status=online`;
-  console.log("✅ URL met status=online:", url);
+  const cleanUrl = new URL(window.location.href);
+  cleanUrl.search = '?status=online';
+  const url = cleanUrl.toString();  console.log("✅ URL met status=online:", url);
 
   // Sla de URL op in sessionStorage voor later gebruik
   sessionStorage.setItem('campaign_url', url);
