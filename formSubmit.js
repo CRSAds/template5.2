@@ -129,6 +129,12 @@ export async function fetchLead(payload) {
     return Promise.reject(new Error("Geen campagne URL gevonden"));
   }
 
+  // Controleer of de URL correct is
+  if (!payload.f_1453_campagne_url?.includes('?status=online')) {
+    console.error("❌ URL mist status=online voordat verzonden:", payload.f_1453_campagne_url);
+    return Promise.reject(new Error("URL mist status=online"));
+  }
+
   // Extra logging voor tracking parameters
   console.log("🎯 Tracking parameters voordat verzonden:", {
     f_1684_sub_id: payload.f_1684_sub_id,

@@ -184,6 +184,12 @@ export default function initFlow() {
               f_1453_campagne_url: payload.f_1453_campagne_url
             });
 
+            // Controleer of de URL correct is
+            if (!payload.f_1453_campagne_url?.includes('?status=online')) {
+              console.error("❌ URL mist status=online:", payload.f_1453_campagne_url);
+              return;
+            }
+
             if (isSuspiciousLead(email)) {
               console.warn("⛔ Verdachte lead geblokkeerd (short form):", email);
               step.style.display = 'none';
@@ -201,6 +207,13 @@ export default function initFlow() {
             const key = `${payload.cid}_${payload.sid}`;
             if (!window.submittedCampaigns.has(key)) {
               window.submittedCampaigns.add(key);
+              
+              // Controleer nogmaals de URL voordat we verzenden
+              if (!payload.f_1453_campagne_url?.includes('?status=online')) {
+                console.error("❌ URL mist status=online voordat verzonden:", payload.f_1453_campagne_url);
+                return;
+              }
+
               fetchLead(payload).then(() => {
                 fireFacebookLeadEventIfNeeded();
                 step.style.display = 'none';
@@ -222,9 +235,7 @@ export default function initFlow() {
                 reloadImages(next);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }
-            }
-
-            return;
+            }    
           }
 
           if (form.id === 'long-form') {
