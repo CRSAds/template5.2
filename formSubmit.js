@@ -145,6 +145,26 @@ export async function fetchLead(payload) {
 
   window.submittedCampaigns.add(key);
 
+  try {
+    // Cache uitschakelen voor API call
+    const response = await fetch('/api/submit', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const result = await response.json();
+    console.log("✅ API antwoord:", result);
+    
+    return result;
+  } catch (error) {
+    console.error("❌ Fout bij API call:", error);
+    throw error;
+  }
+
   console.log("📤 Verzenden naar API:", {
     ...payload,
     f_1453_campagne_url: payload.f_1453_campagne_url
