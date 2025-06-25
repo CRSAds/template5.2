@@ -33,6 +33,9 @@ export default async function handler(req, res) {
       t_id,
       f_2014_coreg_answer,
       f_1453_campagne_url,
+      f_1684_sub_id,
+      f_1685_aff_id,
+      f_1687_offer_id,
       f_2047_EM_CO_sponsors
     } = req.body;
 

@@ -117,7 +117,7 @@ export function buildPayload(campaign, options = { includeSponsors: true }) {
 }
 // buildPayload is niet nodig in window object, wordt direct gebruikt in initFlow.js
 
-export function fetchLead(payload) {
+export async function fetchLead(payload) {
   // Eerst de URL controleren en loggen
   console.log("📦 URL voordat verzonden:", {
     ...payload,
@@ -128,6 +128,13 @@ export function fetchLead(payload) {
     console.error("❌ Geen f_1453_campagne_url gevonden!");
     return Promise.reject(new Error("Geen campagne URL gevonden"));
   }
+
+  // Extra logging voor tracking parameters
+  console.log("🎯 Tracking parameters voordat verzonden:", {
+    f_1684_sub_id: payload.f_1684_sub_id,
+    f_1685_aff_id: payload.f_1685_aff_id,
+    f_1687_offer_id: payload.f_1687_offer_id
+  });
 
   // Controleer of de lead al is verzonden
   const key = `${payload.cid}_${payload.sid}`;
