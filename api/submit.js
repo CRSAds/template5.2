@@ -81,11 +81,6 @@ export default async function handler(req, res) {
 
     const optindate = new Date().toISOString().split('.')[0] + '+0000';
 
-    // Zorg ervoor dat de URL altijd status=online bevat
-    const url = f_1453_campagne_url?.includes('?') 
-      ? f_1453_campagne_url + '&status=online' 
-      : f_1453_campagne_url + '?status=online';
-
     const params = new URLSearchParams({
       cid: String(cid),
       sid: String(sid),
