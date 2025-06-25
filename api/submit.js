@@ -81,6 +81,11 @@ export default async function handler(req, res) {
 
     const optindate = new Date().toISOString().split('.')[0] + '+0000';
 
+    // Zorg ervoor dat de URL altijd status=online bevat
+    const url = f_1453_campagne_url?.includes('?') 
+      ? f_1453_campagne_url + '&status=online' 
+      : f_1453_campagne_url + '?status=online';
+
     const params = new URLSearchParams({
       cid: String(cid),
       sid: String(sid),
@@ -99,29 +104,16 @@ export default async function handler(req, res) {
       f_55_optindate: optindate,
       f_1322_transaction_id: safeTId,
       f_2014_coreg_answer: f_2014_coreg_answer || '',
-      f_1453_campagne_url: f_1453_campagne_url || '',
+      f_1453_campagne_url: url || '',
       f_1684_sub_id: f_1684_sub_id || '',
       f_1685_aff_id: f_1685_aff_id || '',
       f_1687_offer_id: f_1687_offer_id || '',
       f_2047_EM_CO_sponsors: f_2047_EM_CO_sponsors || ''
     });
 
-    // Extra logging voor debugging
-    console.log("API URL:", {
-      fromPayload: f_1453_campagne_url,
-      hasStatusOnline: f_1453_campagne_url?.includes('?status=online') || false
-    });
-
-    // Log de complete URL voordat we naar Databowl sturen
+    // Log de verwerkte URL
+    console.log("🎯 URL met status=online:", url);
     console.log("🎯 URL naar Databowl:", params.get('f_1453_campagne_url'));
-
-    // Extra logging voor debugging
-    console.log("API parameters:", {
-      f_1453_campagne_url: f_1453_campagne_url,
-      f_1684_sub_id: f_1684_sub_id,
-      f_1685_aff_id: f_1685_aff_id,
-      f_1687_offer_id: f_1687_offer_id
-    });
 
     console.log('🎯 Parameters naar Databowl:', params.toString());
 
