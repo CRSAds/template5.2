@@ -77,11 +77,14 @@ export default function initFlow() {
   }
 
   const steps = Array.from(document.querySelectorAll('.flow-section, .coreg-section'))
-    .filter(step => {
-      if (statusParam === 'online') return !step.classList.contains('status-live');
-      if (statusParam === 'live') return true;
-      return false;
-    });
+  .filter(step => {
+    if (statusParam === 'online') {
+      // Sla secties over die bedoeld zijn voor status=live (zoals IVR)
+      return !step.classList.contains('status-live') && !step.classList.contains('ivr-section');
+    }
+    if (statusParam === 'live') return true;
+    return false;
+  });
 
   longFormCampaigns.length = 0;
 
