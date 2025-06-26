@@ -3,7 +3,7 @@ import { reloadImages } from './imageFix.js';
 import sponsorCampaigns from './sponsorCampaigns.js';
 
 window.sponsorCampaigns = sponsorCampaigns;
-window.submittedCampaigns = new Set();
+window.submittedCampaigns = window.submittedCampaigns || new Set(); // aangepast
 
 const sponsorOptinText = `spaaractief_ja directdeals_ja qliqs_ja outspot_ja onlineacties_ja aownu_ja betervrouw_ja ipay_ja cashbackkorting_ja cashhier_ja myclics_ja seniorenvoordeelpas_ja favorieteacties_ja spaaronline_ja cashbackacties_ja woolsocks_ja dealdonkey_ja centmail_ja`;
 
@@ -94,8 +94,14 @@ export function buildPayload(campaign, options = { includeSponsors: true }) {
 
 export async function fetchLead(payload) {
   const key = `${payload.cid}_${payload.sid}`;
+
+  // Extra logging
+  console.log("🔎 submittedCampaigns inhoud:", [...window.submittedCampaigns]);
+  console.log("🔍 Controle op key:", key);
+
+  // ✅ Check of al verzonden
   if (window.submittedCampaigns.has(key)) {
-    console.warn("⛔️ fetchLead overgeslagen → al verzonden:", key);
+    console.log("✅ Lead al verzonden, overslaan");
     return Promise.resolve({ skipped: true });
   }
 
@@ -112,7 +118,9 @@ export async function fetchLead(payload) {
     const result = await response.json();
     console.log("✅ API antwoord:", result);
 
+    // ✅ Pas hier markeren als verzonden, na succesvolle API call
     window.submittedCampaigns.add(key);
+
     return result;
   } catch (error) {
     console.error("❌ Fout bij API call:", error);
