@@ -31,6 +31,7 @@ export default async function handler(req, res) {
       woonplaats,
       telefoon,
       t_id,
+      f_1322_transaction_id, // <-- toegevoegd
       f_2014_coreg_answer,
       f_1453_campagne_url,
       f_1684_sub_id,
@@ -54,9 +55,11 @@ export default async function handler(req, res) {
     }
 
     const ipaddress = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress || '';
-    const safeTId = t_id || 'unknown';
-    const ipKey = `${ipaddress}_${safeTId}`;
 
+    // ✅ Gebruik veld uit payload als prioriteit, anders fallback naar t_id
+    const safeTId = f_1322_transaction_id || t_id || 'unknown';
+
+    const ipKey = `${ipaddress}_${safeTId}`;
     const now = Date.now();
     const lastTime = recentIps.get(ipKey);
     if (lastTime && now - lastTime < 60000) {
@@ -109,7 +112,6 @@ export default async function handler(req, res) {
     // Log de verwerkte URL
     console.log("🎯 URL met status=online:", f_1453_campagne_url);
     console.log("🎯 URL naar Databowl:", params.get('f_1453_campagne_url'));
-
     console.log('🎯 Parameters naar Databowl:', params.toString());
 
     const response = await fetch('https://crsadvertising.databowl.com/api/v1/lead', {
