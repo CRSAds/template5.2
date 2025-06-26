@@ -242,30 +242,33 @@ export default function initFlow() {
     }
   });
 
-  // ⏱️ Automatisch doorschakelen na Sovendus
-  const sovendusSection = document.getElementById('sovendus-section');
-  const nextAfterSovendus = sovendusSection?.nextElementSibling;
+// ⏱️ Automatisch doorschakelen na Sovendus
+const sovendusSection = document.getElementById('sovendus-section');
+const nextAfterSovendus = sovendusSection?.nextElementSibling;
 
-  if (sovendusSection && nextAfterSovendus) {
-    const observer = new IntersectionObserver((entries, obs) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          console.log("👀 Sovendus-sectie in beeld — timer gestart");
-          obs.unobserve(entry.target);
+if (sovendusSection && nextAfterSovendus) {
+  const observer = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        console.log("👀 Sovendus-sectie in beeld — setup en timer gestart");
+        obs.unobserve(entry.target);
 
-          setTimeout(() => {
-            console.log("⏱️ Timer afgelopen — doorgaan naar volgende sectie na Sovendus");
-            sovendusSection.style.display = 'none';
-            nextAfterSovendus.style.display = 'block';
-            reloadImages(nextAfterSovendus);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }, 10000);
-        }
-      });
-    }, { threshold: 0.5 });
+        // Sovendus initialiseren zodra in beeld
+        setupSovendus();
 
-    observer.observe(sovendusSection);
-  }
+        setTimeout(() => {
+          console.log("⏱️ Timer afgelopen — doorgaan naar volgende sectie na Sovendus");
+          sovendusSection.style.display = 'none';
+          nextAfterSovendus.style.display = 'block';
+          reloadImages(nextAfterSovendus);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 10000);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  observer.observe(sovendusSection);
+}
 }
 
 const coregAnswers = {};
