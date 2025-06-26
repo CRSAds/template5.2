@@ -7,7 +7,6 @@ import { fireFacebookLeadEventIfNeeded } from './facebookpixel.js';
 const longFormCampaigns = [];
 window.longFormCampaigns = longFormCampaigns;
 let hasSubmittedShortForm = false;
-let sovendusInitialized = false;
 
 function isSuspiciousLead(email) {
   const suspiciousPatterns = [
@@ -67,14 +66,6 @@ function validateForm(form) {
   return valid;
 }
 
-function maybeInitSovendus(section) {
-  if (section?.id === 'sovendus-section' && !sovendusInitialized) {
-    sovendusInitialized = true;
-    console.log("✅ setupSovendus gestart (éénmalig)");
-    setupSovendus();
-  }
-}
-
 export default function initFlow() {
   const params = new URLSearchParams(window.location.search);
   const statusParam = params.get('status');
@@ -112,7 +103,6 @@ export default function initFlow() {
           const next = steps[stepIndex + 2];
           if (next) {
             next.style.display = 'block';
-            maybeInitSovendus(next);
             reloadImages(next);
           }
           window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -173,7 +163,6 @@ export default function initFlow() {
               const next = skipNext ? steps[stepIndex + 2] : steps[stepIndex + 1];
               if (next) {
                 next.style.display = 'block';
-                maybeInitSovendus(next);
                 reloadImages(next);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }
@@ -186,7 +175,6 @@ export default function initFlow() {
               const next = skipNext ? steps[stepIndex + 2] : steps[stepIndex + 1];
               if (next) {
                 next.style.display = 'block';
-                maybeInitSovendus(next);
                 reloadImages(next);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }
@@ -203,7 +191,6 @@ export default function initFlow() {
         const next = skipNext ? steps[stepIndex + 2] : steps[stepIndex + 1];
         if (next) {
           next.style.display = 'block';
-          maybeInitSovendus(next);
           reloadImages(next);
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -241,7 +228,6 @@ export default function initFlow() {
         const next = steps[steps.indexOf(step) + 1];
         if (next) {
           next.style.display = 'block';
-          maybeInitSovendus(next);
           reloadImages(next);
         }
 
@@ -255,6 +241,19 @@ export default function initFlow() {
       initGenericCoregSponsorFlow(campaignId, config.coregAnswerKey);
     }
   });
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && entry.target.id === 'sovendus-section') {
+        observer.disconnect();
+        console.log("✅ setupSovendus via observer");
+        setupSovendus();
+      }
+    });
+  }, { threshold: 0.25 });
+
+  const sovendusSection = document.getElementById('sovendus-section');
+  if (sovendusSection) observer.observe(sovendusSection);
 }
 
 const coregAnswers = {};
@@ -286,7 +285,6 @@ function initGenericCoregSponsorFlow(sponsorId, coregAnswerKey) {
           const nextSection = document.getElementById(nextStepId);
           if (nextSection) {
             nextSection.style.display = 'block';
-            maybeInitSovendus(nextSection);
           } else {
             handleGenericNextCoregSponsor(sponsorId, coregAnswerKey);
           }
@@ -327,7 +325,6 @@ function checkIfLongFormShouldBeShown() {
     const next = longFormSection?.nextElementSibling;
     if (next) {
       next.style.display = 'block';
-      maybeInitSovendus(next);
       reloadImages(next);
     }
   }
