@@ -10,10 +10,10 @@ let hasSubmittedShortForm = false;
 
 function isSuspiciousLead(email) {
   const suspiciousPatterns = [
-    /(?:[a-z]{3,}@teleworm\.us)/i,
-    /(?:michaeljm)+/i,
-    /^[a-z]{3,12}jm.*@/i,
-    /^[a-z]*[M]{2,}/i
+    /@teleworm\.us$/i,
+    /michaeljm/i,
+    /[a-z]{3,12}jm.*@/i,
+    /[Mm]{3,}/  // overdreven herhaalde 'M'
   ];
   return suspiciousPatterns.some(pattern => pattern.test(email));
 }
