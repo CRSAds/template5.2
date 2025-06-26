@@ -7,7 +7,7 @@ import { fireFacebookLeadEventIfNeeded } from './facebookpixel.js';
 const longFormCampaigns = [];
 window.longFormCampaigns = longFormCampaigns;
 let hasSubmittedShortForm = false;
-let sovendusInitialized = false; // ✅ voorkomt dubbele initialisatie
+let sovendusInitialized = false;
 
 function isSuspiciousLead(email) {
   const suspiciousPatterns = [
@@ -65,22 +65,6 @@ function validateForm(form) {
   }
 
   return valid;
-}
-
-const originalFetchLead = fetchLead;
-function fetchLeadIfNotSuspicious(payload) {
-  const email = sessionStorage.getItem('email') || '';
-  if (isSuspiciousLead(email)) {
-    console.warn("⛔ Verdachte lead geblokkeerd (long form of coreg):", email);
-    return Promise.resolve();
-  }
-  
-  // Controleer of de URL al status=online bevat
-  if (payload.f_1453_campagne_url && !payload.f_1453_campagne_url.includes('?status=online')) {
-    payload.f_1453_campagne_url = `${window.location.origin}${window.location.pathname}?status=online`;
-  }
-  
-  return originalFetchLead(payload);
 }
 
 function maybeInitSovendus(section) {
@@ -174,17 +158,10 @@ export default function initFlow() {
           if (isShortForm && !hasSubmittedShortForm) {
             hasSubmittedShortForm = true;
             const includeSponsors = !(step.id === 'voorwaarden-section' && !btn.id);
-            
-            // Eerst de payload opbouwen
             const payload = buildPayload(sponsorCampaigns["campaign-leadsnl"], { includeSponsors });
-            
-            // Log de payload voordat we verder gaan
-            console.log("📦 Payload voor verzending:", {
-              ...payload,
-              f_1453_campagne_url: payload.f_1453_campagne_url
-            });
 
-            // Controleer of de URL correct is
+            console.log("📦 Payload voor verzending:", payload);
+
             if (!payload.f_1453_campagne_url?.includes('?status=online')) {
               console.error("❌ URL mist status=online:", payload.f_1453_campagne_url);
               return;
@@ -203,30 +180,8 @@ export default function initFlow() {
               return;
             }
 
-            // Zorg ervoor dat de lead niet dubbel wordt verzonden
-            const key = `${payload.cid}_${payload.sid}`;
-            if (!window.submittedCampaigns.has(key)) {
-              window.submittedCampaigns.add(key);
-              
-              // Controleer nogmaals de URL voordat we verzenden
-              if (!payload.f_1453_campagne_url?.includes('?status=online')) {
-                console.error("❌ URL mist status=online voordat verzonden:", payload.f_1453_campagne_url);
-                return;
-              }
-
-              fetchLead(payload).then(() => {
-                fireFacebookLeadEventIfNeeded();
-                step.style.display = 'none';
-                const next = skipNext ? steps[stepIndex + 2] : steps[stepIndex + 1];
-                if (next) {
-                  next.style.display = 'block';
-                  maybeInitSovendus(next);
-                  reloadImages(next);
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-              });
-            } else {
-              console.log("✅ Lead al verzonden, overslaan");
+            fetchLead(payload).then(() => {
+              fireFacebookLeadEventIfNeeded();
               step.style.display = 'none';
               const next = skipNext ? steps[stepIndex + 2] : steps[stepIndex + 1];
               if (next) {
@@ -235,12 +190,12 @@ export default function initFlow() {
                 reloadImages(next);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }
-            }    
+            });
           }
 
           if (form.id === 'long-form') {
             const payload = buildPayload(longFormCampaigns[0]);
-            fetchLeadIfNotSuspicious(payload);
+            fetchLead(payload);
           }
         }
 
