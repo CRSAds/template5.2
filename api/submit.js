@@ -59,7 +59,7 @@ export default async function handler(req, res) {
     // ✅ Gebruik veld uit payload als prioriteit, anders fallback naar t_id
     const safeTId = f_1322_transaction_id || t_id || 'unknown';
 
-    const ipKey = `${ipaddress}_${safeTId}`;
+    const ipKey = `${ipaddress}_${cid}_${sid}`;
     const now = Date.now();
     const lastTime = recentIps.get(ipKey);
     if (lastTime && now - lastTime < 60000) {
