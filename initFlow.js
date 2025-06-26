@@ -242,18 +242,30 @@ export default function initFlow() {
     }
   });
 
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting && entry.target.id === 'sovendus-section') {
-        observer.disconnect();
-        console.log("✅ setupSovendus via observer");
-        setupSovendus();
-      }
-    });
-  }, { threshold: 0.25 });
-
+  // ⏱️ Automatisch doorschakelen na Sovendus
   const sovendusSection = document.getElementById('sovendus-section');
-  if (sovendusSection) observer.observe(sovendusSection);
+  const nextAfterSovendus = sovendusSection?.nextElementSibling;
+
+  if (sovendusSection && nextAfterSovendus) {
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          console.log("👀 Sovendus-sectie in beeld — timer gestart");
+          obs.unobserve(entry.target);
+
+          setTimeout(() => {
+            console.log("⏱️ Timer afgelopen — doorgaan naar volgende sectie na Sovendus");
+            sovendusSection.style.display = 'none';
+            nextAfterSovendus.style.display = 'block';
+            reloadImages(nextAfterSovendus);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }, 10000);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    observer.observe(sovendusSection);
+  }
 }
 
 const coregAnswers = {};
