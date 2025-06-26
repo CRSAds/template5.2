@@ -99,7 +99,7 @@ export default async function handler(req, res) {
       f_55_optindate: optindate,
       f_1322_transaction_id: safeTId,
       f_2014_coreg_answer: f_2014_coreg_answer || '',
-      f_1453_campagne_url: url || '',
+      f_1453_campagne_url: f_1453_campagne_url || '',
       f_1684_sub_id: f_1684_sub_id || '',
       f_1685_aff_id: f_1685_aff_id || '',
       f_1687_offer_id: f_1687_offer_id || '',
@@ -107,7 +107,7 @@ export default async function handler(req, res) {
     });
 
     // Log de verwerkte URL
-    console.log("🎯 URL met status=online:", url);
+    console.log("🎯 URL met status=online:", f_1453_campagne_url);
     console.log("🎯 URL naar Databowl:", params.get('f_1453_campagne_url'));
 
     console.log('🎯 Parameters naar Databowl:', params.toString());
