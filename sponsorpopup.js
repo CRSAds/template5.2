@@ -96,7 +96,7 @@ window.renderSponsorPopup = function (container) {
           {
           name: "OnlineActies",
           description: "Onlineacties.com verbindt consumenten met interessante aanbiedingen van  uiteenlopende bedrijven. De aanbiedingen worden direct op de internetpagina aangeboden of later via e-mail, sms, whatsapp of telefoon.",
-          logo: "assets/sponsorlogo/onlineacties.png",
+          logo: "onlineacties.png",
           address: "Papaverweg 177\n1032 KE Amsterdam",
           privacyLink: "https://www.onlineacties.com/",
           checkboxLabel: "Ja. Ik deel mijn gegevens met Online Acties"
@@ -104,7 +104,7 @@ window.renderSponsorPopup = function (container) {
         {
           name: "AOW.nu",
           description: "AOW.nu mag u benaderen via email over het laatste AOW-nieuws, zoals AOW-bedragen, vakantiegeld, de stand van zaken bij de grootste pensioenfondsen en speciale (voordeel)acties voor 65-plussers.",
-          logo: "assets/sponsorlogo/aownu.png",
+          logo: "aownu.png",
           address: "Tiengemetenstraat 19\n5628 KM Eindhoven",
           privacyLink: "https://www.aow.nu/privacyverklaring-eu/",
           checkboxLabel: "Ja. Ik deel mijn gegevens met AOW.nu"
@@ -112,7 +112,7 @@ window.renderSponsorPopup = function (container) {
         {
           name: "BeterVrouw",
           description: "BeterVROUW is dé gratis wekelijkse nieuwsbrief voor vrouwen in Nederland met daarin onder andere inspirerende artikelen, uitgaanstips, exclusieve aanbiedingen, opinie peilingen en jouw week horoscoop.",
-          logo: "assets/sponsorlogo/betervrouw.png",
+          logo: "betervrouw.png",
           address: "Papaverweg 177\n1032 KE Amsterdam",
           privacyLink: "https://betervrouw.nl/",
           checkboxLabel: "Ja. Ik deel mijn gegevens met Beter Vrouw"
@@ -120,7 +120,7 @@ window.renderSponsorPopup = function (container) {
         {
           name: "iPay",
           description: "OrangeBuddies is gespecialiseerd in online cashback & loyalty portals met als doel toegevoegde waarde te bieden voor zowel consumenten als adverteerders.",
-          logo: "assets/sponsorlogo/ipay.png",
+          logo: "ipay.png",
           address: "Bruggestraat 49-2\n3841 CM Harderwijk",
           privacyLink: "https://www.ipay.nl/static/privacy",
           checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
@@ -128,7 +128,7 @@ window.renderSponsorPopup = function (container) {
         {
           name: "Cashback Korting",
           description: "CashbackKorting is hét startpunt voor online shoppen met korting. Met een aanbod van ruim 35.000 webshops, uitgebreide winkelinformatie, producttrends, inspiratie en korting bij alle aangesloten webshops.",
-          logo: "assets/sponsorlogo/cashbackkorting.png",
+          logo: "cashbackkorting.png",
           address: "Deventerweg 1C\n3843 GA Harderwijk",
           privacyLink: "https://www.cashbackkorting.nl/privacy",
           checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
@@ -136,7 +136,7 @@ window.renderSponsorPopup = function (container) {
         {
           name: "Cash Hier",
           description: "Hier krijg je betaalt voor elke muisklik, je kunt bijvoorbeeld dagelijks klikken op advertenties, meedoen aan acties, aankopen met cashback doen en vergeet de referrals niet.",
-          logo: "assets/sponsorlogo/cashhier.png",
+          logo: "cashhier.png",
           address: "Postbus 216\n9600 AE, Hoogezand",
           privacyLink: "https://www.cashhier.nl/pages/privacy-policy/",
           checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
@@ -144,7 +144,7 @@ window.renderSponsorPopup = function (container) {
         {
           name: "MyClics",
           description: "MyClics is een online loyaliteitsprogramma. Maak snel een account aan, en je kunt direct beginnen met online geld verdienen en besparen.",
-          logo: "assets/sponsorlogo/myclics.png",
+          logo: "myclics.png",
           address: "Postbus 216\n9600 AE, Hoogezand",
           privacyLink: "https://www.myclics.nl/pages/privacy-policy/",
           checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
@@ -152,7 +152,7 @@ window.renderSponsorPopup = function (container) {
         {
           name: "Seniorenvoordeelpas",
           description: "Online shoppen via Seniorenvoordeelpas werkt eenvoudig: wanneer u via onze website een aankoop doet, ontvangen wij een verkoopcommissie van de webshop, die wij aan u teruggeven.",
-          logo: "assets/sponsorlogo/seniorenvoordeelpas.png",
+          logo: "seniorenvoordeelpas.png",
           address: "Deventerweg 1C\n3843 GA\nHarderwijk",
           privacyLink: "https://www.seniorenvoordeelpas.nl/privacy-statementnl",
           checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
@@ -160,7 +160,7 @@ window.renderSponsorPopup = function (container) {
         {
           name: "Favoriete Acties",
           description: "Blijf altijd op de hoogte van de beste aanbiedingen! Schrijf je in en ontvang regelmatig de scherpste deals direct in je inbox.",
-          logo: "assets/sponsorlogo/favorieteacties.png",
+          logo: "favorieteacties.png",
           address: "Weena 788\n3014 DA\nRotterdam",
           privacyLink: "https://favorieteacties.nl/privacy",
           checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
@@ -168,7 +168,7 @@ window.renderSponsorPopup = function (container) {
         {
           name: "Spaar Online",
           description: "Verdien en bespaar op je online aankopen en breng vrienden en/of familie aan. Verdien ook geld door te klikken op banners en emails.",
-          logo: "assets/sponsorlogo/spaaronline.png",
+          logo: "spaaronline.png",
           address: "Postbus 15\n5750AA DEURNE\nNederland",
           privacyLink: "https://www.spaar-online.nl/pages/privacy-policy/",
           checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
@@ -176,7 +176,7 @@ window.renderSponsorPopup = function (container) {
         {
           name: "Cashback Acties",
           description: "Bij Cashback acties begrijpen we dat iedereen op zoek is naar de beste deals en besparingen. Daarom bieden we een eenvoudige en effectieve manier om geld terug te krijgen bij uw online aankopen.",
-          logo: "assets/sponsorlogo/cashbackacties.png",
+          logo: "cashbackacties.png",
           address: "Postbus 15\n5750AA DEURNE\nNederland",
           privacyLink: "https://www.cashbackacties.nl/pages/privacy-policy/",
           checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
@@ -184,7 +184,7 @@ window.renderSponsorPopup = function (container) {
         {
           name: "Woolsocks",
           description: "Woolsocks mag u benaderen via email met informatie en promoties gerelateerd aan de Woolstocks producten en diensten.",
-          logo: "assets/sponsorlogo/woolsocks.png",
+          logo: "woolsocks.png",
           address: "Woolsocks AG\nNeustadtstrasse 7\n6003 Luzern\nSwitzerland",
           privacyLink: "https://woolsocks.eu/privacy-and-cookie-statement/index.html",
           checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
@@ -192,7 +192,7 @@ window.renderSponsorPopup = function (container) {
         {
           name: "Dealdonkey",
           description: "DealDonkey is het online platform om dagelijks de scherpste dagdeals te scoren. Dealdonkey stuurt een dagelijkse nieuwsbrief met de scherpste en meest voordelige aanbiedingen.",
-          logo: "assets/sponsorlogo/dealdonkey.png",
+          logo: "dealdonkey.png",
           address: "DealDonkey\nHaverstraat 31\n2153 GB\nNieuw-Vennep\nKvK: 52030873",
           privacyLink: "https://woolsocks.eu/privacy-and-cookie-statement/index.html",
           checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
@@ -200,7 +200,7 @@ window.renderSponsorPopup = function (container) {
         {
           name: "Yuccies",
           description: "Yuccies biedt een online spaarprogramma, waarmee Gebruikers geld kunnen verdienen door bijvoorbeeld het lezen van commerciële e-mails of het uitproberen van producten.",
-          logo: "assets/sponsorlogo/yuccies.png",
+          logo: "yuccies.png",
           address: "CY Online B.V.\nH.o.d.n. Yuccies\nPostbus 161\n1440 AD Purmerend",
           privacyLink: "https://www.yuccies.nl/pages/privacy-policy/",
           checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
