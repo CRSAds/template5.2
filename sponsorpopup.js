@@ -55,3 +55,36 @@ export const sponsorData = {
     }
   ]
 };
+
+window.renderSponsorPopup = function (container) {
+  if (!container || !sponsorData) return;
+
+  const html = sponsorData.sections.map(section => {
+    const sponsorsHTML = section.sponsors.map(s => `
+      <div class="sponsor-entry" style="margin-bottom:24px;">
+        <h3>${s.name}</h3>
+        <p>${s.description}</p>
+        <img src="${s.logo}" alt="${s.name} logo" style="max-width:100px;margin:10px 0;">
+        <p>${s.address}</p>
+        <a href="${s.privacyPolicy}" target="_blank">Privacy Policy</a><br>
+        <label><input type="checkbox" name="sponsor-${s.name}"> ${s.checkboxLabel}</label>
+      </div>
+    `).join('');
+
+    return `
+      <section>
+        <h2>${section.title}</h2>
+        ${section.description ? `<p>${section.description}</p>` : ''}
+        ${sponsorsHTML}
+      </section>
+    `;
+  }).join('');
+
+  container.innerHTML = `
+    <div class="sponsor-popup-content">
+      <h1>${sponsorData.title}</h1>
+      <p>${sponsorData.intro}</p>
+      ${html}
+    </div>
+  `;
+};
