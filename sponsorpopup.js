@@ -1,4 +1,4 @@
-export const sponsorData = {
+const sponsorData = {
   heading: "Sponsors",
   intro: `Hieronder vindt u de sponsors van deze campagne welke u graag hun allerbeste deals en aanbiedingen willen laten zien. U kunt per sponsor aangeven of zij uw data mogen ontvangen, vink simpelweg het vakje naast of onder hun naam aan. Per sponsor is duidelijk aangegeven waarvoor zij contact met u willen opnemen, hoe vaak zij contact met u willen opnemen en via welke manier u gecontacteerd gaat worden (telefoon of email). Tevens staat er bij elke sponsor een link naar hun privacy voorwaarden. Wij raden aan dat u deze privacy voorwaarden doorneemt.`,
   sections: [
@@ -50,7 +50,7 @@ export const sponsorData = {
           privacyLink: "https://example.com/privacy-ad",
           checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
         }
-        // ... voeg hier meer sponsors toe
+        // Voeg hier meer sponsors toe
       ]
     }
   ]
@@ -59,20 +59,22 @@ export const sponsorData = {
 window.renderSponsorPopup = function (container) {
   if (!container || !sponsorData) return;
 
+  const imageBaseUrl = "https://template5-2.vercel.app/assets/sponsors/";
+
   const html = sponsorData.sections.map(section => {
     const sponsorsHTML = section.sponsors.map(s => `
       <div class="sponsor-entry" style="margin-bottom:24px;">
         <h3>${s.name}</h3>
         <p>${s.description}</p>
-        <img src="${s.logo}" alt="${s.name} logo" style="max-width:100px;margin:10px 0;">
-        <p>${s.address}</p>
-        <a href="${s.privacyLink}" target="_blank">Privacy Policy</a>
-          <label><input type="checkbox" name="sponsor-${s.name}"> ${s.checkboxLabel}</label>
+        <img src="${imageBaseUrl + s.logo}" alt="${s.name} logo" style="max-width:100px;margin:10px 0;">
+        <p>${s.address.replace(/\n/g, "<br>")}</p>
+        <a href="${s.privacyLink}" target="_blank">Privacy Policy</a><br>
+        <label><input type="checkbox" name="sponsor-${s.name}"> ${s.checkboxLabel}</label>
       </div>
     `).join('');
 
     return `
-      <section>
+      <section style="margin-top:30px;">
         <h2>${section.title}</h2>
         ${section.description ? `<p>${section.description}</p>` : ''}
         ${sponsorsHTML}
@@ -82,7 +84,7 @@ window.renderSponsorPopup = function (container) {
 
   container.innerHTML = `
     <div class="sponsor-popup-content">
-      <h1>${sponsorData.title}</h1>
+      <h1>${sponsorData.heading}</h1>
       <p>${sponsorData.intro}</p>
       ${html}
     </div>
