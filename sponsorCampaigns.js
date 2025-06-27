@@ -118,6 +118,13 @@ const sponsorCampaigns = {
     coregAnswerKey: "coreg_answer_campaign-consubeheer",
     hasCoregFlow: false
   },
+    "campaign-engie": {
+    cid: 4985,
+    sid: 34,
+    requiresLongForm: true,
+    coregAnswerKey: "coreg_answer_engie",
+    hasCoregFlow: false
+  },
   "campaign-generationzero": {
     cid: 4555,
     sid: 34,
