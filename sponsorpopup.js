@@ -92,6 +92,117 @@ window.renderSponsorPopup = function (container) {
             address: "Dorp 16\n9830 Sint-Martens-Latem\nBelgi\u00eb",
             privacyLink: "https://example.com/privacy-outspot",
             checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
+           {
+          name: "OnlineActies",
+          description: "Onlineacties.com verbindt consumenten met interessante aanbiedingen van  uiteenlopende bedrijven. De aanbiedingen worden direct op de internetpagina aangeboden of later via e-mail, sms, whatsapp of telefoon.",
+          logo: "assets/sponsorlogo/onlineacties.png",
+          address: "Papaverweg 177\n1032 KE Amsterdam",
+          privacyLink: "https://example.com/privacy-onlineacties",
+          checkboxLabel: "Ja. Ik deel mijn gegevens met Online Acties"
+        },
+        {
+          name: "AOW.nu",
+          description: "AOW.nu mag u benaderen via email over het laatste AOW-nieuws, zoals AOW-bedragen, vakantiegeld, de stand van zaken bij de grootste pensioenfondsen en speciale (voordeel)acties voor 65-plussers.",
+          logo: "assets/sponsorlogo/aownu.png",
+          address: "Tiengemetenstraat 19\n5628 KM Eindhoven",
+          privacyLink: "https://example.com/privacy-aow",
+          checkboxLabel: "Ja. Ik deel mijn gegevens met AOW.nu"
+        },
+        {
+          name: "BeterVrouw",
+          description: "BeterVROUW is dé gratis wekelijkse nieuwsbrief voor vrouwen in Nederland met daarin onder andere inspirerende artikelen, uitgaanstips, exclusieve aanbiedingen, opinie peilingen en jouw week horoscoop.",
+          logo: "assets/sponsorlogo/betervrouw.png",
+          address: "Papaverweg 177\n1032 KE Amsterdam",
+          privacyLink: "https://example.com/privacy-betervrouw",
+          checkboxLabel: "Ja. Ik deel mijn gegevens met Beter Vrouw"
+        },
+        {
+          name: "iPay",
+          description: "OrangeBuddies is gespecialiseerd in online cashback & loyalty portals met als doel toegevoegde waarde te bieden voor zowel consumenten als adverteerders.",
+          logo: "assets/sponsorlogo/ipay.png",
+          address: "Bruggestraat 49-2\n3841 CM Harderwijk",
+          privacyLink: "https://example.com/privacy-ipay",
+          checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
+        },
+        {
+          name: "Cashback Korting",
+          description: "CashbackKorting is hét startpunt voor online shoppen met korting. Met een aanbod van ruim 35.000 webshops, uitgebreide winkelinformatie, producttrends, inspiratie en korting bij alle aangesloten webshops.",
+          logo: "assets/sponsorlogo/cashbackkorting.png",
+          address: "Deventerweg 1C\n3843 GA Harderwijk",
+          privacyLink: "https://example.com/privacy-cbk",
+          checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
+        },
+        {
+          name: "Cash Hier",
+          description: "Hier krijg je betaalt voor elke muisklik, je kunt bijvoorbeeld dagelijks klikken op advertenties, meedoen aan acties, aankopen met cashback doen en vergeet de referrals niet.",
+          logo: "assets/sponsorlogo/cashhier.png",
+          address: "Postbus 216\n9600 AE, Hoogezand",
+          privacyLink: "https://example.com/privacy-cashhier",
+          checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
+        },
+        {
+          name: "MyClics",
+          description: "MyClics is een online loyaliteitsprogramma. Maak snel een account aan, en je kunt direct beginnen met online geld verdienen en besparen.",
+          logo: "assets/sponsorlogo/myclics.png",
+          address: "Postbus 216\n9600 AE, Hoogezand",
+          privacyLink: "https://example.com/privacy-myclics",
+          checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
+        },
+        {
+          name: "Seniorenvoordeelpas",
+          description: "Online shoppen via Seniorenvoordeelpas werkt eenvoudig: wanneer u via onze website een aankoop doet, ontvangen wij een verkoopcommissie van de webshop, die wij aan u teruggeven.",
+          logo: "assets/sponsorlogo/seniorenvoordeelpas.png",
+          address: "Deventerweg 1C\n3843 GA\nHarderwijk",
+          privacyLink: "https://example.com/privacy-svp",
+          checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
+        },
+        {
+          name: "Favoriete Acties",
+          description: "Blijf altijd op de hoogte van de beste aanbiedingen! Schrijf je in en ontvang regelmatig de scherpste deals direct in je inbox.",
+          logo: "assets/sponsorlogo/favorieteacties.png",
+          address: "Weena 788\n3014 DA\nRotterdam",
+          privacyLink: "https://example.com/privacy-favorieteacties",
+          checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
+        },
+        {
+          name: "Spaar Online",
+          description: "Verdien en bespaar op je online aankopen en breng vrienden en/of familie aan. Verdien ook geld door te klikken op banners en emails.",
+          logo: "assets/sponsorlogo/spaaronline.png",
+          address: "Postbus 15\n5750AA DEURNE\nNederland",
+          privacyLink: "https://example.com/privacy-spaaronline",
+          checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
+        },
+        {
+          name: "Cashback Acties",
+          description: "Bij Cashback acties begrijpen we dat iedereen op zoek is naar de beste deals en besparingen. Daarom bieden we een eenvoudige en effectieve manier om geld terug te krijgen bij uw online aankopen.",
+          logo: "assets/sponsorlogo/cashbackacties.png",
+          address: "Postbus 15\n5750AA DEURNE\nNederland",
+          privacyLink: "https://example.com/privacy-cba",
+          checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
+        },
+        {
+          name: "Woolsocks",
+          description: "Woolsocks mag u benaderen via email met informatie en promoties gerelateerd aan de Woolstocks producten en diensten.",
+          logo: "assets/sponsorlogo/woolsocks.png",
+          address: "Woolsocks AG\nNeustadtstrasse 7\n6003 Luzern\nSwitzerland",
+          privacyLink: "https://example.com/privacy-woolsocks",
+          checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
+        },
+        {
+          name: "Dealdonkey",
+          description: "DealDonkey is het online platform om dagelijks de scherpste dagdeals te scoren. Dealdonkey stuurt een dagelijkse nieuwsbrief met de scherpste en meest voordelige aanbiedingen.",
+          logo: "assets/sponsorlogo/dealdonkey.png",
+          address: "DealDonkey\nHaverstraat 31\n2153 GB\nNieuw-Vennep\nKvK: 52030873",
+          privacyLink: "https://example.com/privacy-dealdonkey",
+          checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
+        },
+        {
+          name: "Yuccies",
+          description: "Yuccies biedt een online spaarprogramma, waarmee Gebruikers geld kunnen verdienen door bijvoorbeeld het lezen van commerciële e-mails of het uitproberen van producten.",
+          logo: "assets/sponsorlogo/yuccies.png",
+          address: "CY Online B.V.\nH.o.d.n. Yuccies\nPostbus 161\n1440 AD Purmerend",
+          privacyLink: "https://example.com/privacy-yuccies",
+          checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
           }
         ]
       }
