@@ -66,8 +66,8 @@ window.renderSponsorPopup = function (container) {
         <p>${s.description}</p>
         <img src="${s.logo}" alt="${s.name} logo" style="max-width:100px;margin:10px 0;">
         <p>${s.address}</p>
-        <a href="${s.privacyPolicy}" target="_blank">Privacy Policy</a><br>
-        <label><input type="checkbox" name="sponsor-${s.name}"> ${s.checkboxLabel}</label>
+        <a href="${s.privacyLink}" target="_blank">Privacy Policy</a>
+          <label><input type="checkbox" name="sponsor-${s.name}"> ${s.checkboxLabel}</label>
       </div>
     `).join('');
 
