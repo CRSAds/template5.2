@@ -37,62 +37,62 @@ window.renderSponsorPopup = function (container) {
       {
         title: "\ud83d\udce7 Email sponsors",
         sponsors: [
-          {
-            name: "Kiosk",
-            description: "Ontvang nu de nieuwsbrief van Kiosk.nl...",
-            logo: "kiosk.png",
-            address: "DPG Media BV\nVan der Madeweg 40\n1114AM Amsterdam-Duivendrecht",
-            privacyLink: "https://privacy.dpgmedia.nl/nl/document/privacy-policy",
-            checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
-          },
-          {
-            name: "AD",
-            description: "Ontvang dagelijks de nieuwsbrief van het AD...",
-            logo: "ad.png",
-            address: "DPG Media BV\nVan der Madeweg 40\n1114AM Amsterdam-Duivendrecht",
-            privacyLink: "https://privacy.dpgmedia.nl/nl/document/privacy-policy",
-            checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
-          },
-          {
-            name: "De Volkskrant",
-            description: "Ontvang dagelijks per email...",
-            logo: "devolkskrant.png",
-            address: "DPG Media BV\nVan der Madeweg 40\n1114AM Amsterdam-Duivendrecht",
-            privacyLink: "https://privacy.dpgmedia.nl/nl/document/privacy-policy",
-            checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
-          },
-          {
-            name: "Spaar Actief",
-            description: "Heb jij al gehoord over de beste cashback site...",
-            logo: "spaaractief.png",
-            address: "Spaaractief B.V.\nPostbus 216\n9600 AE, Hoogezand",
-            privacyLink: "https://www.snelverdienen.nl/pages/privacy-policy/",
-            checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
-          },
-          {
-            name: "Direct Deals",
-            description: "Direct Deals: de digitale nieuwsbrief...",
-            logo: "directdeals.png",
-            address: "Lead2Sale\nGestelsestraat 28\n5615 LE Eindhoven\nNederland",
-            privacyLink: "http://www.direct-deals.nl/privacy/",
-            checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
-          },
-          {
-            name: "Qliqs",
-            description: "Krijg cashback op je online aankopen...",
-            logo: "qliqs.png",
-            address: "Postbus 216\n9600 AE, Hoogezand",
-            privacyLink: "https://www.qlics.nl/pages/privacy-policy/",
-            checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
-          },
-          {
-            name: "Outspot",
-            description: "Outspot is een online aanbiedingensite...",
-            logo: "outspot.png",
-            address: "Dorp 16\n9830 Sint-Martens-Latem\nBelgi\u00eb",
-            privacyLink: "https://www.outspot.be/nl/privacybeleid",
-            checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
-          },
+        {
+  name: "Kiosk",
+  description: "Ontvang nu de nieuwsbrief van Kiosk.nl met daarin de leukste artikelen, aanbiedingen en prijsvragen!",
+  logo: "kiosk.png",
+  address: "DPG Media BV\nVan der Madeweg 40\n1114AM Amsterdam-Duivendrecht",
+  privacyLink: "https://privacy.dpgmedia.nl/nl/document/privacy-policy",
+  checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
+},
+{
+  name: "AD",
+  description: "Ontvang dagelijks de nieuwsbrief van het Algemeen Dagblad met een overzicht van het belangrijkste nieuws.",
+  logo: "ad.png",
+  address: "DPG Media BV\nVan der Madeweg 40\n1114AM Amsterdam-Duivendrecht",
+  privacyLink: "https://privacy.dpgmedia.nl/nl/document/privacy-policy",
+  checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
+},
+{
+  name: "De Volkskrant",
+  description: "Ontvang dagelijks per email het laatste nieuws, scherpe analyses en achtergrondverhalen van de Volkskrant.",
+  logo: "devolkskrant.png",
+  address: "DPG Media BV\nVan der Madeweg 40\n1114AM Amsterdam-Duivendrecht",
+  privacyLink: "https://privacy.dpgmedia.nl/nl/document/privacy-policy",
+  checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
+},
+{
+  name: "Spaar Actief",
+  description: "SpaarActief is een van de populairste cashbackwebsites in Nederland. Verdien geld door aankopen, klikken of inschrijven.",
+  logo: "spaaractief.png",
+  address: "Spaaractief B.V.\nPostbus 216\n9600 AE, Hoogezand",
+  privacyLink: "https://www.snelverdienen.nl/pages/privacy-policy/",
+  checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
+},
+{
+  name: "Direct Deals",
+  description: "Direct Deals: de digitale nieuwsbrief met exclusieve deals en aanbiedingen rechtstreeks in je inbox.",
+  logo: "directdeals.png",
+  address: "Lead2Sale\nGestelsestraat 28\n5615 LE Eindhoven\nNederland",
+  privacyLink: "http://www.direct-deals.nl/privacy/",
+  checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
+},
+{
+  name: "Qliqs",
+  description: "Krijg cashback op je online aankopen, ontvang beloningen voor het bekijken van aanbiedingen en meer met Qliqs.",
+  logo: "qliqs.png",
+  address: "Postbus 216\n9600 AE, Hoogezand",
+  privacyLink: "https://www.qlics.nl/pages/privacy-policy/",
+  checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
+},
+{
+  name: "Outspot",
+  description: "Outspot is een online aanbiedingensite met dagelijkse nieuwe deals op het gebied van reizen, gadgets, mode en meer.",
+  logo: "outspot.png",
+  address: "Dorp 16\n9830 Sint-Martens-Latem\nBelgië",
+  privacyLink: "https://www.outspot.be/nl/privacybeleid",
+  checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
+},
           {
           name: "OnlineActies",
           description: "Onlineacties.com verbindt consumenten met interessante aanbiedingen van  uiteenlopende bedrijven. De aanbiedingen worden direct op de internetpagina aangeboden of later via e-mail, sms, whatsapp of telefoon.",
