@@ -92,7 +92,8 @@ window.renderSponsorPopup = function (container) {
             address: "Dorp 16\n9830 Sint-Martens-Latem\nBelgi\u00eb",
             privacyLink: "https://example.com/privacy-outspot",
             checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
-           {
+          },
+          {
           name: "OnlineActies",
           description: "Onlineacties.com verbindt consumenten met interessante aanbiedingen van  uiteenlopende bedrijven. De aanbiedingen worden direct op de internetpagina aangeboden of later via e-mail, sms, whatsapp of telefoon.",
           logo: "assets/sponsorlogo/onlineacties.png",
