@@ -68,10 +68,10 @@ function createCard(src) {
   card.classList.add('card');
   card.innerHTML = `
     <div class="front">
-      <img src="https://template5-1.vercel.app/assets/card-icon.png" alt="">
+      <img src="https://template5-2.vercel.app/assets/card-icon.png" alt="">
     </div>
     <div class="back">
-      <img src="https://template5-1.vercel.app/assets/${selectedSetName}/${src}" alt="">
+      <img src="https://template5-2.vercel.app/assets/${selectedSetName}/${src}" alt="">
     </div>
   `;
   card.addEventListener('click', () => flipCard(card, src));
