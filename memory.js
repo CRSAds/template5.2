@@ -10,10 +10,10 @@ const iconSets = {
     'sun.png', 'sun.png'
   ],
   beautysummer: [
-    'Photo.png', 'Photo.png',
-    'Shell.png', 'Shell.png',
-    'Sunglasses.png', 'Sunglasses.png',
-    'FlipFlops.png', 'FlipFlops.png',
+    'photo.png', 'photo.png',
+    'shell.png', 'shell.png',
+    'sunglasses.png', 'sunglasses.png',
+    'flipflops.png', 'flipflops.png',
     'cocktail.png', 'cocktail.png',
     'bucket.png', 'bucket.png'
   ],
