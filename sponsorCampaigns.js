@@ -34,6 +34,13 @@ const sponsorCampaigns = {
     coregAnswerKey: "coreg_answer_campaign-kiosk",
     hasCoregFlow: false
   },
+  "campaign-dealdonkey": {
+    cid: 4819,
+    sid: 34,
+    requiresLongForm: false,
+    coregAnswerKey: "coreg_answer_campaign-dealdonkey",
+    hasCoregFlow: false
+  },
   "campaign-ad": {
     cid: 3532,
     sid: 34,
