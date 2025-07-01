@@ -17,6 +17,14 @@ const iconSets = {
     'bananas.png', 'bananas.png',
     'orange.png', 'orange.png'
   ],
+  soda: [
+    'cola.png', 'cola.png',
+    'drink.png', 'drink.png',
+    'soda.png', 'soda.png',
+    'soft-drink-can.png', 'soft-drink-can.png',
+    'soft-drink-glass.png', 'soft-drink-glass.png',
+    'soft-drink.png', 'soft-drink.png'
+  ],
     beauty: [
     'face-mask.png', 'face-mask.png',
     'cream.png', 'cream.png',
