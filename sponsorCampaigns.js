@@ -134,7 +134,7 @@ const sponsorCampaigns = {
   },
   "campaign-generationzero": {
     cid: 4555,
-    sid: 34,
+    sid: 463,
     requiresLongForm: true,
     coregAnswerKey: "coreg_answer_campaign-generationzero",
     hasCoregFlow: true
@@ -148,7 +148,7 @@ const sponsorCampaigns = {
   },
   "campaign-raadselgids": {
     cid: 3697,
-    sid: 34,
+    sid: 265,
     requiresLongForm: true,
     coregAnswerKey: "coreg_answer_campaign-raadselgids",
     hasCoregFlow: false
