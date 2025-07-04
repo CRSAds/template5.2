@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateProgress(index) {
     const percent = Math.round(((index + 1) / total) * 100);
     fill.style.width = `${percent}%`;
-    label.textContent = `Bijna klaar, nog enkele vragen ${index + 1}/${total}`;
+    label.textContent = `Voor toegang tot de volgende stap: vul onderstaande vragen in ${index + 1}/${total}`;
   }
 
   const observer = new MutationObserver(() => {
