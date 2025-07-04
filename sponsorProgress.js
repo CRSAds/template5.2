@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const wrapper = document.createElement('div');
   wrapper.id = 'sponsor-progress-wrapper';
   wrapper.innerHTML = `
-    <div id="sponsor-progress-text">Bijna klaar, nog enkele vragen</div>
+    <div id="sponsor-progress-text">Voor toegang tot de volgende stap: vul onderstaande vragen in</div>
     <div id="sponsor-progress-container">
       <div id="sponsor-progress-fill"></div>
     </div>
