@@ -281,14 +281,15 @@ function initGenericCoregSponsorFlow(sponsorId, coregAnswerKey) {
   coregAnswers[sponsorId] = [];
 
   const allSections = document.querySelectorAll(`[id^="campaign-${sponsorId}"]`);
-  allSections.forEach(section => {
+  allSections.forEach((section, index) => {
     const buttons = section.querySelectorAll('.flow-next');
     buttons.forEach(button => {
       button.addEventListener('click', () => {
         const answerText = button.innerText.trim();
         coregAnswers[sponsorId].push(answerText);
 
-        if (!button.classList.contains('sponsor-next')) return;
+        const isPositive = button.classList.contains('sponsor-optin') || button.classList.contains('sponsor-next');
+        if (!isPositive) return;
 
         let nextStepId = '';
         button.classList.forEach(cls => {
@@ -303,14 +304,23 @@ function initGenericCoregSponsorFlow(sponsorId, coregAnswerKey) {
           const nextSection = document.getElementById(nextStepId);
           if (nextSection) {
             nextSection.style.display = 'block';
-          } else {
-            handleGenericNextCoregSponsor(sponsorId, coregAnswerKey);
+            reloadImages(nextSection);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
           }
-        } else {
-          handleGenericNextCoregSponsor(sponsorId, coregAnswerKey);
         }
 
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        const isLastStep = index === allSections.length - 1;
+        if (isLastStep) {
+          handleGenericNextCoregSponsor(sponsorId, coregAnswerKey);
+        } else {
+          const next = allSections[index + 1];
+          if (next) {
+            next.style.display = 'block';
+            reloadImages(next);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        }
       });
     });
   });
