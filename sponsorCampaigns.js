@@ -1,7 +1,7 @@
 const sponsorCampaigns = {
   "campaign-mycollections": {
     cid: 1882,
-    sid: 34,
+    sid: 133,
     requiresLongForm: true,
     coregAnswerKey: "coreg_answer_campaign-mycollections",
     hasCoregFlow: false
