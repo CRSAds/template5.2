@@ -281,15 +281,14 @@ function initGenericCoregSponsorFlow(sponsorId, coregAnswerKey) {
   coregAnswers[sponsorId] = [];
 
   const allSections = document.querySelectorAll(`[id^="campaign-${sponsorId}"]`);
-  allSections.forEach((section, index) => {
+  allSections.forEach(section => {
     const buttons = section.querySelectorAll('.flow-next');
     buttons.forEach(button => {
       button.addEventListener('click', () => {
         const answerText = button.innerText.trim();
         coregAnswers[sponsorId].push(answerText);
 
-        const isPositive = button.classList.contains('sponsor-optin') || button.classList.contains('sponsor-next');
-        if (!isPositive) return;
+        if (!button.classList.contains('sponsor-next')) return;
 
         let nextStepId = '';
         button.classList.forEach(cls => {
@@ -304,23 +303,14 @@ function initGenericCoregSponsorFlow(sponsorId, coregAnswerKey) {
           const nextSection = document.getElementById(nextStepId);
           if (nextSection) {
             nextSection.style.display = 'block';
-            reloadImages(nextSection);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            return;
+          } else {
+            handleGenericNextCoregSponsor(sponsorId, coregAnswerKey);
           }
+        } else {
+          handleGenericNextCoregSponsor(sponsorId, coregAnswerKey);
         }
 
-        const isLastStep = index === allSections.length - 1;
-        if (isLastStep) {
-          handleGenericNextCoregSponsor(sponsorId, coregAnswerKey);
-        } else {
-          const next = allSections[index + 1];
-          if (next) {
-            next.style.display = 'block';
-            reloadImages(next);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }
-        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       });
     });
   });
