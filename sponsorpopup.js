@@ -212,96 +212,108 @@ window.renderSponsorPopup = function (container) {
 
  if (!container) return;
 
-  // Intro Card
-  const introCard = `
-    <div style="
-      background:#f7fafe;
-      border-radius:18px;
-      box-shadow:0 2px 18px #1165b505;
-      padding:32px 26px 32px 26px;
-      margin-bottom:42px;
-      text-align:left;
-      max-width:690px;
-      margin-left:auto;
-      margin-right:auto;
-    ">
-      <h1 style="font-size:1.55rem;font-weight:800;margin-bottom:12px;color:#0f335c;">${sponsorData.heading}</h1>
-      <p style="font-size:1.07rem;margin:0;line-height:1.65;color:#485c6c;">
-        ${sponsorData.intro}
-      </p>
-    </div>
-  `;
-
-  // Section Cards (cards met losse achtergrond, ruimte, en extra padding onder scheidingslijn)
-  const sectionsHtml = sponsorData.sections.map(section => {
-  const sponsorsHTML = section.sponsors.map((s, i) => `
-  <div class="sponsor-entry" style="
-    display: flex;
-    align-items: flex-start;
-    gap: 22px;
-    padding-bottom: ${i === section.sponsors.length-1 ? '0' : '16px'};
-    margin-bottom: ${i === section.sponsors.length-1 ? '0' : '28px'};
-    position: relative;
-    flex-direction: row;
-    background: none;
-  ">
-    <img src="${imageBaseUrl + s.logo}" alt="${s.name} logo" style="max-width:76px;max-height:54px;flex-shrink:0;border-radius:10px;box-shadow:0 2px 12px #0001;">
-    <div style="flex:1;">
-      <h3 style="margin:0 0 6px 0;font-size:1.12rem;font-weight:700;letter-spacing:0.01em;color:#183963;">${s.name}</h3>
-      <div style="font-size:0.99rem;margin-bottom:7px;color:#364150;line-height:1.42;">${s.description}</div>
-      <div style="font-size:.91rem;color:#788494;white-space:pre-line;margin-bottom:7px;">${s.address}</div>
-      <a href="${s.privacyLink}" target="_blank" style="display:inline-block;margin-top:2px;font-size:.92rem;color:#1666af;text-decoration:underline;">
-        Privacy Policy
-      </a>
-    </div>
-    ${i !== section.sponsors.length-1
-      ? `<div style="position:absolute;left:0;right:0;bottom:-14px;height:0;">
-            <hr style="border:none;border-top:2px solid #d4e3ef;margin:0;">
-         </div>`
-      : ''}
-  </div>
-`).join('');
-
-    return `
-      <div style="
-        background:#fff;
-        border-radius:18px;
-        box-shadow:0 2px 18px #168ad305;
-        padding:30px 26px 0 26px;
-        margin-bottom:42px;
-        max-width:690px;
-        margin-left:auto;
-        margin-right:auto;
+ // ---- Sponsor Entry HTML ----
+  const sponsorsHTML = section =>
+    section.sponsors.map((s, i) => `
+      <div class="sponsor-entry" style="
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        padding: 0 0 26px 0;
+        margin: 0;
+        position: relative;
+        flex-direction: row;
+        background: none;
       ">
-        <h2 style="
-          font-size:1.26rem;
-          font-weight:900;
-          color:#165699;
-          margin-bottom:32px;
-          letter-spacing:.03em;
-          line-height:1.23;
-          text-transform:uppercase;
-          border-left:6px solid #52a0e3;
-          padding-left:15px;
-          background:linear-gradient(90deg,rgba(82,160,227,0.09),transparent 68%);
-        ">
-          ${section.title}
-        </h2>
-        ${sponsorsHTML}
+        <img src="${imageBaseUrl + s.logo}" alt="${s.name} logo"
+          style="max-width:60px;max-height:46px;flex-shrink:0;border-radius:8px;box-shadow:0 1px 8px #0001;margin-top:4px;">
+        <div style="flex:1;">
+          <h3 style="margin:0 0 4px 0;font-size:1.10rem;font-weight:700;letter-spacing:0.01em;color:#183963;">
+            ${s.name}
+          </h3>
+          <div style="font-size:.97rem;margin-bottom:5px;color:#364150;line-height:1.38;">
+            ${s.description}
+          </div>
+          <div style="font-size:.89rem;color:#7a889a;white-space:pre-line;margin-bottom:4px;">
+            ${s.address}
+          </div>
+          <a href="${s.privacyLink}" target="_blank"
+            style="display:inline-block;margin-top:2px;font-size:.89rem;color:#1666af;text-decoration:underline;">
+            Privacy Policy
+          </a>
+        </div>
+        ${i !== section.sponsors.length-1
+          ? `<div class="sponsor-separator"></div>`
+          : ''}
       </div>
-    `;
-  }).join('');
+    `).join('');
 
-  // Hoofdcontainer
-  container.innerHTML = `
-    <div class="sponsor-popup-content" style="
-      max-width:820px;
-      margin:auto;
-      padding:0;
-      background:transparent;
+  // ---- Sectie met blauwe titelbalk ----
+  const sectionHTML = section => `
+    <section style="
+      margin-bottom:38px;
+      background: #fff;
+      border-radius:18px;
+      box-shadow:0 2px 16px #0001;
+      padding:0 0 0 0;
+      overflow:hidden;
     ">
-      ${introCard}
-      ${sectionsHtml}
+      <div style="
+        background: linear-gradient(90deg, #2172b8 0%, #185389 100%);
+        color: #fff;
+        font-size: 1.09rem;
+        font-weight: 800;
+        letter-spacing:0.04em;
+        padding: 14px 24px 13px 20px;
+        margin: 0 0 22px 0;
+        text-transform: uppercase;
+        border-radius:18px 18px 0 0;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid #18538930;
+      ">
+        ${section.title}
+      </div>
+      <div style="padding:18px 18px 12px 18px;">
+        ${sponsorsHTML(section)}
+      </div>
+    </section>
+  `;
+
+  // ---- Introblok ----
+  container.innerHTML = `
+    <div class="sponsor-popup-content" style="max-width:630px;margin:32px auto 0 auto;">
+      <div style="
+        background: #fff;
+        border-radius:18px;
+        box-shadow:0 2px 16px #0001;
+        padding: 28px 26px 24px 26px;
+        margin-bottom:44px;">
+        <h1 style="font-size:1.4rem;font-weight:700;margin-bottom:10px;color:#213753;">${sponsorData.heading}</h1>
+        <p style="font-size:1rem;margin-bottom:0;color:#485262;line-height:1.55;">
+          ${sponsorData.intro}
+        </p>
+      </div>
+      ${sponsorData.sections.map(sectionHTML).join('')}
     </div>
   `;
+
+  // ---- CSS-injectie voor separator ----
+  if (!document.getElementById('sponsor-separator-style')) {
+    const style = document.createElement('style');
+    style.id = 'sponsor-separator-style';
+    style.textContent = `
+      .sponsor-entry .sponsor-separator {
+        position: absolute;
+        left: 0; right: 0;
+        bottom: -11px;
+        height: 0;
+        border-top: 2px solid #d4e3ef;
+        width: 100%;
+        margin: 0;
+      }
+      .sponsor-entry:not(:last-child) { margin-bottom:34px !important; }
+    `;
+    document.head.appendChild(style);
+  }
 };
