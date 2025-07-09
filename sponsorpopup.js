@@ -234,28 +234,27 @@ window.renderSponsorPopup = function (container) {
 
   // Section Cards (cards met losse achtergrond, ruimte, en extra padding onder scheidingslijn)
   const sectionsHtml = sponsorData.sections.map(section => {
-    const sponsorsHTML = section.sponsors.map((s, i) => `
-      <div class="sponsor-entry" style="
-        display: flex;
-        align-items: flex-start;
-        gap: 22px;
-        margin-bottom: 0;
-        padding: 0 0 38px 0;
-        border-bottom: 2px solid #d4e3ef;
-        position: relative;
-        ${i === section.sponsors.length-1 ? 'border-bottom:none;padding-bottom:0;' : ''}
-      ">
-        <img src="${imageBaseUrl + s.logo}" alt="${s.name} logo" style="max-width:76px;max-height:54px;flex-shrink:0;border-radius:10px;box-shadow:0 2px 12px #0001;">
-        <div>
-          <h3 style="margin:0 0 6px 0;font-size:1.12rem;font-weight:700;letter-spacing:0.01em;color:#183963;">${s.name}</h3>
-          <div style="font-size:0.99rem;margin-bottom:7px;color:#364150;line-height:1.42;">${s.description}</div>
-          <div style="font-size:.91rem;color:#788494;white-space:pre-line;margin-bottom:7px;">${s.address}</div>
-          <a href="${s.privacyLink}" target="_blank" style="display:inline-block;margin-top:2px;font-size:.92rem;color:#1666af;text-decoration:underline;">
-            Privacy Policy
-          </a>
-        </div>
-      </div>
-    `).join('');
+const sponsorsHTML = section.sponsors.map((s, i) => `
+  <div class="sponsor-entry" style="
+    display: flex;
+    align-items: flex-start;
+    gap: 22px;
+    margin-bottom: ${i === section.sponsors.length-1 ? '0' : '36px'};
+    padding: 0 0 0 0;
+    border-bottom: ${i === section.sponsors.length-1 ? 'none' : '2px solid #d4e3ef'};
+    position: relative;
+  ">
+    <img src="${imageBaseUrl + s.logo}" alt="${s.name} logo" style="max-width:76px;max-height:54px;flex-shrink:0;border-radius:10px;box-shadow:0 2px 12px #0001;">
+    <div>
+      <h3 style="margin:0 0 6px 0;font-size:1.12rem;font-weight:700;letter-spacing:0.01em;color:#183963;">${s.name}</h3>
+      <div style="font-size:0.99rem;margin-bottom:7px;color:#364150;line-height:1.42;">${s.description}</div>
+      <div style="font-size:.91rem;color:#788494;white-space:pre-line;margin-bottom:7px;">${s.address}</div>
+      <a href="${s.privacyLink}" target="_blank" style="display:inline-block;margin-top:2px;font-size:.92rem;color:#1666af;text-decoration:underline;">
+        Privacy Policy
+      </a>
+    </div>
+  </div>
+`).join('');
 
     return `
       <div style="
