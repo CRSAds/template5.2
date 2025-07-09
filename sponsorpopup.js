@@ -218,16 +218,16 @@ window.renderSponsorPopup = function (container) {
         display: flex;
         align-items: flex-start;
         gap: 20px;
-        margin-bottom: 32px;
-        padding: 16px 0;
+        margin-bottom: 28px;
+        padding: 14px 0 18px 0;
         border-bottom: 1px solid #f0f0f0;
       ">
-        <img src="${imageBaseUrl + s.logo}" alt="${s.name} logo" style="max-width:70px;flex-shrink:0;border-radius:8px;">
+        <img src="${imageBaseUrl + s.logo}" alt="${s.name} logo" style="max-width:72px;max-height:52px;flex-shrink:0;border-radius:8px;box-shadow:0 2px 12px #0001;">
         <div>
-          <h3 style="margin:0 0 4px 0;font-size:1.15rem;font-weight:600;">${s.name}</h3>
-          <div style="font-size:.97rem;margin-bottom:6px;color:#444;">${s.description}</div>
-          <div style="font-size:.91rem;color:#888;white-space:pre-line;">${s.address}</div>
-          <a href="${s.privacyLink}" target="_blank" style="display:inline-block;margin-top:8px;font-size:.91rem;color:#1666af;text-decoration:underline;">
+          <h3 style="margin:0 0 4px 0;font-size:1.08rem;font-weight:600;color:#223;">${s.name}</h3>
+          <div style="font-size:.97rem;margin-bottom:7px;color:#444;">${s.description}</div>
+          <div style="font-size:.91rem;color:#6b6b6b;font-style:italic;margin-bottom:3px;white-space:pre-line;">${s.address}</div>
+          <a href="${s.privacyLink}" target="_blank" style="display:inline-block;margin-top:3px;font-size:.92rem;color:#2d6ac8;text-decoration:underline dotted;">
             Privacy Policy
           </a>
         </div>
@@ -235,17 +235,27 @@ window.renderSponsorPopup = function (container) {
     `).join('');
 
     return `
-      <section style="margin-bottom:32px;">
-        <h2 style="font-size:1.13rem;color:#0a2533;margin-bottom:14px;">${section.title}</h2>
+      <section style="margin-bottom:34px;">
+        <h2 style="font-size:1.13rem;color:#1760b0;margin-bottom:12px;font-weight:700;">${section.title}</h2>
         ${sponsorsHTML}
       </section>
     `;
   }).join('');
 
   container.innerHTML = `
-    <div class="sponsor-popup-content" style="max-width:540px;margin:auto;">
-      <h1 style="font-size:1.45rem;font-weight:700;margin-bottom:6px;">${sponsorData.heading}</h1>
-      <p style="font-size:1rem;margin-bottom:28px;color:#555;">${sponsorData.intro}</p>
+    <div class="sponsor-popup-content" style="
+      font-family:inherit;
+      background:#fff;
+      border-radius:18px;
+      box-shadow:0 6px 36px #0001;
+      padding:28px 18px 18px 18px;
+      font-size:15px;
+      line-height:1.7;
+      max-width:560px;
+      margin:auto;
+    ">
+      <h1 style="font-size:1.32rem;font-weight:700;margin-bottom:8px;">${sponsorData.heading}</h1>
+      <p style="font-size:.97rem;margin-bottom:22px;color:#555;">${sponsorData.intro}</p>
       ${html}
     </div>
   `;
