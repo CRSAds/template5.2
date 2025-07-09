@@ -186,8 +186,19 @@ export function setupFormSubmit() {
           console.log(`⛔️ Lead NIET verstuurd voor ${campaign.cid} → antwoord was:`, answer);
         }
       });
-    }
+    }    
+          const tmcosponsors = Object.values(sponsorCampaigns).filter(c => c.tmcosponsor);
+          const sponsorOptin = sessionStorage.getItem('sponsor_optin') || '';
 
+        if (sponsorOptin) {
+          tmcosponsors.forEach(campaign => {
+          const payload = buildPayload(campaign, { includeSponsors: false });
+        fetchLead(payload);
+      });
+    } else {
+      console.log("⛔️ Geen sponsor_optin, tmcosponsors worden niet verstuurd");
+    }
+    
     section.style.display = 'none';
     const steps = Array.from(document.querySelectorAll('.flow-section, .coreg-section'));
     const idx = steps.findIndex(s => s.id === 'long-form-section');
