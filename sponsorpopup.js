@@ -219,8 +219,11 @@ window.renderSponsorPopup = function (container) {
       border-radius:18px;
       box-shadow:0 2px 18px #1165b505;
       padding:32px 26px 32px 26px;
-      margin-bottom:36px;
+      margin-bottom:42px;
       text-align:left;
+      max-width:690px;
+      margin-left:auto;
+      margin-right:auto;
     ">
       <h1 style="font-size:1.55rem;font-weight:800;margin-bottom:12px;color:#0f335c;">${sponsorData.heading}</h1>
       <p style="font-size:1.07rem;margin:0;line-height:1.65;color:#485c6c;">
@@ -229,7 +232,7 @@ window.renderSponsorPopup = function (container) {
     </div>
   `;
 
-  // Section Cards
+  // Section Cards (cards met losse achtergrond, ruimte, en extra padding onder scheidingslijn)
   const sectionsHtml = sponsorData.sections.map(section => {
     const sponsorsHTML = section.sponsors.map((s, i) => `
       <div class="sponsor-entry" style="
@@ -237,7 +240,7 @@ window.renderSponsorPopup = function (container) {
         align-items: flex-start;
         gap: 22px;
         margin-bottom: 0;
-        padding: 0 0 30px 0;
+        padding: 0 0 38px 0;
         border-bottom: 2px solid #d4e3ef;
         position: relative;
         ${i === section.sponsors.length-1 ? 'border-bottom:none;padding-bottom:0;' : ''}
@@ -259,21 +262,24 @@ window.renderSponsorPopup = function (container) {
         background:#fff;
         border-radius:18px;
         box-shadow:0 2px 18px #168ad305;
-        padding:30px 26px 10px 26px;
-        margin-bottom:38px;
-        ">
+        padding:30px 26px 0 26px;
+        margin-bottom:42px;
+        max-width:690px;
+        margin-left:auto;
+        margin-right:auto;
+      ">
         <h2 style="
-          font-size:1.25rem;
-          font-weight:800;
+          font-size:1.26rem;
+          font-weight:900;
           color:#165699;
-          margin-bottom:26px;
-          letter-spacing:.02em;
+          margin-bottom:32px;
+          letter-spacing:.03em;
           line-height:1.23;
           text-transform:uppercase;
           border-left:6px solid #52a0e3;
           padding-left:15px;
           background:linear-gradient(90deg,rgba(82,160,227,0.09),transparent 68%);
-          ">
+        ">
           ${section.title}
         </h2>
         ${sponsorsHTML}
@@ -284,7 +290,7 @@ window.renderSponsorPopup = function (container) {
   // Hoofdcontainer
   container.innerHTML = `
     <div class="sponsor-popup-content" style="
-      max-width:670px;
+      max-width:820px;
       margin:auto;
       padding:0;
       background:transparent;
