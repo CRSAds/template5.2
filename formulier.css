@@ -1,3 +1,16 @@
+.sponsor-popup-content {
+  font-family: inherit;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 6px 36px #0001;
+  padding: 28px 18px 18px 18px;
+}
+.sponsor-entry img { box-shadow: 0 2px 12px #0001; }
+@media (max-width: 640px) {
+  .sponsor-popup-content { padding: 16px 3vw; }
+  .sponsor-entry { flex-direction: column !important; gap: 12px !important; }
+}
+
 form {
   max-width: 480px;
   margin: 0 auto;
