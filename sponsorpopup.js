@@ -234,18 +234,19 @@ window.renderSponsorPopup = function (container) {
 
   // Section Cards (cards met losse achtergrond, ruimte, en extra padding onder scheidingslijn)
   const sectionsHtml = sponsorData.sections.map(section => {
-const sponsorsHTML = section.sponsors.map((s, i) => `
+  const sponsorsHTML = section.sponsors.map((s, i) => `
   <div class="sponsor-entry" style="
     display: flex;
     align-items: flex-start;
     gap: 22px;
-    margin-bottom: ${i === section.sponsors.length-1 ? '0' : '36px'};
-    padding: 0 0 0 0;
-    border-bottom: ${i === section.sponsors.length-1 ? 'none' : '2px solid #d4e3ef'};
+    padding-bottom: ${i === section.sponsors.length-1 ? '0' : '16px'};
+    margin-bottom: ${i === section.sponsors.length-1 ? '0' : '28px'};
     position: relative;
+    flex-direction: row;
+    background: none;
   ">
     <img src="${imageBaseUrl + s.logo}" alt="${s.name} logo" style="max-width:76px;max-height:54px;flex-shrink:0;border-radius:10px;box-shadow:0 2px 12px #0001;">
-    <div>
+    <div style="flex:1;">
       <h3 style="margin:0 0 6px 0;font-size:1.12rem;font-weight:700;letter-spacing:0.01em;color:#183963;">${s.name}</h3>
       <div style="font-size:0.99rem;margin-bottom:7px;color:#364150;line-height:1.42;">${s.description}</div>
       <div style="font-size:.91rem;color:#788494;white-space:pre-line;margin-bottom:7px;">${s.address}</div>
@@ -253,6 +254,11 @@ const sponsorsHTML = section.sponsors.map((s, i) => `
         Privacy Policy
       </a>
     </div>
+    ${i !== section.sponsors.length-1
+      ? `<div style="position:absolute;left:0;right:0;bottom:-14px;height:0;">
+            <hr style="border:none;border-top:2px solid #d4e3ef;margin:0;">
+         </div>`
+      : ''}
   </div>
 `).join('');
 
