@@ -210,32 +210,42 @@ window.renderSponsorPopup = function (container) {
     ]
   };
 
-  if (!container) return;
+   if (!container) return;
 
   const html = sponsorData.sections.map(section => {
     const sponsorsHTML = section.sponsors.map(s => `
-      <div class="sponsor-entry" style="margin-bottom:24px;">
-        <h3>${s.name}</h3>
-        <p>${s.description}</p>
-        <img src="${imageBaseUrl + s.logo}" alt="${s.name} logo" style="max-width:100px;margin:10px 0;">
-        <p>${s.address.replace(/\n/g, '<br>')}</p>
-        <a href="${s.privacyLink}" target="_blank">Privacy Policy</a><br>
-        <label><input type="checkbox" name="sponsor-${s.name}"> ${s.checkboxLabel}</label>
+      <div class="sponsor-entry" style="
+        display: flex;
+        align-items: flex-start;
+        gap: 20px;
+        margin-bottom: 32px;
+        padding: 16px 0;
+        border-bottom: 1px solid #f0f0f0;
+      ">
+        <img src="${imageBaseUrl + s.logo}" alt="${s.name} logo" style="max-width:70px;flex-shrink:0;border-radius:8px;">
+        <div>
+          <h3 style="margin:0 0 4px 0;font-size:1.15rem;font-weight:600;">${s.name}</h3>
+          <div style="font-size:.97rem;margin-bottom:6px;color:#444;">${s.description}</div>
+          <div style="font-size:.91rem;color:#888;white-space:pre-line;">${s.address}</div>
+          <a href="${s.privacyLink}" target="_blank" style="display:inline-block;margin-top:8px;font-size:.91rem;color:#1666af;text-decoration:underline;">
+            Privacy Policy
+          </a>
+        </div>
       </div>
     `).join('');
 
     return `
-      <section>
-        <h2>${section.title}</h2>
+      <section style="margin-bottom:32px;">
+        <h2 style="font-size:1.13rem;color:#0a2533;margin-bottom:14px;">${section.title}</h2>
         ${sponsorsHTML}
       </section>
     `;
   }).join('');
 
   container.innerHTML = `
-    <div class="sponsor-popup-content">
-      <h1>${sponsorData.heading}</h1>
-      <p>${sponsorData.intro}</p>
+    <div class="sponsor-popup-content" style="max-width:540px;margin:auto;">
+      <h1 style="font-size:1.45rem;font-weight:700;margin-bottom:6px;">${sponsorData.heading}</h1>
+      <p style="font-size:1rem;margin-bottom:28px;color:#555;">${sponsorData.intro}</p>
       ${html}
     </div>
   `;
