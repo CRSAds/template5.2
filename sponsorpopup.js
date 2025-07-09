@@ -212,24 +212,42 @@ window.renderSponsorPopup = function (container) {
 
  if (!container) return;
 
-  const html = sponsorData.sections.map((section, si) => {
+  // Intro Card
+  const introCard = `
+    <div style="
+      background:#f7fafe;
+      border-radius:18px;
+      box-shadow:0 2px 18px #1165b505;
+      padding:32px 26px 32px 26px;
+      margin-bottom:36px;
+      text-align:left;
+    ">
+      <h1 style="font-size:1.55rem;font-weight:800;margin-bottom:12px;color:#0f335c;">${sponsorData.heading}</h1>
+      <p style="font-size:1.07rem;margin:0;line-height:1.65;color:#485c6c;">
+        ${sponsorData.intro}
+      </p>
+    </div>
+  `;
+
+  // Section Cards
+  const sectionsHtml = sponsorData.sections.map(section => {
     const sponsorsHTML = section.sponsors.map((s, i) => `
       <div class="sponsor-entry" style="
         display: flex;
         align-items: flex-start;
         gap: 22px;
         margin-bottom: 0;
-        padding: 0 0 26px 0;
-        border-bottom: 2px solid #e8eaf0;
+        padding: 0 0 30px 0;
+        border-bottom: 2px solid #d4e3ef;
         position: relative;
-        ${i === section.sponsors.length-1 ? 'border-bottom:none;' : ''}
+        ${i === section.sponsors.length-1 ? 'border-bottom:none;padding-bottom:0;' : ''}
       ">
         <img src="${imageBaseUrl + s.logo}" alt="${s.name} logo" style="max-width:76px;max-height:54px;flex-shrink:0;border-radius:10px;box-shadow:0 2px 12px #0001;">
         <div>
-          <h3 style="margin:0 0 6px 0;font-size:1.18rem;font-weight:700;letter-spacing:0.01em;">${s.name}</h3>
-          <div style="font-size:1rem;margin-bottom:7px;color:#364150;line-height:1.4;">${s.description}</div>
-          <div style="font-size:.93rem;color:#7a869a;white-space:pre-line;margin-bottom:7px;">${s.address}</div>
-          <a href="${s.privacyLink}" target="_blank" style="display:inline-block;margin-top:1px;font-size:.93rem;color:#1873be;text-decoration:underline;">
+          <h3 style="margin:0 0 6px 0;font-size:1.12rem;font-weight:700;letter-spacing:0.01em;color:#183963;">${s.name}</h3>
+          <div style="font-size:0.99rem;margin-bottom:7px;color:#364150;line-height:1.42;">${s.description}</div>
+          <div style="font-size:.91rem;color:#788494;white-space:pre-line;margin-bottom:7px;">${s.address}</div>
+          <a href="${s.privacyLink}" target="_blank" style="display:inline-block;margin-top:2px;font-size:.92rem;color:#1666af;text-decoration:underline;">
             Privacy Policy
           </a>
         </div>
@@ -237,44 +255,42 @@ window.renderSponsorPopup = function (container) {
     `).join('');
 
     return `
-      <section style="
-        margin-bottom:52px;
-        padding-bottom:0;
-      ">
+      <div style="
+        background:#fff;
+        border-radius:18px;
+        box-shadow:0 2px 18px #168ad305;
+        padding:30px 26px 10px 26px;
+        margin-bottom:38px;
+        ">
         <h2 style="
           font-size:1.25rem;
           font-weight:800;
-          color:#19538c;
-          margin-bottom:24px;
-          margin-top:${si === 0 ? "0" : "18px"};
+          color:#165699;
+          margin-bottom:26px;
           letter-spacing:.02em;
           line-height:1.23;
           text-transform:uppercase;
-          border-left:5px solid #52a0e3;
-          padding-left:14px;
-          background:linear-gradient(90deg,rgba(82,160,227,0.08),transparent 60%);
+          border-left:6px solid #52a0e3;
+          padding-left:15px;
+          background:linear-gradient(90deg,rgba(82,160,227,0.09),transparent 68%);
           ">
           ${section.title}
         </h2>
         ${sponsorsHTML}
-      </section>
+      </div>
     `;
   }).join('');
 
+  // Hoofdcontainer
   container.innerHTML = `
     <div class="sponsor-popup-content" style="
-      max-width:630px;
+      max-width:670px;
       margin:auto;
-      padding:42px 22px 34px 22px;
-      background:#fff;
-      border-radius:22px;
-      box-shadow:0 6px 40px #0b2c4420;
+      padding:0;
+      background:transparent;
     ">
-      <h1 style="font-size:1.62rem;font-weight:800;margin-bottom:19px;letter-spacing:.01em;color:#123459;">${sponsorData.heading}</h1>
-      <p style="font-size:1.07rem;margin-bottom:38px;line-height:1.6;color:#53637a;">
-        ${sponsorData.intro}
-      </p>
-      ${html}
+      ${introCard}
+      ${sectionsHtml}
     </div>
   `;
 };
