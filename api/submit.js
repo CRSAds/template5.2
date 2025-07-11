@@ -37,7 +37,8 @@ export default async function handler(req, res) {
       f_1684_sub_id,
       f_1685_aff_id,
       f_1687_offer_id,
-      f_2047_EM_CO_sponsors
+      f_2047_EM_CO_sponsors,
+      f_2575_coreg_answer_dropdown
     } = req.body;
 
     console.log('Ontvangen data van frontend:', req.body);
@@ -106,7 +107,8 @@ export default async function handler(req, res) {
       f_1684_sub_id: f_1684_sub_id || '',
       f_1685_aff_id: f_1685_aff_id || '',
       f_1687_offer_id: f_1687_offer_id || '',
-      f_2047_EM_CO_sponsors: f_2047_EM_CO_sponsors || ''
+      f_2047_EM_CO_sponsors: f_2047_EM_CO_sponsors || '',
+      f_2575_coreg_answer_dropdown: (f_2575_coreg_answer_dropdown || ''),
     });
 
     // Log de verwerkte URL
