@@ -27,6 +27,14 @@ const sponsorCampaigns = {
     tmcosponsor: true,
     hasCoregFlow: false
   },
+    "campaign-trefzeker": {
+    cid: 5017,
+    sid: 496,
+    requiresLongForm: true,
+    coregAnswerKey: "coreg_answer_campaign-trefzeker",
+    hasCoregFlow: true,
+    answerFieldKey: "f_2575_coreg_answer_dropdown"
+  },
     "campaign-vastelasten": {
     cid: 4951,
     sid: 34,
