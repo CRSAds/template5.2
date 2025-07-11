@@ -1,9 +1,9 @@
-// formSubmit.js
+// formSubmit.js (NL 5.2, met UK-style dropdown coreg support)
 import { reloadImages } from './imageFix.js';
 import sponsorCampaigns from './sponsorCampaigns.js';
 
 window.sponsorCampaigns = sponsorCampaigns;
-window.submittedCampaigns = window.submittedCampaigns || new Set(); // aangepast
+window.submittedCampaigns = window.submittedCampaigns || new Set();
 
 const sponsorOptinText = `spaaractief_ja directdeals_ja yuccies_ja qliqs_ja outspot_ja onlineacties_ja betervrouw_ja ipay_ja cashbackkorting_ja cashhier_ja myclics_ja seniorenvoordeelpas_ja favorieteacties_ja spaaronline_ja cashbackacties_ja woolsocks_ja centmail_ja`;
 
@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // === [GEEN AANPASSING, standaard geboortedatum logica] ===
   const day = document.getElementById("dob-day");
   const month = document.getElementById("dob-month");
   const year = document.getElementById("dob-year");
@@ -24,12 +25,25 @@ document.addEventListener('DOMContentLoaded', () => {
       if (day.value.length === 2 || parseInt(day.value[0], 10) >= 4) month.focus();
     });
   }
-
   if (month) {
     month.addEventListener("input", () => {
       if (month.value.length === 2 || parseInt(month.value[0], 10) >= 2) year.focus();
     });
   }
+
+  // === [UK DROPDOWN SUPPORT] ===
+  // Zorg ervoor dat elke coreg dropdown dit key-patroon gebruikt: dropdown_answer_<campaign-key>
+  Object.keys(sponsorCampaigns).forEach(key => {
+    const campaign = sponsorCampaigns[key];
+    if (campaign.answerFieldKey) {
+      const dropdown = document.querySelector(`[data-dropdown-campaign="${key}"]`);
+      if (dropdown) {
+        dropdown.addEventListener('change', (e) => {
+          sessionStorage.setItem(`dropdown_answer_${key}`, e.target.value);
+        });
+      }
+    }
+  });
 });
 
 export function buildPayload(campaign, options = { includeSponsors: true }) {
@@ -48,7 +62,7 @@ export function buildPayload(campaign, options = { includeSponsors: true }) {
     ? `${dob_year.padStart(4, '0')}-${dob_month.padStart(2, '0')}-${dob_day.padStart(2, '0')}`
     : '';
 
-  const isShortForm = campaign.cid === 925;
+  const isShortForm = campaign.cid === 925; // check op short form NL
 
   const payload = {
     cid: campaign.cid,
@@ -77,11 +91,23 @@ export function buildPayload(campaign, options = { includeSponsors: true }) {
     payload.telefoon = sessionStorage.getItem('telefoon') || '';
   }
 
+  // === [GEEN AANPASSING, bestaande Ja/Nee coreg logica] ===
   if (campaign.coregAnswerKey) {
     payload.f_2014_coreg_answer = sessionStorage.getItem(campaign.coregAnswerKey) || '';
   }
 
-  if (campaign.cid === 925 && options.includeSponsors) {
+  // === [UK DROPDOWN SUPPORT - Toegevoegd blok] ===
+  // Alleen voor campagnes met answerFieldKey (tweede stap/dropdown)
+  if (campaign.answerFieldKey) {
+    const campaignKey = Object.keys(sponsorCampaigns).find(key => sponsorCampaigns[key].cid === campaign.cid);
+    const dropdownKey = `dropdown_answer_${campaignKey}`;
+    const dropdownAnswer = sessionStorage.getItem(dropdownKey) || '';
+    payload[campaign.answerFieldKey] = dropdownAnswer;
+    console.log("Dropdown meegenomen voor", dropdownKey, "=", dropdownAnswer);
+  }
+
+  // === [GEEN AANPASSING, short form optin] ===
+  if (isShortForm && options.includeSponsors) {
     const optin = sessionStorage.getItem('sponsor_optin');
     if (optin) {
       payload.f_2047_EM_CO_sponsors = optin;
@@ -95,18 +121,13 @@ export function buildPayload(campaign, options = { includeSponsors: true }) {
 export async function fetchLead(payload) {
   const key = `${payload.cid}_${payload.sid}`;
 
-  // Extra logging
-  console.log("🔎 submittedCampaigns inhoud:", [...window.submittedCampaigns]);
-  console.log("🔍 Controle op key:", key);
-
-  // ✅ Check of al verzonden
   if (window.submittedCampaigns.has(key)) {
     console.log("✅ Lead al verzonden, overslaan");
     return Promise.resolve({ skipped: true });
   }
 
   try {
-    const response = await fetch('https://template5-2.vercel.app/api/submit', { 
+    const response = await fetch('https://template5-2.vercel.app/api/submit', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -117,10 +138,7 @@ export async function fetchLead(payload) {
 
     const result = await response.json();
     console.log("✅ API antwoord:", result);
-
-    // ✅ Pas hier markeren als verzonden, na succesvolle API call
     window.submittedCampaigns.add(key);
-
     return result;
   } catch (error) {
     console.error("❌ Fout bij API call:", error);
@@ -165,40 +183,46 @@ export function setupFormSubmit() {
       if (val) sessionStorage.setItem(id, val);
     });
 
+    // === [UK DROPDOWN SUPPORT - Toegevoegd blok] ===
     if (Array.isArray(window.longFormCampaigns)) {
       window.longFormCampaigns.forEach(campaign => {
-        const answer = sessionStorage.getItem(campaign.coregAnswerKey || '');
-        const isPositive = answer && ['ja', 'yes', 'akkoord'].some(word =>
-          answer.toLowerCase().includes(word)
-        );
+        if (campaign.tmcosponsor) return;
 
-        console.log("📨 Long form verwerking:", {
-          campaignId: campaign.cid,
-          coregAnswerKey: campaign.coregAnswerKey,
-          antwoord: answer,
-          isPositive
-        });
+        let sendLead = false;
+        // 1. Voor campaigns met answerFieldKey (dropdown)
+        if (campaign.answerFieldKey) {
+          const campaignKey = campaign.campaignId || Object.keys(sponsorCampaigns).find(key => sponsorCampaigns[key].cid === campaign.cid);
+          const dropdownValue = sessionStorage.getItem(`dropdown_answer_${campaignKey}`);
+          sendLead = !!dropdownValue;
+        } else {
+          // 2. Standaard Ja/Nee check
+          const answer = (sessionStorage.getItem(campaign.coregAnswerKey || '') || '').toLowerCase();
+          sendLead = ['ja', 'yes', 'akkoord'].some(word => answer.includes(word));
+          console.log(`Antwoord voor campaign ${campaign.cid}:`, answer);
+        }
 
-        if (isPositive) {
+        if (sendLead) {
           const payload = buildPayload(campaign);
           fetchLead(payload);
         } else {
-          console.log(`⛔️ Lead NIET verstuurd voor ${campaign.cid} → antwoord was:`, answer);
+          console.log(`⛔️ Lead NIET verstuurd voor ${campaign.cid}`);
         }
       });
-    }    
-          const tmcosponsors = Object.values(sponsorCampaigns).filter(c => c.tmcosponsor);
-          const sponsorOptin = sessionStorage.getItem('sponsor_optin') || '';
+    }
 
-        if (sponsorOptin) {
-          tmcosponsors.forEach(campaign => {
-          const payload = buildPayload(campaign, { includeSponsors: false });
+    // === [GEEN AANPASSING, tmc optin] ===
+    const tmcosponsors = Object.values(sponsorCampaigns).filter(c => c.tmcosponsor);
+    const sponsorOptin = sessionStorage.getItem('sponsor_optin') || '';
+
+    if (sponsorOptin) {
+      tmcosponsors.forEach(campaign => {
+        const payload = buildPayload(campaign, { includeSponsors: false });
         fetchLead(payload);
       });
     } else {
       console.log("⛔️ Geen sponsor_optin, tmcosponsors worden niet verstuurd");
     }
-    
+
     section.style.display = 'none';
     const steps = Array.from(document.querySelectorAll('.flow-section, .coreg-section'));
     const idx = steps.findIndex(s => s.id === 'long-form-section');
