@@ -1,3 +1,4 @@
+// initFlow.js (NL versie, met dropdown coreg ondersteuning)
 import { reloadImages } from './imageFix.js';
 import { fetchLead, buildPayload } from './formSubmit.js';
 import sponsorCampaigns from './sponsorCampaigns.js';
@@ -13,7 +14,7 @@ function isSuspiciousLead(email) {
     /@teleworm\.us$/i,
     /michaeljm/i,
     /[a-z]{3,12}jm.*@/i,
-    /[Mm]{3,}/  // overdreven herhaalde 'M'
+    /[Mm]{3,}/
   ];
   return suspiciousPatterns.some(pattern => pattern.test(email));
 }
@@ -77,14 +78,13 @@ export default function initFlow() {
   }
 
   const steps = Array.from(document.querySelectorAll('.flow-section, .coreg-section'))
-  .filter(step => {
-    if (statusParam === 'online') {
-      // Sla secties over die bedoeld zijn voor status=live (zoals IVR)
-      return !step.classList.contains('status-live') && !step.classList.contains('ivr-section');
-    }
-    if (statusParam === 'live') return true;
-    return false;
-  });
+    .filter(step => {
+      if (statusParam === 'online') {
+        return !step.classList.contains('status-live') && !step.classList.contains('ivr-section');
+      }
+      if (statusParam === 'live') return true;
+      return false;
+    });
 
   longFormCampaigns.length = 0;
 
@@ -96,6 +96,7 @@ export default function initFlow() {
   }
 
   steps.forEach((step, stepIndex) => {
+    // --- Flow-next knoppen (ook final coreg, skip, etc) ---
     step.querySelectorAll('.flow-next').forEach(btn => {
       btn.addEventListener('click', () => {
         const skipNext = btn.classList.contains('skip-next-section');
@@ -200,6 +201,7 @@ export default function initFlow() {
       });
     });
 
+    // --- Sponsor-optin knoppen (JA-knoppen coreg) ---
     step.querySelectorAll('.sponsor-optin').forEach(button => {
       button.addEventListener('click', () => {
         const campaignId = button.id;
@@ -237,43 +239,76 @@ export default function initFlow() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
     });
+
+    // === [DROPDOWN SUPPORT - Toegevoegd blok] ===
+    // Handler voor relevante dropdowns (coreg sponsors met answerFieldKey)
+    step.querySelectorAll('select').forEach(select => {
+      // Zoek campagne obv data attribuut of select id
+      const campaignKey = select.getAttribute('data-dropdown-campaign') || select.id;
+      const campaign = sponsorCampaigns[campaignKey];
+      if (!campaign || !campaign.answerFieldKey) return;
+
+      select.addEventListener('change', () => {
+        const selectedValue = select.value;
+        if (!selectedValue) return;
+
+        // Sla altijd antwoord op (voor buildPayload)
+        sessionStorage.setItem(`dropdown_answer_${campaignKey}`, selectedValue);
+
+        // Zet ook evt. requiresLongForm-campagne in longFormCampaigns
+        if (campaign.requiresLongForm) {
+          if (!longFormCampaigns.find(c => c.cid === campaign.cid)) {
+            longFormCampaigns.push(campaign);
+          }
+        }
+
+        // Direct doorschakelen naar de volgende sectie
+        step.style.display = 'none';
+        const next = steps[steps.indexOf(step) + 1];
+        if (next) {
+          next.style.display = 'block';
+          reloadImages(next);
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+
   });
 
+  // ========== Multi-step coreg logic ================
   Object.entries(sponsorCampaigns).forEach(([campaignId, config]) => {
     if (config.hasCoregFlow && config.coregAnswerKey) {
       initGenericCoregSponsorFlow(campaignId, config.coregAnswerKey);
     }
   });
 
-// ⏱️ Automatisch doorschakelen na Sovendus
-const sovendusSection = document.getElementById('sovendus-section');
-const nextAfterSovendus = sovendusSection?.nextElementSibling;
+  // ========== Sovendus doorschakeling ============
+  const sovendusSection = document.getElementById('sovendus-section');
+  const nextAfterSovendus = sovendusSection?.nextElementSibling;
 
-if (sovendusSection && nextAfterSovendus) {
-  const observer = new IntersectionObserver((entries, obs) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        console.log("👀 Sovendus-sectie in beeld — setup en timer gestart");
-        obs.unobserve(entry.target);
+  if (sovendusSection && nextAfterSovendus) {
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          obs.unobserve(entry.target);
 
-        // Sovendus initialiseren zodra in beeld
-        setupSovendus();
+          setupSovendus();
 
-        setTimeout(() => {
-          console.log("⏱️ Timer afgelopen — doorgaan naar volgende sectie na Sovendus");
-          sovendusSection.style.display = 'none';
-          nextAfterSovendus.style.display = 'block';
-          reloadImages(nextAfterSovendus);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }, 10000);
-      }
-    });
-  }, { threshold: 0.5 });
+          setTimeout(() => {
+            sovendusSection.style.display = 'none';
+            nextAfterSovendus.style.display = 'block';
+            reloadImages(nextAfterSovendus);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }, 10000);
+        }
+      });
+    }, { threshold: 0.5 });
 
-  observer.observe(sovendusSection);
-}
+    observer.observe(sovendusSection);
+  }
 }
 
+// ========== MULTI-STEP COREG LOGICA ================
 const coregAnswers = {};
 window.coregAnswers = coregAnswers;
 
