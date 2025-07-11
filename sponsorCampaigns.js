@@ -28,7 +28,7 @@ const sponsorCampaigns = {
     hasCoregFlow: false
   },
     "campaign-trefzeker": {
-    cid: 5017,
+    cid: 5050,
     sid: 496,
     requiresLongForm: true,
     coregAnswerKey: "coreg_answer_campaign-trefzeker",
