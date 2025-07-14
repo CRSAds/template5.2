@@ -245,25 +245,26 @@ step.querySelectorAll('select').forEach(select => {
   // Zoek campagne op basis van data attribuut of select id
   const campaignKey = select.getAttribute('data-dropdown-campaign') || select.id;
   const campaign = sponsorCampaigns[campaignKey];
-  if (!campaign || !campaign.answerFieldKey) return;
+  if (!campaign) return;
 
   select.addEventListener('change', () => {
     const selectedValue = select.value;
     if (!selectedValue) return;
 
-    // Altijd antwoord opslaan voor buildPayload
+    // Antwoord altijd opslaan voor buildPayload
     sessionStorage.setItem(`dropdown_answer_${campaignKey}`, selectedValue);
 
-    // === [NIEUW] Directe lead verzending als alwaysSend ===
+    // === [NIEUW] Directe lead verzending als alwaysSend (bijvoorbeeld voor email coreg dropdowns)
     if (campaign.alwaysSend) {
       const payload = buildPayload(campaign);
       fetchLead(payload);
     } else if (campaign.requiresLongForm) {
-      // === [NIEUW] Anders bij longform alleen toevoegen aan longFormCampaigns
+      // Anders bij longform: alleen toevoegen aan longFormCampaigns
       if (!longFormCampaigns.find(c => c.cid === campaign.cid)) {
         longFormCampaigns.push(campaign);
       }
     }
+    // Voor alleen opslaan (geen alwaysSend/requiresLongForm) hoef je niks extra te doen
 
     // Altijd doorschakelen naar de volgende sectie
     step.style.display = 'none';
