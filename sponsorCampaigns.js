@@ -20,6 +20,55 @@ const sponsorCampaigns = {
     coregAnswerKey: "coreg_answer_campaign-unitedconsumers-vrouw",
     hasCoregFlow: false
   },
+  "campaign-destentor": {
+    cid: 4199,
+    sid: 34,
+    requiresLongForm: false,
+    hasCoregFlow: false,
+    alwaysSend: true
+  },
+  "campaign-bndestem": {
+    cid: 4120,
+    sid: 34,
+    requiresLongForm: false,
+    hasCoregFlow: false,
+    alwaysSend: true
+  },
+  "campaign-degelderlander": {
+    cid: 4196,
+    sid: 34,
+    requiresLongForm: false,
+    hasCoregFlow: false,
+    alwaysSend: true
+  },
+  "campaign-brabantsdagblad": {
+    cid: 4198,
+    sid: 34,
+    requiresLongForm: false,
+    hasCoregFlow: false,
+    alwaysSend: true
+  },
+  "campaign-tubantia": {
+    cid: 4195,
+    sid: 34,
+    requiresLongForm: false,
+    hasCoregFlow: false,
+    alwaysSend: true
+  },
+  "campaign-einhovensdagblad": {
+    cid: 4197,
+    sid: 34,
+    requiresLongForm: false,
+    hasCoregFlow: false,
+    alwaysSend: true
+  },
+  "campaign-pzc": {
+    cid: 4197,
+    sid: 34,
+    requiresLongForm: false,
+    hasCoregFlow: false,
+    alwaysSend: true
+  },
     "campaign-aownu": {
     cid: 4423,
     sid: 397,
