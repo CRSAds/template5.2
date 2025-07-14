@@ -240,31 +240,32 @@ export default function initFlow() {
       });
     });
 
-// === [DROPDOWN SUPPORT - Volledig blok, ondersteunt alwaysSend en longform] ===
+// === [DROPDOWN SUPPORT voor 1 select met meerdere campagnes als optie] ===
 step.querySelectorAll('select').forEach(select => {
-  // Zoek campagne op basis van data attribuut of select id
-  const campaignKey = select.getAttribute('data-dropdown-campaign') || select.id;
-  const campaign = sponsorCampaigns[campaignKey];
-  if (!campaign) return;
-
+  // Speciale handling voor multi-campaign dropdown (zoals krant)
   select.addEventListener('change', () => {
     const selectedValue = select.value;
-    if (!selectedValue) return;
+    if (!selectedValue) return; // geen keuze
 
-    // Antwoord altijd opslaan voor buildPayload
-    sessionStorage.setItem(`dropdown_answer_${campaignKey}`, selectedValue);
+    // Nu is selectedValue bv. 'campaign-bndestem'
+    const campaign = sponsorCampaigns[selectedValue];
+    if (!campaign) {
+      console.warn("Geen campagne gevonden voor", selectedValue);
+      return;
+    }
 
-    // === [NIEUW] Directe lead verzending als alwaysSend (bijvoorbeeld voor email coreg dropdowns)
+    // Opslaan gekozen campagne voor evt. debugging of analytics
+    sessionStorage.setItem(`dropdown_answer_${selectedValue}`, select.options[select.selectedIndex].text);
+
+    // Directe lead verzending
     if (campaign.alwaysSend) {
       const payload = buildPayload(campaign);
       fetchLead(payload);
     } else if (campaign.requiresLongForm) {
-      // Anders bij longform: alleen toevoegen aan longFormCampaigns
       if (!longFormCampaigns.find(c => c.cid === campaign.cid)) {
         longFormCampaigns.push(campaign);
       }
     }
-    // Voor alleen opslaan (geen alwaysSend/requiresLongForm) hoef je niks extra te doen
 
     // Altijd doorschakelen naar de volgende sectie
     step.style.display = 'none';
