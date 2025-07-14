@@ -240,38 +240,41 @@ export default function initFlow() {
       });
     });
 
-    // === [DROPDOWN SUPPORT - Toegevoegd blok] ===
-    // Handler voor relevante dropdowns (coreg sponsors met answerFieldKey)
-    step.querySelectorAll('select').forEach(select => {
-      // Zoek campagne obv data attribuut of select id
-      const campaignKey = select.getAttribute('data-dropdown-campaign') || select.id;
-      const campaign = sponsorCampaigns[campaignKey];
-      if (!campaign || !campaign.answerFieldKey) return;
+// === [DROPDOWN SUPPORT - Volledig blok, ondersteunt alwaysSend en longform] ===
+step.querySelectorAll('select').forEach(select => {
+  // Zoek campagne op basis van data attribuut of select id
+  const campaignKey = select.getAttribute('data-dropdown-campaign') || select.id;
+  const campaign = sponsorCampaigns[campaignKey];
+  if (!campaign || !campaign.answerFieldKey) return;
 
-      select.addEventListener('change', () => {
-        const selectedValue = select.value;
-        if (!selectedValue) return;
+  select.addEventListener('change', () => {
+    const selectedValue = select.value;
+    if (!selectedValue) return;
 
-        // Sla altijd antwoord op (voor buildPayload)
-        sessionStorage.setItem(`dropdown_answer_${campaignKey}`, selectedValue);
+    // Altijd antwoord opslaan voor buildPayload
+    sessionStorage.setItem(`dropdown_answer_${campaignKey}`, selectedValue);
 
-        // Zet ook evt. requiresLongForm-campagne in longFormCampaigns
-        if (campaign.requiresLongForm) {
-          if (!longFormCampaigns.find(c => c.cid === campaign.cid)) {
-            longFormCampaigns.push(campaign);
-          }
-        }
+    // === [NIEUW] Directe lead verzending als alwaysSend ===
+    if (campaign.alwaysSend) {
+      const payload = buildPayload(campaign);
+      fetchLead(payload);
+    } else if (campaign.requiresLongForm) {
+      // === [NIEUW] Anders bij longform alleen toevoegen aan longFormCampaigns
+      if (!longFormCampaigns.find(c => c.cid === campaign.cid)) {
+        longFormCampaigns.push(campaign);
+      }
+    }
 
-        // Direct doorschakelen naar de volgende sectie
-        step.style.display = 'none';
-        const next = steps[steps.indexOf(step) + 1];
-        if (next) {
-          next.style.display = 'block';
-          reloadImages(next);
-        }
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
-    });
+    // Altijd doorschakelen naar de volgende sectie
+    step.style.display = 'none';
+    const next = steps[steps.indexOf(step) + 1];
+    if (next) {
+      next.style.display = 'block';
+      reloadImages(next);
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+});
 
   });
 
