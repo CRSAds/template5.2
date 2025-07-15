@@ -133,55 +133,6 @@ const sponsorCampaigns = {
     coregAnswerKey: "coreg_answer_campaign-trouw",
     hasCoregFlow: false
   },
-  "campaign-bndestem": {
-    cid: 4200,
-    sid: 34,
-    requiresLongForm: false,
-    coregAnswerKey: "coreg_answer_campaign-bndestem",
-    hasCoregFlow: false
-  },
-  "campaign-brabantsdagblad": {
-    cid: 4198,
-    sid: 34,
-    requiresLongForm: false,
-    coregAnswerKey: "coreg_answer_campaign-brabantsdagblad",
-    hasCoregFlow: false
-  },
-  "campaign-degelderlander": {
-    cid: 4196,
-    sid: 34,
-    requiresLongForm: false,
-    coregAnswerKey: "coreg_answer_campaign-degelderlander",
-    hasCoregFlow: false
-  },
-  "campaign-destentor": {
-    cid: 4199,
-    sid: 34,
-    requiresLongForm: false,
-    coregAnswerKey: "coreg_answer_campaign-destentor",
-    hasCoregFlow: false
-  },
-  "campaign-eindhovensdagblad": {
-    cid: 4197,
-    sid: 34,
-    requiresLongForm: false,
-    coregAnswerKey: "coreg_answer_campaign-eindhovensdagblad",
-    hasCoregFlow: false
-  },
-  "campaign-pzc": {
-    cid: 4194,
-    sid: 34,
-    requiresLongForm: false,
-    coregAnswerKey: "coreg_answer_campaign-pzc",
-    hasCoregFlow: false
-  },
-  "campaign-tubantia": {
-    cid: 4195,
-    sid: 34,
-    requiresLongForm: false,
-    coregAnswerKey: "coreg_answer_campaign-tubantia",
-    hasCoregFlow: false
-  },
   "campaign-consubeheer": {
     cid: 4721,
     sid: 34,
@@ -189,7 +140,7 @@ const sponsorCampaigns = {
     coregAnswerKey: "coreg_answer_campaign-consubeheer",
     hasCoregFlow: false
   },
-    "campaign-engie": {
+  "campaign-engie": {
     cid: 4985,
     sid: 34,
     requiresLongForm: true,
