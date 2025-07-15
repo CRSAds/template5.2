@@ -242,17 +242,15 @@ export default function initFlow() {
 
 // === [DROPDOWN SUPPORT: ondersteunt zowel multi-campaign als gewone dropdowns] ===
 step.querySelectorAll('select').forEach(select => {
-  // Multi-campaign dropdown: option.value is een geldige campaign-key in sponsorCampaigns
   select.addEventListener('change', () => {
     const selectedValue = select.value;
     if (!selectedValue) return;
 
-    // Probeer campaign op te halen op basis van value
+    // 1. Multi-campaign dropdown: option.value is een geldige campaign-key in sponsorCampaigns
     const possibleCampaign = sponsorCampaigns[selectedValue];
 
     if (possibleCampaign && possibleCampaign.alwaysSend) {
       // Dit is een multi-campaign dropdown optie (zoals krant)
-      // Optie: sla tekst op, kan handig zijn voor debugging of rapportages
       sessionStorage.setItem(`dropdown_answer_${selectedValue}`, select.options[select.selectedIndex].text);
 
       // Verstuur lead
@@ -267,11 +265,12 @@ step.querySelectorAll('select').forEach(select => {
         reloadImages(next);
       }
       window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // *** Hier returnen zodat de rest NIET wordt uitgevoerd! ***
       return;
     }
 
-    // Anders: reguliere dropdown coreg logic (zoals trefzeker, energieleverancier)
-    // Zoek campaign op basis van data attribuut of select id
+    // 2. Anders: reguliere dropdown coreg logic (zoals trefzeker, energieleverancier)
     const campaignKey = select.getAttribute('data-dropdown-campaign') || select.id;
     const campaign = sponsorCampaigns[campaignKey];
     if (!campaign || !campaign.answerFieldKey) return;
