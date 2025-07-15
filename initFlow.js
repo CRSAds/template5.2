@@ -240,17 +240,45 @@ export default function initFlow() {
       });
     });
 
-step.querySelectorAll('select').forEach(select => {
-  select.addEventListener('change', (e) => {
+
+  // Dropdwon handler  
+  step.querySelectorAll('select').forEach(select => {
+  select.addEventListener('change', () => {
     const selectedValue = select.value;
     if (!selectedValue) return;
 
-    // 1. Multi-campaign dropdown: optie-value is een geldige campaign-key in sponsorCampaigns
-    const multiCampaign = sponsorCampaigns[selectedValue];
-    if (multiCampaign && multiCampaign.alwaysSend) {
+    // Check: zit deze key in sponsorCampaigns? Dan is het een directe lead (multi-campaign)
+    const campaign = sponsorCampaigns[selectedValue];
+    if (campaign && campaign.alwaysSend) {
+      // Sla antwoord op (option tekst in sessionStorage)
       sessionStorage.setItem(`dropdown_answer_${selectedValue}`, select.options[select.selectedIndex].text);
-      const payload = buildPayload(multiCampaign);
+
+      // Verstuur de lead
+      const payload = buildPayload(campaign);
       fetchLead(payload);
+
+      // Schakel door naar volgende sectie
+      step.style.display = 'none';
+      const next = steps[steps.indexOf(step) + 1];
+      if (next) {
+        next.style.display = 'block';
+        reloadImages(next);
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    // Anders reguliere dropdown zoals trefzeker
+    const campaignKey = select.getAttribute('data-dropdown-campaign') || select.id;
+    const coregCampaign = sponsorCampaigns[campaignKey];
+    if (coregCampaign && coregCampaign.answerFieldKey) {
+      sessionStorage.setItem(`dropdown_answer_${campaignKey}`, selectedValue);
+
+      if (coregCampaign.requiresLongForm) {
+        if (!longFormCampaigns.find(c => c.cid === coregCampaign.cid)) {
+          longFormCampaigns.push(coregCampaign);
+        }
+      }
 
       step.style.display = 'none';
       const next = steps[steps.indexOf(step) + 1];
@@ -259,36 +287,7 @@ step.querySelectorAll('select').forEach(select => {
         reloadImages(next);
       }
       window.scrollTo({ top: 0, behavior: 'smooth' });
-
-      // Safari fix: force value to reset
-      setTimeout(() => { select.value = ""; }, 10);
-
-      return;
     }
-
-    // 2. Reguliere dropdown coreg (bijv. Trefzeker)
-    const campaignKey = select.getAttribute('data-dropdown-campaign') || select.id;
-    const campaign = sponsorCampaigns[campaignKey];
-    if (!campaign || !campaign.answerFieldKey) return;
-
-    sessionStorage.setItem(`dropdown_answer_${campaignKey}`, selectedValue);
-
-    if (campaign.requiresLongForm) {
-      if (!longFormCampaigns.find(c => c.cid === campaign.cid)) {
-        longFormCampaigns.push(campaign);
-      }
-    }
-
-    step.style.display = 'none';
-    const next = steps[steps.indexOf(step) + 1];
-    if (next) {
-      next.style.display = 'block';
-      reloadImages(next);
-    }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    // Safari fix: force value to reset
-    setTimeout(() => { select.value = ""; }, 10);
   });
 });
 
