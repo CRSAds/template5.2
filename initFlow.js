@@ -240,24 +240,23 @@ export default function initFlow() {
       });
     });
 
-// === [DROPDOWN SUPPORT: ondersteunt zowel multi-campaign als gewone dropdowns] ===
+// === [DROPDOWN SUPPORT: ondersteunt multi-campaign en gewone dropdowns] ===
 step.querySelectorAll('select').forEach(select => {
   select.addEventListener('change', () => {
     const selectedValue = select.value;
     if (!selectedValue) return;
 
-    // 1. Multi-campaign dropdown: option.value is een geldige campaign-key in sponsorCampaigns
-    const possibleCampaign = sponsorCampaigns[selectedValue];
-
-    if (possibleCampaign && possibleCampaign.alwaysSend) {
-      // Dit is een multi-campaign dropdown optie (zoals krant)
+    // 1. Multi-campaign dropdown: optie-value is een geldige campaign-key in sponsorCampaigns
+    const multiCampaign = sponsorCampaigns[selectedValue];
+    if (multiCampaign && multiCampaign.alwaysSend) {
+      // Sla het antwoord op met de campaign-key (option value) als storage-key (bijvoorbeeld "dropdown_answer_campaign-bndestem")
       sessionStorage.setItem(`dropdown_answer_${selectedValue}`, select.options[select.selectedIndex].text);
 
-      // Verstuur lead
-      const payload = buildPayload(possibleCampaign);
+      // Lead versturen voor de gekozen krant
+      const payload = buildPayload(multiCampaign);
       fetchLead(payload);
 
-      // Toon volgende sectie
+      // Toon direct de volgende sectie
       step.style.display = 'none';
       const next = steps[steps.indexOf(step) + 1];
       if (next) {
@@ -266,25 +265,26 @@ step.querySelectorAll('select').forEach(select => {
       }
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
-      // *** Hier returnen zodat de rest NIET wordt uitgevoerd! ***
+      // Return om te voorkomen dat de rest hieronder draait
       return;
     }
 
-    // 2. Anders: reguliere dropdown coreg logic (zoals trefzeker, energieleverancier)
+    // 2. Reguliere dropdown coreg (bijv. Trefzeker) waarbij select gekoppeld is aan 1 campagne via data-dropdown-campaign of id
     const campaignKey = select.getAttribute('data-dropdown-campaign') || select.id;
     const campaign = sponsorCampaigns[campaignKey];
     if (!campaign || !campaign.answerFieldKey) return;
 
-    // Antwoord opslaan
+    // Antwoord opslaan voor reguliere dropdown
     sessionStorage.setItem(`dropdown_answer_${campaignKey}`, selectedValue);
 
+    // Bij longform: campagne toevoegen aan longFormCampaigns als dat nodig is
     if (campaign.requiresLongForm) {
       if (!longFormCampaigns.find(c => c.cid === campaign.cid)) {
         longFormCampaigns.push(campaign);
       }
     }
 
-    // Altijd doorschakelen naar de volgende sectie
+    // Toon direct de volgende sectie (ook als het alleen opslaan betreft)
     step.style.display = 'none';
     const next = steps[steps.indexOf(step) + 1];
     if (next) {
