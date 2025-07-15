@@ -265,6 +265,9 @@ step.querySelectorAll('select').forEach(select => {
       }
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
+      // Reset dropdown na doorschakeling
+      select.selectedIndex = 0;
+
       // Return om te voorkomen dat de rest hieronder draait
       return;
     }
@@ -292,6 +295,9 @@ step.querySelectorAll('select').forEach(select => {
       reloadImages(next);
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Reset dropdown na doorschakeling
+    select.selectedIndex = 0;
   });
 });
 
