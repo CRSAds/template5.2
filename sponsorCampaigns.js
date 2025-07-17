@@ -76,11 +76,19 @@ const sponsorCampaigns = {
     tmcosponsor: true,
     hasCoregFlow: false
   },
-    "campaign-trefzeker": {
+  "campaign-trefzeker": {
     cid: 5050,
     sid: 496,
     requiresLongForm: true,
     coregAnswerKey: "coreg_answer_campaign-trefzeker",
+    hasCoregFlow: true,
+    answerFieldKey: "f_2575_coreg_answer_dropdown"
+  },
+  "campaign-beterabonnementeneco": {
+    cid: 5116,
+    sid: 34,
+    requiresLongForm: true,
+    coregAnswerKey: "coreg_answer_campaign-beterabonnementeneco",
     hasCoregFlow: true,
     answerFieldKey: "f_2575_coreg_answer_dropdown"
   },
