@@ -35,8 +35,8 @@
   font-family: inherit;
   background: #fff;
   border-radius: 18px;
-  box-shadow: 0 6px 36px #0001;
-  padding: 28px 18px 18px 18px;
+  box-shadow: 0 0px 0px #0001;
+  padding: 0px 0px 0px 0px;
   font-size: 15px;
   line-height: 1.7;
 }
@@ -58,7 +58,7 @@
   display: flex;
   gap: 20px;
   align-items: flex-start;
-  border-bottom: 1px solid #ececec;
+  border-bottom: 0px solid #ececec;
   padding-bottom: 16px;
   margin-bottom: 22px;
 }
