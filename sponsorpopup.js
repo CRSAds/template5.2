@@ -212,75 +212,85 @@ window.renderSponsorPopup = function (container) {
 
  if (!container) return;
 
- // --- HTML helpers, nu met minder padding/marge indien flat=true ---
+ // ---- Sponsor Entry HTML ----
   const sponsorsHTML = section =>
     section.sponsors.map((s, i) => `
       <div class="sponsor-entry" style="
-        display:flex;align-items:flex-start;gap:12px;
-        padding:0 0 ${flat ? '10px' : '26px'} 0;
-        margin:0;
-        flex-direction:row;
-        background:none;
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        padding: 0 0 26px 0;
+        margin: 0;
+        position: relative;
+        flex-direction: row;
+        background: none;
       ">
         <img src="${imageBaseUrl + s.logo}" alt="${s.name} logo"
-          style="max-width:52px;max-height:42px;flex-shrink:0;border-radius:8px;box-shadow:0 1px 8px #0001;margin-top:4px;">
+          style="max-width:60px;max-height:46px;flex-shrink:0;border-radius:8px;box-shadow:0 1px 8px #0001;margin-top:4px;">
         <div style="flex:1;">
-          <h3 style="margin:0 0 2px 0;font-size:1.09rem;font-weight:700;color:#183963;">
+          <h3 style="margin:0 0 4px 0;font-size:1.10rem;font-weight:700;letter-spacing:0.01em;color:#183963;">
             ${s.name}
           </h3>
-          <div style="font-size:.97rem;margin-bottom:2px;color:#364150;">
+          <div style="font-size:.97rem;margin-bottom:5px;color:#364150;line-height:1.38;">
             ${s.description}
           </div>
-          <div style="font-size:.89rem;color:#7a889a;white-space:pre-line;margin-bottom:2px;">
+          <div style="font-size:.89rem;color:#7a889a;white-space:pre-line;margin-bottom:4px;">
             ${s.address}
           </div>
           <a href="${s.privacyLink}" target="_blank"
-            style="display:inline-block;margin-top:1px;font-size:.89rem;color:#1666af;text-decoration:underline;">
+            style="display:inline-block;margin-top:2px;font-size:.89rem;color:#1666af;text-decoration:underline;">
             Privacy Policy
           </a>
         </div>
-        ${i !== section.sponsors.length-1 ? `<div class="sponsor-separator"></div>` : ''}
+        ${i !== section.sponsors.length-1
+          ? `<div class="sponsor-separator"></div>`
+          : ''}
       </div>
     `).join('');
 
+  // ---- Sectie met blauwe titelbalk ----
   const sectionHTML = section => `
     <section style="
-      margin-bottom:${flat ? '12px' : '38px'};
-      background:#fff;
-      border-radius:0;
-      box-shadow:none;
-      padding:0;
+      margin-bottom:38px;
+      background: #fff;
+      border-radius:18px;
+      box-shadow:0 2px 16px #0001;
+      padding:0 0 0 0;
       overflow:hidden;
     ">
       <div style="
-        background:linear-gradient(90deg, #2172b8 0%, #185389 100%);
-        color:#fff;font-size:1.07rem;font-weight:800;
-        padding:${flat ? '9px 13px' : '14px 24px 13px 20px'};
-        margin:0 0 ${flat ? '8px' : '22px'} 0;
-        text-transform:uppercase;
-        border-radius:0;
-        display:flex;
-        align-items:center;
-        border-bottom:1px solid #18538930;
+        background: linear-gradient(90deg, #2172b8 0%, #185389 100%);
+        color: #fff;
+        font-size: 1.09rem;
+        font-weight: 800;
+        letter-spacing:0.04em;
+        padding: 14px 24px 13px 20px;
+        margin: 0 0 22px 0;
+        text-transform: uppercase;
+        border-radius:18px 18px 0 0;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid #18538930;
       ">
         ${section.title}
       </div>
-      <div style="padding:${flat ? '7px 9px 2px 9px' : '18px 18px 12px 18px'};">
+      <div style="padding:18px 18px 12px 18px;">
         ${sponsorsHTML(section)}
       </div>
     </section>
   `;
 
+  // ---- Introblok ----
   container.innerHTML = `
-    <div class="sponsor-popup-content" style="max-width:100vw;margin:0;padding:0;">
+    <div class="sponsor-popup-content" style="max-width:630px;margin:32px auto 0 auto;">
       <div style="
-        background:#fff;
-        border-radius:0;
-        box-shadow:none;
-        padding:${flat ? '13px 10px 7px 10px' : '28px 26px 24px 26px'};
-        margin-bottom:${flat ? '10px' : '44px'};">
-        <h1 style="font-size:1.32rem;font-weight:700;margin-bottom:8px;color:#213753;">${sponsorData.heading}</h1>
-        <p style="font-size:.97rem;margin-bottom:0;color:#485262;line-height:1.45;">
+        background: #fff;
+        border-radius:18px;
+        box-shadow:0 2px 16px #0001;
+        padding: 28px 26px 24px 26px;
+        margin-bottom:44px;">
+        <h1 style="font-size:1.4rem;font-weight:700;margin-bottom:10px;color:#213753;">${sponsorData.heading}</h1>
+        <p style="font-size:1rem;margin-bottom:0;color:#485262;line-height:1.55;">
           ${sponsorData.intro}
         </p>
       </div>
@@ -288,16 +298,21 @@ window.renderSponsorPopup = function (container) {
     </div>
   `;
 
-  // --- Extra: flat variant separator nog dunner ---
+  // ---- CSS-injectie voor separator ----
   if (!document.getElementById('sponsor-separator-style')) {
     const style = document.createElement('style');
     style.id = 'sponsor-separator-style';
     style.textContent = `
       .sponsor-entry .sponsor-separator {
-        position:absolute;left:0;right:0;bottom:-8px;
-        height:0;border-top:1px solid #d4e3ef;width:100%;margin:0;
+        position: absolute;
+        left: 0; right: 0;
+        bottom: -11px;
+        height: 0;
+        border-top: 2px solid #d4e3ef;
+        width: 100%;
+        margin: 0;
       }
-      .sponsor-entry:not(:last-child) { margin-bottom:${flat ? '12px' : '34px'} !important; }
+      .sponsor-entry:not(:last-child) { margin-bottom:34px !important; }
     `;
     document.head.appendChild(style);
   }
