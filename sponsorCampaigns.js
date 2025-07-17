@@ -148,6 +148,13 @@ const sponsorCampaigns = {
     coregAnswerKey: "coreg_answer_campaign-consubeheer",
     hasCoregFlow: false
   },
+  "campaign-beterabonnementkeuze": {
+    cid: 5086,
+    sid: 34,
+    requiresLongForm: true,
+    coregAnswerKey: "coreg_answer_campaign-beterabonnementkeuze",
+    hasCoregFlow: false
+  },
   "campaign-engie": {
     cid: 4985,
     sid: 34,
