@@ -1,6 +1,6 @@
 const imageBaseUrl = "https://template5-2.vercel.app/assets/sponsorlogo/";
 
-window.renderSponsorPopup = function (container) {
+window.renderSponsorPopupSelectie = function (container) {
   const sponsorData = {
     heading: "Sponsors",
     intro: `Hieronder vindt u de sponsors van deze campagne welke u graag hun allerbeste deals en aanbiedingen willen laten zien. Per sponsor is duidelijk aangegeven waarvoor zij contact met u willen opnemen, hoe vaak zij contact met u willen opnemen en via welke manier u gecontacteerd gaat worden (telefoon of email). Tevens staat er bij elke sponsor een link naar hun privacy voorwaarden. Wij raden aan dat u deze privacy voorwaarden doorneemt.`,
