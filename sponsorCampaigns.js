@@ -6,6 +6,14 @@ const sponsorCampaigns = {
     coregAnswerKey: "coreg_answer_campaign-mycollections",
     hasCoregFlow: false
   },
+  "campaign-unitedconsumers-vraag": {
+    forwardTo: [
+    "campaign-unitedconsumers-man",
+    "campaign-unitedconsumers-vrouw"
+    ],
+    requiresLongForm: true, // als je wilt dat long form verplicht is voor beide
+    coregAnswerKey: "coreg_answer_campaign-unitedconsumers-vraag"
+  },
   "campaign-unitedconsumers-man": {
     cid: 2905,
     sid: 34,
