@@ -201,44 +201,51 @@ export default function initFlow() {
       });
     });
 
-    // --- Sponsor-optin knoppen (JA-knoppen coreg) ---
-    step.querySelectorAll('.sponsor-optin').forEach(button => {
-      button.addEventListener('click', () => {
-        const campaignId = button.id;
-        const campaign = sponsorCampaigns[campaignId];
-        if (!campaign) return;
+// --- Sponsor-optin knoppen (JA-knoppen coreg, nu met multi-cid support) ---
+step.querySelectorAll('.sponsor-optin').forEach(button => {
+  button.addEventListener('click', () => {
+    const campaignId = button.id;
+    const campaign = sponsorCampaigns[campaignId];
+    if (!campaign) return;
 
-        const answer = button.innerText.toLowerCase();
-        const isPositive = ['ja', 'yes', 'akkoord'].some(word => answer.includes(word));
+    const answer = button.innerText.toLowerCase();
+    const isPositive = ['ja', 'yes', 'akkoord'].some(word => answer.includes(word));
 
-        if (campaign.coregAnswerKey) {
-          sessionStorage.setItem(campaign.coregAnswerKey, answer);
+    if (campaign.coregAnswerKey) {
+      sessionStorage.setItem(campaign.coregAnswerKey, answer);
+    }
+
+    // Multi-cid logic: bij positief antwoord en 'forwardTo' meerdere campagnes sturen
+    let campaignKeys = [campaignId];
+    if (isPositive && Array.isArray(campaign.forwardTo)) {
+      campaignKeys = campaign.forwardTo;
+    }
+
+    campaignKeys.forEach(key => {
+      const c = sponsorCampaigns[key];
+      if (!c) return;
+      if (c.requiresLongForm && isPositive) {
+        if (!longFormCampaigns.find(item => item.cid === c.cid)) {
+          longFormCampaigns.push(c);
         }
-
-        if (campaign.requiresLongForm && isPositive) {
-          if (!longFormCampaigns.find(c => c.cid === campaign.cid)) {
-            longFormCampaigns.push(campaign);
-          }
+      } else if (!c.requiresLongForm) {
+        const coregPayload = buildPayload(c);
+        const email = sessionStorage.getItem('email') || '';
+        if (!isSuspiciousLead(email)) {
+          fetchLead(coregPayload);
         }
-
-        if (!campaign.requiresLongForm) {
-          const coregPayload = buildPayload(campaign);
-          const email = sessionStorage.getItem('email') || '';
-          if (!isSuspiciousLead(email)) {
-            fetchLead(coregPayload);
-          }
-        }
-
-        step.style.display = 'none';
-        const next = steps[steps.indexOf(step) + 1];
-        if (next) {
-          next.style.display = 'block';
-          reloadImages(next);
-        }
-
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
+      }
     });
+
+    step.style.display = 'none';
+    const next = steps[steps.indexOf(step) + 1];
+    if (next) {
+      next.style.display = 'block';
+      reloadImages(next);
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+});
 
 
   // Dropdwon handler  
