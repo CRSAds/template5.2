@@ -201,7 +201,7 @@ export default function initFlow() {
       });
     });
 
-// --- Sponsor-optin knoppen (JA-knoppen coreg, nu met multi-cid support) ---
+// --- Sponsor-optin knoppen (JA-knoppen coreg, met multi-cid support) ---
 step.querySelectorAll('.sponsor-optin').forEach(button => {
   button.addEventListener('click', () => {
     const campaignId = button.id;
@@ -211,28 +211,28 @@ step.querySelectorAll('.sponsor-optin').forEach(button => {
     const answer = button.innerText.toLowerCase();
     const isPositive = ['ja', 'yes', 'akkoord'].some(word => answer.includes(word));
 
-    // Antwoord opslaan in sessionStorage (voor evt. longform/coreg answer field)
-    if (campaign.coregAnswerKey) {
-      sessionStorage.setItem(campaign.coregAnswerKey, answer);
-    }
-
-    // --- Multi-cid support: bij positief antwoord en 'forwardTo' meerdere campagnes sturen ---
+    // Verzamel alle campagne sleutels die doorgestuurd moeten worden
     let campaignKeys = [campaignId];
     if (isPositive && Array.isArray(campaign.forwardTo)) {
       campaignKeys = campaign.forwardTo;
     }
 
+    // Zet het antwoord op alle relevante coregAnswerKey’s
     campaignKeys.forEach(key => {
       const c = sponsorCampaigns[key];
-      if (!c) return;
-      // Bij requiresLongForm: alleen aan longFormCampaigns toevoegen, niet direct lead sturen
-      if (c.requiresLongForm && isPositive) {
+      if (c && c.coregAnswerKey) {
+        sessionStorage.setItem(c.coregAnswerKey, answer);
+      }
+    });
+
+    // Voeg alle requiresLongForm campagnes toe aan longFormCampaigns
+    campaignKeys.forEach(key => {
+      const c = sponsorCampaigns[key];
+      if (c && c.requiresLongForm && isPositive) {
         if (!longFormCampaigns.find(item => item.cid === c.cid)) {
           longFormCampaigns.push(c);
         }
-      }
-      // Geen long form vereist? Direct lead sturen (net als bij tm-coreg)
-      if (!c.requiresLongForm && isPositive) {
+      } else if (c && !c.requiresLongForm && isPositive) {
         const coregPayload = buildPayload(c);
         const email = sessionStorage.getItem('email') || '';
         if (!isSuspiciousLead(email)) {
@@ -241,17 +241,17 @@ step.querySelectorAll('.sponsor-optin').forEach(button => {
       }
     });
 
-    // Volgende stap tonen in de flow
+    // Volgende stap tonen
     step.style.display = 'none';
     const next = steps[steps.indexOf(step) + 1];
     if (next) {
       next.style.display = 'block';
       reloadImages(next);
     }
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 });
-
 
   // Dropdwon handler  
   step.querySelectorAll('select').forEach(select => {
