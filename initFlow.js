@@ -211,11 +211,12 @@ step.querySelectorAll('.sponsor-optin').forEach(button => {
     const answer = button.innerText.toLowerCase();
     const isPositive = ['ja', 'yes', 'akkoord'].some(word => answer.includes(word));
 
+    // Antwoord opslaan in sessionStorage (voor evt. longform/coreg answer field)
     if (campaign.coregAnswerKey) {
       sessionStorage.setItem(campaign.coregAnswerKey, answer);
     }
 
-    // Multi-cid logic: bij positief antwoord en 'forwardTo' meerdere campagnes sturen
+    // --- Multi-cid support: bij positief antwoord en 'forwardTo' meerdere campagnes sturen ---
     let campaignKeys = [campaignId];
     if (isPositive && Array.isArray(campaign.forwardTo)) {
       campaignKeys = campaign.forwardTo;
@@ -224,11 +225,14 @@ step.querySelectorAll('.sponsor-optin').forEach(button => {
     campaignKeys.forEach(key => {
       const c = sponsorCampaigns[key];
       if (!c) return;
+      // Bij requiresLongForm: alleen aan longFormCampaigns toevoegen, niet direct lead sturen
       if (c.requiresLongForm && isPositive) {
         if (!longFormCampaigns.find(item => item.cid === c.cid)) {
           longFormCampaigns.push(c);
         }
-      } else if (!c.requiresLongForm) {
+      }
+      // Geen long form vereist? Direct lead sturen (net als bij tm-coreg)
+      if (!c.requiresLongForm && isPositive) {
         const coregPayload = buildPayload(c);
         const email = sessionStorage.getItem('email') || '';
         if (!isSuspiciousLead(email)) {
@@ -237,6 +241,7 @@ step.querySelectorAll('.sponsor-optin').forEach(button => {
       }
     });
 
+    // Volgende stap tonen in de flow
     step.style.display = 'none';
     const next = steps[steps.indexOf(step) + 1];
     if (next) {
