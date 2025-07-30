@@ -120,7 +120,7 @@ window.renderSponsorPopup = function (container) {
         {
           name: "Meevallers",
           description: "Meevallers mag u benaderen via email over speciale (voordeel)acties en aanbiedingen om u te helpen besparen.",
-          logo: "meevallers.png",
+          logo: "meevallers.jpg",
           address: "Tiengemetenstraat 19\n5628 KM Eindhoven",
           privacyLink: "https://www.meevallers.nu/privacy-statement/",
           checkboxLabel: "Ja. Ik deel mijn gegevens met Meevallers"
