@@ -6,9 +6,22 @@ window.renderSponsorPopupSelectie = function (container) {
     intro: `Hieronder vindt u de sponsors van deze campagne welke u graag hun allerbeste deals en aanbiedingen willen laten zien. Per sponsor is duidelijk aangegeven waarvoor zij contact met u willen opnemen, hoe vaak zij contact met u willen opnemen en via welke manier u gecontacteerd gaat worden (telefoon of email). Tevens staat er bij elke sponsor een link naar hun privacy voorwaarden. Wij raden aan dat u deze privacy voorwaarden doorneemt.`,
     sections: [
       {
-        title: "\ud83d\udce7 Email sponsors",
+        title: "\ud83d\udcde Telemarketing sponsors",
         sponsors: [
           {
+            name: "Trefzeker",
+            description: "Bij Trefzeker Adviesgroep staan we voor dienstverlening die jou helpt het maximale uit de energiemarkt te halen, zonder zorgen en met een focus op heldere communicatie.",
+            logo: "trefzeker.png",
+            address: "Trefzeker Adviesgroep BV\nDalsteindreef 141\n1112 XJ Diemen\nNederland",
+            privacyLink: "https://tref-zeker.com/privacyverklaring/",
+            checkboxLabel: "Trefzeker stelt u een vraag op deze pagina. Alleen bij een positief antwoord worden uw gegevens gedeeld."
+          }
+        ]
+      },
+      {
+        title: "\ud83d\udce7 Email sponsors",
+        sponsors: [
+        {
           name: "Outspot",
           description: "Outspot is een online aanbiedingensite met dagelijkse nieuwe deals op het gebied van reizen, gadgets, mode en meer.",
           logo: "outspot.png",
