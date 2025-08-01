@@ -10,7 +10,7 @@ window.renderSponsorPopupSelectie = function (container) {
         sponsors: [
           {
             name: "Trefzeker",
-            description: "Bij Trefzeker Adviesgroep staan we voor dienstverlening die jou helpt het maximale uit de energiemarkt te halen, zonder zorgen en met een focus op heldere communicatie.",
+            description: "Bij Trefzeker Adviesgroep staan we voor dienstverlening die jou helpt het maximale uit de energiemarkt te halen, zonder zorgen en met een focus op heldere communicatie. Trefzeker stelt u een vraag op deze pagina. Alleen bij een positief antwoord worden uw gegevens gedeeld.",
             logo: "trefzeker.png",
             address: "Trefzeker Adviesgroep BV\nDalsteindreef 141\n1112 XJ Diemen\nNederland",
             privacyLink: "https://tref-zeker.com/privacyverklaring/",
