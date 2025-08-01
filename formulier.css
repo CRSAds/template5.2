@@ -17,22 +17,13 @@
   border-color: #4678FA;
   box-shadow: 0 0 0 2px rgba(70, 120, 250, 0.1);
 }
-
-/* Verberg het standaard pijltje op Chrome/Safari/Edge */
-.form-group select::-ms-expand {
-  display: none;
-}
-.form-group select::-webkit-select-placeholder {
-  color: #B8BFCB;
-}
-
-/* Zorg dat placeholder (disabled/selected) grijs toont */
-.form-group select:invalid {
-  color: #B8BFCB;
-}
+.form-group select::-ms-expand { display: none; }
+.form-group select::-webkit-select-placeholder { color: #B8BFCB; }
+.form-group select:invalid { color: #B8BFCB; }
 
 /* Reset alleen buitenmarges en popup-omlijsting! */
-#sponsor-popup-container {
+#sponsor-popup-container,
+#sponsor-popup-selectie-container {
   margin: 0 !important;
   padding: 0 !important;
   border-radius: 0 !important;
@@ -41,120 +32,198 @@
   max-width: 100vw !important;
 }
 
-/* Geef weer een interne layout, voor spacing binnen de popup */
+/* Sponsor popup algemene layout */
 .sponsor-popup-content {
-  max-width: 760px !important; /* Iets breder op desktop */
-  margin: 36px auto 36px auto !important;
-  padding: 0 18px 28px 18px !important;
-  background: #fff !important;
-  border-radius: 18px !important;
-  box-shadow: 0 2px 22px #0002 !important;
+  max-width: 760px;
+  margin: 36px auto 36px auto;
+  padding: 0 18px 28px 18px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 2px 22px #0002;
 }
 
 /* Introblok */
+.sponsor-intro,
 .sponsor-popup-content > div:first-child {
-  margin-bottom: 32px !important;
-  padding: 28px 26px 24px 26px !important;
-  border-radius: 18px !important;
+  margin-bottom: 32px;
+  padding: 28px 26px 24px 26px;
+  border-radius: 18px;
+  background: #fff;
+}
+.sponsor-intro h1,
+.sponsor-popup-content h1 {
+  font-size: 1.36rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #213753;
+}
+.sponsor-intro p,
+.sponsor-popup-content p {
+  font-size: 1rem;
+  margin-bottom: 0;
+  color: #485262;
+  line-height: 1.55;
 }
 
 /* Sectie zelf (met blauwe titelbalk) */
 .sponsor-popup-content section {
-  margin-bottom: 38px !important;
-  border-radius: 18px !important;
-  box-shadow: 0 2px 12px #0001 !important;
-  padding: 0 !important;
+  margin-bottom: 38px;
+  border-radius: 18px;
+  box-shadow: 0 2px 12px #0001;
+  padding: 0;
+  background: #fff;
 }
-
-/* Titelbalk */
+.sponsor-section-title,
 .sponsor-popup-content section > div:first-child {
-  padding: 14px 28px 13px 24px !important;
-  font-size: 1.11rem !important;
-  border-radius: 18px 18px 0 0 !important;
-  margin-bottom: 0 !important;
+  background: linear-gradient(90deg, #2172b8 0%, #185389 100%);
+  color: #fff;
+  font-size: 1.09rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  padding: 14px 24px 13px 20px;
+  margin: 0 0 16px 0;
+  text-transform: uppercase;
+  border-radius: 18px 18px 0 0;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #18538930;
 }
-
+.sponsor-section-list,
 .sponsor-popup-content section > div:last-child {
-  padding: 18px 20px 14px 20px !important;
+  padding: 12px 10px 8px 10px;
 }
 
-/* Sponsor entry: bredere layout */
-.sponsor-popup-content .sponsor-entry {
-  display: flex !important;
-  align-items: flex-start !important;
-  gap: 22px !important;
-  padding: 0 0 28px 0 !important;
-  margin-bottom: 22px !important;
-  background: none !important;
-  border-radius: 0 !important;
+/* Sponsor entry: 2 kolommen desktop, flex-direction row */
+.sponsor-entry {
+  display: flex;
+  align-items: flex-start;
+  gap: 26px;
+  position: relative;
+  margin-bottom: 24px;
+  background: none;
+  border-radius: 0;
 }
 
-/* Sponsor logo: groter op desktop */
-.sponsor-popup-content .sponsor-entry img {
-  max-width: 75px !important;
-  max-height: 60px !important;
-  border-radius: 10px !important;
-  margin-top: 2px !important;
-  box-shadow: 0 1px 12px #0001 !important;
+/* Linkerkolom: logo + adres */
+.sponsor-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 105px;
+  max-width: 120px;
+  flex-shrink: 0;
+  margin-right: 6px;
+}
+.sponsor-logo {
+  max-width: 72px;
+  max-height: 60px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 12px #0001;
+}
+.sponsor-address {
+  font-size: 0.92em;
+  color: #6b7a8a;
+  white-space: pre-line;
+  margin-bottom: 2px;
+  margin-top: 0;
+}
+
+/* Rechterkolom: inhoud */
+.sponsor-content {
+  flex: 1;
+}
+.sponsor-content h3 {
+  margin: 0 0 4px 0;
+  font-size: 1.09rem;
+  font-weight: 700;
+  color: #183963;
+}
+.sponsor-description {
+  margin-bottom: 8px;
+  color: #364150;
+  font-size: .97rem;
+  line-height: 1.45;
+}
+.sponsor-privacy {
+  display: inline-block;
+  margin-top: 3px;
+  font-size: .93rem;
+  color: #1666af;
+  text-decoration: underline;
 }
 
 /* Separator tussen sponsors */
 .sponsor-entry .sponsor-separator {
   position: absolute;
   left: 0; right: 0;
-  bottom: -13px;
+  bottom: -10px;
+  height: 0;
   border-top: 2px solid #d4e3ef;
   width: 100%;
   margin: 0;
 }
 
-/* Mobiel optimalisatie */
-@media (max-width: 600px) {
+/* ===== Mobiel layout: alles onder elkaar ===== */
+@media (max-width: 700px) {
   .sponsor-popup-content {
-    max-width: 99vw !important;
-    padding: 0 4vw 16vw 4vw !important;
-    border-radius: 11px !important;
-    margin: 14px auto 16px auto !important;
+    max-width: 98vw;
+    padding: 0 3vw 18vw 3vw;
+    border-radius: 12px;
+    margin: 14px auto 16px auto;
   }
+  .sponsor-intro,
   .sponsor-popup-content > div:first-child {
-    padding: 18px 9px 18px 9px !important;
-    border-radius: 12px !important;
+    padding: 17px 7px 17px 7px;
+    border-radius: 10px;
   }
+  .sponsor-section-title,
   .sponsor-popup-content section > div:first-child {
-    padding: 12px 10px 12px 10px !important;
-    font-size: 1rem !important;
-    border-radius: 11px 11px 0 0 !important;
+    padding: 11px 8px 11px 8px;
+    font-size: 0.99rem;
+    border-radius: 11px 11px 0 0;
   }
+  .sponsor-section-list,
   .sponsor-popup-content section > div:last-child {
-    padding: 11px 4px 11px 4px !important;
+    padding: 7px 2px 6px 2px;
   }
-  .sponsor-popup-content .sponsor-entry {
-    gap: 12px !important;
-    padding: 0 0 20px 0 !important;
-    margin-bottom: 10px !important;
-    flex-direction: row !important;
+  .sponsor-entry {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+    margin-bottom: 14px;
   }
-  .sponsor-popup-content .sponsor-entry img {
-    max-width: 45px !important;
-    max-height: 32px !important;
-    border-radius: 7px !important;
+  .sponsor-left {
+    flex-direction: row;
+    align-items: flex-start;
+    min-width: 0;
+    max-width: none;
+    margin-right: 0;
+    margin-bottom: 5px;
+    gap: 13px;
   }
-  .sponsor-popup-content h1 {
-    font-size: 1.09rem !important;
-    margin-bottom: 7px !important;
+  .sponsor-logo {
+    max-width: 45px;
+    max-height: 32px;
+    border-radius: 7px;
+    margin-bottom: 0;
+    margin-right: 0;
   }
-  .sponsor-popup-content h3 {
-    font-size: 1.02rem !important;
-    margin-bottom: 2px !important;
+  .sponsor-address {
+    font-size: 0.92em;
+    margin-bottom: 0;
+    margin-left: 7px;
+    color: #6b7a8a;
   }
-  .sponsor-popup-content p,
-  .sponsor-popup-content .sponsor-entry div,
-  .sponsor-popup-content .sponsor-entry a {
-    font-size: 0.94rem !important;
-    line-height: 1.35 !important;
+  .sponsor-content h3 {
+    font-size: 1.04rem;
+  }
+  .sponsor-description, .sponsor-privacy {
+    font-size: .96rem;
   }
 }
 
+/* --- Formulier styles hieronder, niet popup-specifiek --- */
 form {
   max-width: 480px;
   margin: 0 auto;
@@ -163,14 +232,11 @@ form {
   padding: 10px;
   border-radius: 10px;
 }
-
-/* Geslacht radiobuttons */
 .gender-group {
   display: flex;
   gap: 20px;
   margin-bottom: 16px;
 }
-
 .gender-group .radio-container {
   position: relative;
   padding-left: 32px;
@@ -180,15 +246,11 @@ form {
   display: flex;
   align-items: center;
 }
-
-/* Verborgen standaard input */
 .radio-container input[type="radio"] {
   position: absolute;
   opacity: 0;
   cursor: pointer;
 }
-
-/* Custom cirkel */
 .radio-container .checkmark {
   position: absolute;
   left: 0;
@@ -200,14 +262,10 @@ form {
   border-radius: 50%;
   border: 2px solid #ccc;
 }
-
-/* Actieve radio */
 .radio-container input:checked ~ .checkmark {
   background-color: #ff7300;
   border-color: #ff7300;
 }
-
-/* Witte punt binnenin */
 .radio-container .checkmark::after {
   content: "";
   position: absolute;
@@ -219,12 +277,9 @@ form {
   border-radius: 50%;
   background: white;
 }
-
 .radio-container input:checked ~ .checkmark::after {
   display: block;
 }
-
-/* Labels en inputvelden */
 label {
   display: block;
   margin-bottom: 4px;
@@ -232,31 +287,23 @@ label {
   margin-top: 10px;
   font-size: 14px;
 }
-
 input[type="text"],
 input[type="email"],
 input[type="tel"] {
   width: 100%;
   padding: 8px;
-  font-size: 16px; /* >= 16px voorkomt zoom op mobiel */
+  font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 8px;
   box-sizing: border-box;
   margin-bottom: 0;
 }
-
-/* Geboortedatum */
 .dob-group {
   display: flex;
   gap: 10px;
   margin-top: 6px;
 }
-
-.dob-group input {
-  flex: 1;
-}
-
-/* Knoppen */
+.dob-group input { flex: 1; }
 button[type="submit"],
 button.flow-next,
 button#submit-long-form {
@@ -270,23 +317,10 @@ button#submit-long-form {
   cursor: pointer;
   margin-top: 16px;
 }
-
-button:hover {
-  background-color: #e36200;
-}
-
-/* ===== Responsieve verbeteringen ===== */
-
-/* Kleinere labels op mobiel */
+button:hover { background-color: #e36200; }
 @media (max-width: 480px) {
-  label {
-    font-size: 14px;
-  }
+  label { font-size: 14px; }
 }
-
-/* Kleiner formulier op desktop */
 @media (min-width: 768px) {
-  form {
-    max-width: 420px;
-  }
+  form { max-width: 420px; }
 }
