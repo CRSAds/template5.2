@@ -1,27 +1,5 @@
-/* Verbeterde dropdown styling */
-.form-group select {
-  width: 100%;
-  padding: 10px 14px;
-  border: 1.5px solid #B8BFCB;
-  border-radius: 8px;
-  background: #fff url('data:image/svg+xml;utf8,<svg fill="gray" height="14" viewBox="0 0 20 20" width="14" xmlns="http://www.w3.org/2000/svg"><path d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z"/></svg>') no-repeat right 12px center/18px 18px;
-  font-size: 1rem;
-  color: #1d273b;
-  outline: none;
-  appearance: none;
-  -webkit-appearance: none;
-  transition: border-color 0.2s;
-}
+/* --- Sponsor popup styling --- */
 
-.form-group select:focus {
-  border-color: #4678FA;
-  box-shadow: 0 0 0 2px rgba(70, 120, 250, 0.1);
-}
-.form-group select::-ms-expand { display: none; }
-.form-group select::-webkit-select-placeholder { color: #B8BFCB; }
-.form-group select:invalid { color: #B8BFCB; }
-
-/* Reset alleen buitenmarges en popup-omlijsting! */
 #sponsor-popup-container,
 #sponsor-popup-selectie-container {
   margin: 0 !important;
@@ -32,7 +10,6 @@
   max-width: 100vw !important;
 }
 
-/* Sponsor popup algemene layout */
 .sponsor-popup-content {
   max-width: 760px;
   margin: 36px auto 36px auto;
@@ -73,8 +50,7 @@
   padding: 0;
   background: #fff;
 }
-.sponsor-section-title,
-.sponsor-popup-content section > div:first-child {
+.sponsor-section-title {
   background: linear-gradient(90deg, #2172b8 0%, #185389 100%);
   color: #fff;
   font-size: 1.09rem;
@@ -88,12 +64,11 @@
   align-items: center;
   border-bottom: 1px solid #18538930;
 }
-.sponsor-section-list,
-.sponsor-popup-content section > div:last-child {
+.sponsor-section-list {
   padding: 12px 10px 8px 10px;
 }
 
-/* Sponsor entry: 2 kolommen desktop, flex-direction row */
+/* Sponsor entry: 2 kolommen desktop */
 .sponsor-entry {
   display: flex;
   align-items: flex-start;
@@ -103,8 +78,6 @@
   background: none;
   border-radius: 0;
 }
-
-/* Linkerkolom: logo + adres */
 .sponsor-left {
   display: flex;
   flex-direction: column;
@@ -128,12 +101,11 @@
   margin-bottom: 2px;
   margin-top: 0;
 }
-
-/* Rechterkolom: inhoud */
 .sponsor-content {
   flex: 1;
 }
-.sponsor-content h3 {
+.sponsor-content h3,
+.sponsor-name {
   margin: 0 0 4px 0;
   font-size: 1.09rem;
   font-weight: 700;
@@ -152,8 +124,6 @@
   color: #1666af;
   text-decoration: underline;
 }
-
-/* Separator tussen sponsors */
 .sponsor-entry .sponsor-separator {
   position: absolute;
   left: 0; right: 0;
@@ -177,14 +147,12 @@
     padding: 17px 7px 17px 7px;
     border-radius: 10px;
   }
-  .sponsor-section-title,
-  .sponsor-popup-content section > div:first-child {
+  .sponsor-section-title {
     padding: 11px 8px 11px 8px;
     font-size: 0.99rem;
     border-radius: 11px 11px 0 0;
   }
-  .sponsor-section-list,
-  .sponsor-popup-content section > div:last-child {
+  .sponsor-section-list {
     padding: 7px 2px 6px 2px;
   }
   .sponsor-entry {
@@ -215,7 +183,8 @@
     margin-left: 7px;
     color: #6b7a8a;
   }
-  .sponsor-content h3 {
+  .sponsor-content h3,
+  .sponsor-name {
     font-size: 1.04rem;
   }
   .sponsor-description, .sponsor-privacy {
@@ -223,7 +192,29 @@
   }
 }
 
-/* --- Formulier styles hieronder, niet popup-specifiek --- */
+/* Verbeterde dropdown styling */
+.form-group select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1.5px solid #B8BFCB;
+  border-radius: 8px;
+  background: #fff url('data:image/svg+xml;utf8,<svg fill="gray" height="14" viewBox="0 0 20 20" width="14" xmlns="http://www.w3.org/2000/svg"><path d="M5.293 7.293a1 1 0 0 1 1.414 0L10 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z"/></svg>') no-repeat right 12px center/18px 18px;
+  font-size: 1rem;
+  color: #1d273b;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  transition: border-color 0.2s;
+}
+.form-group select:focus {
+  border-color: #4678FA;
+  box-shadow: 0 0 0 2px rgba(70, 120, 250, 0.1);
+}
+.form-group select::-ms-expand { display: none; }
+.form-group select::-webkit-select-placeholder { color: #B8BFCB; }
+.form-group select:invalid { color: #B8BFCB; }
+
+/* --- Formulier styles, niet popup-specifiek --- */
 form {
   max-width: 480px;
   margin: 0 auto;
