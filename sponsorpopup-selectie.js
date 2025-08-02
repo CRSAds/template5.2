@@ -72,16 +72,15 @@ window.renderSponsorPopupSelectie = function (container) {
   const sponsorsHTML = section =>
     section.sponsors.map((s, i) => `
       <div class="sponsor-entry">
-        <div class="sponsor-left">
+        <div class="sponsor-col sponsor-left">
           <img src="${imageBaseUrl + s.logo}" alt="${s.name} logo" class="sponsor-logo" />
           <div class="sponsor-address">${s.address}</div>
         </div>
-        <div class="sponsor-content">
-          <h3>${s.name}</h3>
+        <div class="sponsor-col sponsor-right">
+          <h3 class="sponsor-name">${s.name}</h3>
           <div class="sponsor-description">${s.description}</div>
           <a href="${s.privacyLink}" target="_blank" class="sponsor-privacy">Privacy Policy</a>
         </div>
-        ${i !== section.sponsors.length-1 ? `<div class="sponsor-separator"></div>` : ''}
       </div>
     `).join('');
 
