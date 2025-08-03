@@ -126,7 +126,8 @@ const sponsorCampaigns = {
     sid: 34,
     requiresLongForm: false,
     coregAnswerKey: "coreg_answer_campaign-ad",
-    hasCoregFlow: false
+    hasCoregFlow: false,
+    alwaysSend: true
   },
   "campaign-volkskrant": {
     cid: 3534,
