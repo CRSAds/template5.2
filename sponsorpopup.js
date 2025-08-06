@@ -18,7 +18,7 @@ window.renderSponsorPopup = function (container) {
           },
           {
             name: "Beter Abonnement",
-            description: "Op deze pagina biedt Callsolution BV u – onder de naam Beter Abonnement – de kans op een gepersonaliseerde besparing én een energieaanbieding namens Eneco.",
+            description: "Op deze pagina biedt Callsolution BV u – onder de naam Beter Abonnement – de kans op een gepersonaliseerde besparing én een energieaanbieding namens Eneco. Indien u (een van) de vragen positief beantwoordt, kan het zijn dat u telefonisch wordt benaderd om het aanbod verder toe te lichten.",
             logo: "beterabonnement.png",
             address: "Callsolution BV\nTouwslager 5\n3861 SP, Nijkerk\nNederland",
             privacyLink: "https://www.beterabonnement.nl/privacybeleid/",
