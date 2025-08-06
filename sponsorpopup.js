@@ -10,15 +10,23 @@ window.renderSponsorPopup = function (container) {
         sponsors: [
           {
             name: "My Collections",
-            description: "My Collections biedt u vele voordelen...",
+            description: "My Collections biedt u vele voordelige verzamelpakketten. Wij stellen u een vraag binnen deze pagina of u geïnteresseerd bent in een aanbod.",
             logo: "mycollections.png",
             address: "My Collections BV\nOosteinde 137\n2271 EE Voorburg\nNederland",
             privacyLink: "https://mycollections.com/nl/klantenservice/privacy-statement",
             checkboxLabel: "Ik deel mijn gegevens met My Collections"
           },
           {
+            name: "Beter Abonnement",
+            description: "Callsolution BV met handelsnaam Beter Abonnement stelt u een vraag binnen deze pagina voor het doen van een gepersonaliseerde aanbieding om te besparen op uw vaste lasten.",
+            logo: "beterabonnement.png",
+            address: "Callsolution BV\nTouwslager 5\n3861 SP, Nijkerk\nNederland",
+            privacyLink: "https://www.beterabonnement.nl/privacybeleid/",
+            checkboxLabel: "Ik deel mijn gegevens met Beter Abonnement"
+          },
+          {
             name: "Raadselgids",
-            description: "Wij brengen elke dag...",
+            description: "De leukste puzzelboeken vindt je bij Raadselgids. Wij stellen u een vraag binnen deze pagina of u geïnteresseerd bent in een aanbod.",
             logo: "raadselgids.png",
             address: "Premium Services B.V\nBredaseweg 185\n4872LA, Etten-Leur\nNederland",
             privacyLink: "https://raadselgids.com/privacy-verklaring",
@@ -26,7 +34,7 @@ window.renderSponsorPopup = function (container) {
           },
           {
             name: "Consubeheer",
-            description: "Bespaar met onze energie specialisten...",
+            description: "Bespaar met onze energie specialisten. Wij stellen u een vraag binnen deze pagina of u geïnteresseerd bent in een aanbod.",
             logo: "consubeheer.png",
             address: "Jan Rebelstraat 14A\n1069CC Amsterdam\nNederland",
             privacyLink: "https://raadselgids.com/privacy-verklaring",
