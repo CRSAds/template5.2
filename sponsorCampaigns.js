@@ -35,6 +35,13 @@ const sponsorCampaigns = {
     hasCoregFlow: false,
     alwaysSend: true
   },
+  "campaign-ercapital": {
+    cid: 2245,
+    sid: 34,
+    requiresLongForm: false,
+    hasCoregFlow: false,
+    alwaysSend: true
+  },
   "campaign-bndestem": {
     cid: 4120,
     sid: 34,
