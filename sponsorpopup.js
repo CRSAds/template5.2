@@ -70,6 +70,14 @@ window.renderSponsorPopup = function (container) {
   checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
 },
 {
+  name: "Direct Verdiend",
+  description: "DirectVerdiend mag u benaderen via email over kortingen en aanbiedingen om u te helpen met sparen en besparen.",
+  logo: "directverdiend.png",
+  address: "RSA Online Leads BV.\nDe Eglantier 404\n7329DL Apeldoorn",
+  privacyLink: "https://www.directverdiend.nl/artikelen/geen-category/privacy-statement",
+  checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
+},
+{
   name: "Spaar Actief",
   description: "SpaarActief is een van de populairste cashbackwebsites in Nederland. Verdien geld door aankopen, klikken of inschrijven.",
   logo: "spaaractief.png",
