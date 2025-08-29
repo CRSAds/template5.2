@@ -70,6 +70,14 @@ window.renderSponsorPopup = function (container) {
   checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
 },
 {
+  name: "5popup",
+  description: "5popup mag u benaderen via email met geselecteerde producten en aanbiedingen en informatie over gerelateerde merken en producten.",
+  logo: "5popup.png",
+  address: "Entrada 161\nDuivendrecht, 1114 AA\nNederland",
+  privacyLink: "https://5popup.nl/policies/privacy-policy",
+  checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
+},
+{
   name: "Direct Verdiend",
   description: "DirectVerdiend mag u benaderen via email over kortingen en aanbiedingen om u te helpen met sparen en besparen.",
   logo: "directverdiend.png",
