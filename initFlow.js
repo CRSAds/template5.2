@@ -45,6 +45,11 @@ function selectSplitCampaigns(campaigns) {
 const sponsorCampaigns = selectSplitCampaigns(originalSponsorCampaigns);
 window.sponsorCampaigns = sponsorCampaigns;
 
+// === Mapping: alias campaign-raadselgids → gekozen variant (bijv. -b)
+if (sponsorCampaigns["campaign-raadselgids-b"]) {
+  sponsorCampaigns["campaign-raadselgids"] = sponsorCampaigns["campaign-raadselgids-b"];
+}
+
 // === Originele bestaande code ===
 
 const longFormCampaigns = [];
