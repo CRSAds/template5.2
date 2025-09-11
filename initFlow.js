@@ -1,9 +1,51 @@
-// initFlow.js (NL versie, met dropdown coreg ondersteuning)
 import { reloadImages } from './imageFix.js';
 import { fetchLead, buildPayload } from './formSubmit.js';
-import sponsorCampaigns from './sponsorCampaigns.js';
+import originalSponsorCampaigns from './sponsorCampaigns.js';
 import setupSovendus from './setupSovendus.js';
 import { fireFacebookLeadEventIfNeeded } from './facebookpixel.js';
+
+// ===== NIEUW: splitPercentage ondersteuning =====
+function selectSplitCampaigns(campaigns) {
+  const groups = {};
+
+  Object.entries(campaigns).forEach(([key, campaign]) => {
+    if (campaign.splitGroup) {
+      if (!groups[campaign.splitGroup]) groups[campaign.splitGroup] = [];
+      groups[campaign.splitGroup].push({ ...campaign, key });
+    }
+  });
+
+  const selectedKeys = new Set();
+  const selected = {};
+
+  Object.entries(groups).forEach(([groupName, variants]) => {
+    const r = Math.random() * 100;
+    let total = 0;
+    for (const variant of variants) {
+      total += variant.splitPercentage || 0;
+      if (r <= total && !selectedKeys.has(groupName)) {
+        selected[variant.key] = variant;
+        selectedKeys.add(groupName);
+        break;
+      }
+    }
+  });
+
+  const finalCampaigns = { ...campaigns };
+  Object.keys(campaigns).forEach(key => {
+    const campaign = campaigns[key];
+    if (campaign.splitGroup && !selected[key]) {
+      delete finalCampaigns[key];
+    }
+  });
+
+  return finalCampaigns;
+}
+
+const sponsorCampaigns = selectSplitCampaigns(originalSponsorCampaigns);
+window.sponsorCampaigns = sponsorCampaigns;
+
+// === Originele bestaande code ===
 
 const longFormCampaigns = [];
 window.longFormCampaigns = longFormCampaigns;
@@ -96,7 +138,6 @@ export default function initFlow() {
   }
 
   steps.forEach((step, stepIndex) => {
-    // --- Flow-next knoppen (ook final coreg, skip, etc) ---
     step.querySelectorAll('.flow-next').forEach(btn => {
       btn.addEventListener('click', () => {
         const skipNext = btn.classList.contains('skip-next-section');
@@ -201,118 +242,102 @@ export default function initFlow() {
       });
     });
 
-// --- Sponsor-optin knoppen (JA-knoppen coreg, met multi-cid support) ---
-step.querySelectorAll('.sponsor-optin').forEach(button => {
-  button.addEventListener('click', () => {
-    const campaignId = button.id;
-    const campaign = sponsorCampaigns[campaignId];
-    if (!campaign) return;
+    step.querySelectorAll('.sponsor-optin').forEach(button => {
+      button.addEventListener('click', () => {
+        const campaignId = button.id;
+        const campaign = sponsorCampaigns[campaignId];
+        if (!campaign) return;
 
-    const answer = button.innerText.toLowerCase();
-    const isPositive = ['ja', 'yes', 'akkoord'].some(word => answer.includes(word));
+        const answer = button.innerText.toLowerCase();
+        const isPositive = ['ja', 'yes', 'akkoord'].some(word => answer.includes(word));
 
-    // Verzamel alle campagne sleutels die doorgestuurd moeten worden
-    let campaignKeys = [campaignId];
-    if (isPositive && Array.isArray(campaign.forwardTo)) {
-      campaignKeys = campaign.forwardTo;
-    }
+        let campaignKeys = [campaignId];
+        if (isPositive && Array.isArray(campaign.forwardTo)) {
+          campaignKeys = campaign.forwardTo;
+        }
 
-    // Zet het antwoord op alle relevante coregAnswerKey’s
-    campaignKeys.forEach(key => {
-      const c = sponsorCampaigns[key];
-      if (c && c.coregAnswerKey) {
-        sessionStorage.setItem(c.coregAnswerKey, answer);
-      }
+        campaignKeys.forEach(key => {
+          const c = sponsorCampaigns[key];
+          if (c && c.coregAnswerKey) {
+            sessionStorage.setItem(c.coregAnswerKey, answer);
+          }
+        });
+
+        campaignKeys.forEach(key => {
+          const c = sponsorCampaigns[key];
+          if (c && c.requiresLongForm && isPositive) {
+            if (!longFormCampaigns.find(item => item.cid === c.cid)) {
+              longFormCampaigns.push(c);
+            }
+          } else if (c && !c.requiresLongForm && isPositive) {
+            const coregPayload = buildPayload(c);
+            const email = sessionStorage.getItem('email') || '';
+            if (!isSuspiciousLead(email)) {
+              fetchLead(coregPayload);
+            }
+          }
+        });
+
+        step.style.display = 'none';
+        const next = steps[steps.indexOf(step) + 1];
+        if (next) {
+          next.style.display = 'block';
+          reloadImages(next);
+        }
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
     });
 
-    // Voeg alle requiresLongForm campagnes toe aan longFormCampaigns
-    campaignKeys.forEach(key => {
-      const c = sponsorCampaigns[key];
-      if (c && c.requiresLongForm && isPositive) {
-        if (!longFormCampaigns.find(item => item.cid === c.cid)) {
-          longFormCampaigns.push(c);
+    step.querySelectorAll('select').forEach(select => {
+      select.addEventListener('change', () => {
+        const selectedValue = select.value;
+        if (!selectedValue) return;
+
+        const campaign = sponsorCampaigns[selectedValue];
+        if (campaign && campaign.alwaysSend) {
+          sessionStorage.setItem(`dropdown_answer_${selectedValue}`, select.options[select.selectedIndex].text);
+          const payload = buildPayload(campaign);
+          fetchLead(payload);
+          step.style.display = 'none';
+          const next = steps[steps.indexOf(step) + 1];
+          if (next) {
+            next.style.display = 'block';
+            reloadImages(next);
+          }
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          return;
         }
-      } else if (c && !c.requiresLongForm && isPositive) {
-        const coregPayload = buildPayload(c);
-        const email = sessionStorage.getItem('email') || '';
-        if (!isSuspiciousLead(email)) {
-          fetchLead(coregPayload);
+
+        const campaignKey = select.getAttribute('data-dropdown-campaign') || select.id;
+        const coregCampaign = sponsorCampaigns[campaignKey];
+        if (coregCampaign && coregCampaign.answerFieldKey) {
+          sessionStorage.setItem(`dropdown_answer_${campaignKey}`, selectedValue);
+
+          if (coregCampaign.requiresLongForm) {
+            if (!longFormCampaigns.find(c => c.cid === coregCampaign.cid)) {
+              longFormCampaigns.push(coregCampaign);
+            }
+          }
+
+          step.style.display = 'none';
+          const next = steps[steps.indexOf(step) + 1];
+          if (next) {
+            next.style.display = 'block';
+            reloadImages(next);
+          }
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-      }
+      });
     });
-
-    // Volgende stap tonen
-    step.style.display = 'none';
-    const next = steps[steps.indexOf(step) + 1];
-    if (next) {
-      next.style.display = 'block';
-      reloadImages(next);
-    }
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-});
-
-  // Dropdwon handler  
-  step.querySelectorAll('select').forEach(select => {
-  select.addEventListener('change', () => {
-    const selectedValue = select.value;
-    if (!selectedValue) return;
-
-    // Check: zit deze key in sponsorCampaigns? Dan is het een directe lead (multi-campaign)
-    const campaign = sponsorCampaigns[selectedValue];
-    if (campaign && campaign.alwaysSend) {
-      // Sla antwoord op (option tekst in sessionStorage)
-      sessionStorage.setItem(`dropdown_answer_${selectedValue}`, select.options[select.selectedIndex].text);
-
-      // Verstuur de lead
-      const payload = buildPayload(campaign);
-      fetchLead(payload);
-
-      // Schakel door naar volgende sectie
-      step.style.display = 'none';
-      const next = steps[steps.indexOf(step) + 1];
-      if (next) {
-        next.style.display = 'block';
-        reloadImages(next);
-      }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
-    }
-
-    // Anders reguliere dropdown zoals trefzeker
-    const campaignKey = select.getAttribute('data-dropdown-campaign') || select.id;
-    const coregCampaign = sponsorCampaigns[campaignKey];
-    if (coregCampaign && coregCampaign.answerFieldKey) {
-      sessionStorage.setItem(`dropdown_answer_${campaignKey}`, selectedValue);
-
-      if (coregCampaign.requiresLongForm) {
-        if (!longFormCampaigns.find(c => c.cid === coregCampaign.cid)) {
-          longFormCampaigns.push(coregCampaign);
-        }
-      }
-
-      step.style.display = 'none';
-      const next = steps[steps.indexOf(step) + 1];
-      if (next) {
-        next.style.display = 'block';
-        reloadImages(next);
-      }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  });
-});
-
   });
 
-  // ========== Multi-step coreg logic ================
   Object.entries(sponsorCampaigns).forEach(([campaignId, config]) => {
     if (config.hasCoregFlow && config.coregAnswerKey) {
       initGenericCoregSponsorFlow(campaignId, config.coregAnswerKey);
     }
   });
 
-  // ========== Sovendus doorschakeling ============
   const sovendusSection = document.getElementById('sovendus-section');
   const nextAfterSovendus = sovendusSection?.nextElementSibling;
 
@@ -338,7 +363,6 @@ step.querySelectorAll('.sponsor-optin').forEach(button => {
   }
 }
 
-// ========== MULTI-STEP COREG LOGICA ================
 const coregAnswers = {};
 window.coregAnswers = coregAnswers;
 
