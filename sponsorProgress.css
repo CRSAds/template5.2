@@ -1,63 +1,77 @@
-/* Volledige wrapper (tekst + bar) */
+/* Wrapper */
 #sponsor-progress-wrapper {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  background: #ffffff;
-  padding: 16px 0;
+  background: linear-gradient(90deg, #fff8e1, #ffe0b2);
+  padding: 20px 0 28px;
   text-align: center;
-  font-family: Arial, sans-serif;
+  font-family: 'Comic Neue', Arial, sans-serif;
   z-index: 9999;
   display: none;
   pointer-events: none;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
 }
 
-/* Tekst boven de balk */
+/* Tekst */
 #sponsor-progress-text {
-  font-size: 18px;
-  font-weight: bold;
-  color: #222;
+  font-size: 20px;
+  font-weight: 700;
+  color: #ff6f00;
   margin-bottom: 12px;
+  text-shadow: 1px 1px 0 #fff;
   pointer-events: none;
 }
 
-/* Container van de voortgangsbalk */
+/* Container */
 #sponsor-progress-container {
-  background: #fff3e0;
-  border-radius: 16px;
-  width: 80%;
-  max-width: 480px;
+  background: #ffe0b2;
+  border-radius: 24px;
+  width: 85%;
+  max-width: 520px;
   margin: 0 auto;
-  height: 12px;
-  overflow: visible;
+  height: 20px;
   position: relative;
-  pointer-events: none;
+  overflow: hidden;
 }
 
 /* Gevulde balk */
 #sponsor-progress-fill {
-  background: linear-gradient(to right, #ffb300, #f57c00);
+  background: linear-gradient(90deg, #ff9800, #f44336);
   height: 100%;
   width: 0%;
-  border-radius: 16px;
+  border-radius: 24px;
   transition: width 0.4s ease-in-out;
   position: relative;
-  pointer-events: none;
+  box-shadow: inset 0 0 6px rgba(255,255,255,0.7);
+  animation: pulseGlow 2s infinite alternate;
 }
 
-/* Zon als marker (buiten de balk, zwevend) */
-#sponsor-progress-fill::after {
-  content: '';
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 6px rgba(255,255,255,0.7); }
+  100% { box-shadow: 0 0 16px rgba(255,193,7,0.9); }
+}
+
+/* Sterren rij */
+#sponsor-progress-stars {
+  display: flex;
+  justify-content: space-between;
   position: absolute;
-  top: 50%;
-  right: 0;
-  transform: translate(50%, -50%);
-  width: 32px;
-  height: 32px;
-  background-image: url('./assets/sun.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  pointer-events: none;
+  top: -32px;
+  left: 0;
+  width: 100%;
+  padding: 0 12px;
+}
+
+#sponsor-progress-stars span {
+  font-size: 28px;
+  opacity: 0.3;
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+#sponsor-progress-stars span.active {
+  opacity: 1;
+  transform: scale(1.2);
+  color: gold;
 }
