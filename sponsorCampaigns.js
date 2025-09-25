@@ -199,7 +199,7 @@ const sponsorCampaigns = {
     coregAnswerKey: "coreg_answer_campaign-raadselgids",
     hasCoregFlow: false,
     splitGroup: "raadselgids",
-    splitPercentage: 100
+    splitPercentage: 0
   },
   "campaign-raadselgids-b": {
     cid: 5314,
@@ -208,7 +208,7 @@ const sponsorCampaigns = {
     coregAnswerKey: "coreg_answer_campaign-raadselgids",
     hasCoregFlow: false,
     splitGroup: "raadselgids",
-    splitPercentage: 0
+    splitPercentage: 100
   },
   "campaign-tuinmanieren": {
     cid: 4852,
