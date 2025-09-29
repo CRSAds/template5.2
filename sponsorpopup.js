@@ -174,6 +174,14 @@ window.renderSponsorPopup = function (container) {
           checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
         },
         {
+          name: "ClickToBuy",
+          description: "Al sinds januari 2011 zijn onze inkopers dagelijks op jacht naar de beste aanbiedingen rechtstreeks van de fabriek. Ontvang onze dagelijkse koopjes alert met de nieuwste en beste tijdelijke aanbiedingen!",
+          logo: "clicktobuy.png",
+          address: "Rota IM\nSingel 6 B\n4357BW Domburg\nKvK: 60536179",
+          privacyLink: "https://www.clicktobuy.nl/pages/privacy-policy",
+          checkboxLabel: "Ja. Ik wil de dagelijkse koopjes alert ontvangen"
+        },
+        {
           name: "MyClics",
           description: "MyClics is een online loyaliteitsprogramma. Maak snel een account aan, en je kunt direct beginnen met online geld verdienen en besparen.",
           logo: "myclics.png",
