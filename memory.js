@@ -1,6 +1,14 @@
 console.log("memory.js geladen!");
 
 const iconSets = {
+  herfst: [
+    'acorn.png', 'acorn.png',
+    'mushroom.png', 'mushroom.png',
+    'fox.png', 'fox.png',
+    'pumpkin.png', 'pumpkin.png',
+    'tree.png', 'tree.png',
+    'leaf.png', 'leaf.png'
+  ],
   summer: [
     'beach-umbrella.png', 'beach-umbrella.png',
     'flamingo.png', 'flamingo.png',
