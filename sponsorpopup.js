@@ -70,12 +70,12 @@ window.renderSponsorPopup = function (container) {
   checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
 },
 {
-  name: "5popup",
-  description: "5popup mag u benaderen via email met geselecteerde producten en aanbiedingen en informatie over gerelateerde merken en producten.",
-  logo: "5popup.png",
-  address: "Entrada 161\nDuivendrecht, 1114 AA\nNederland",
-  privacyLink: "https://5popup.nl/policies/privacy-policy",
-  checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
+  name: "Brand New Day",
+  description: "Brand New Day is een Nederlandse bank die gespecialiseerd is in pensioen- en beleggingsproducten.",
+  logo: "Logo_BND.png",
+  address: "BrandNewDay Bank N.V.\nHoogoorddreef 15\n1101 BA Amsterdam",
+  privacyLink: "https://new.brandnewday.nl/privacy-en-cookiestatement/",
+  checkboxLabel: "Ja. Brand New Day mag mij via e-mail benaderen met aanbiedingen over pensioen- en beleggingsproducten."
 },
 {
   name: "Direct Verdiend",
