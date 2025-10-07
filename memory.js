@@ -25,6 +25,14 @@ const iconSets = {
     'bananas.png', 'bananas.png',
     'orange.png', 'orange.png'
   ],
+    halloween: [
+    'bat.png', 'bat.png',
+    'costume.png', 'costume.png',
+    'dracula.png', 'dracula.png',
+    'eye.png', 'eye.png',
+    'haunted-house.png', 'haunted-house.png',
+    'pumpkin.png', 'pumpkin.png'
+  ],
   summerbeauty: [
     'FlipFlops.png', 'FlipFlops.png',
     'Photo.png', 'Photo.png',
