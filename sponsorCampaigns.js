@@ -84,6 +84,13 @@ const sponsorCampaigns = {
     hasCoregFlow: false,
     alwaysSend: true
   },
+  "campaign-voordeelvanger": {
+    cid: 5380,
+    sid: 34,
+    requiresLongForm: false,
+    hasCoregFlow: false,
+    alwaysSend: true
+  },
     "campaign-aownu": {
     cid: 4423,
     sid: 397,
