@@ -207,12 +207,14 @@ export function setupFormSubmit() {
             key => sponsorCampaigns[key].cid === campaign.cid
           );
 
-          // Controleer of het antwoord deze ID bevat
-          const isPositiveById = answer.includes(`[${campaignKey}]`);
-          sendLead = isPositiveById;
+          // Case-insensitive ID-check zonder leestekengevoeligheid
+          const normalizedAnswer = answer.replace(/\s+/g, '').toLowerCase();
+          const normalizedKey = `[${campaignKey.toLowerCase().replace(/\s+/g, '')}]`;
+          const isPositiveById = normalizedAnswer.includes(normalizedKey);
+        sendLead = isPositiveById;
 
-          console.log(`🔎 ID-gebaseerde check voor ${campaign.cid}:`, isPositiveById, '→', answer);
-        }
+        console.log(`🔎 ID-gebaseerde check voor ${campaign.cid}:`, isPositiveById, '→', normalizedKey, normalizedAnswer);
+          }
 
         if (sendLead) {
           const payload = buildPayload(campaign);
