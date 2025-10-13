@@ -379,11 +379,22 @@ function initGenericCoregSponsorFlow(sponsorId, coregAnswerKey) {
     const buttons = section.querySelectorAll('.flow-next');
     buttons.forEach(button => {
       button.addEventListener('click', () => {
+        // 📋 Sla tekst + button-ID op voor latere logica
         const answerText = button.innerText.trim();
-        coregAnswers[sponsorId].push(answerText);
+        const buttonId = button.id || '';
+        coregAnswers[sponsorId].push(buttonId ? `${answerText} [${buttonId}]` : answerText);
 
-        if (!button.classList.contains('sponsor-next')) return;
+        // ⚙️ Alleen doorgaan naar volgende stap als het een sponsor-next is
+        if (!button.classList.contains('sponsor-next')) {
+          // gewone flow-next → naar volgende coreg-sectie
+          section.style.display = 'none';
+          const next = document.querySelector('.coreg-section[style*="display: none;"] + .coreg-section');
+          if (next) next.style.display = 'block';
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          return;
+        }
 
+        // ✅ Heeft deze button een next-step verwijzing?
         let nextStepId = '';
         button.classList.forEach(cls => {
           if (cls.startsWith('next-step-')) {
@@ -391,8 +402,10 @@ function initGenericCoregSponsorFlow(sponsorId, coregAnswerKey) {
           }
         });
 
+        // Sluit huidige stap
         section.style.display = 'none';
 
+        // Toon volgende stap (indien aanwezig)
         if (nextStepId) {
           const nextSection = document.getElementById(nextStepId);
           if (nextSection) {
@@ -401,6 +414,7 @@ function initGenericCoregSponsorFlow(sponsorId, coregAnswerKey) {
             handleGenericNextCoregSponsor(sponsorId, coregAnswerKey);
           }
         } else {
+          // Geen next-step → dit was de laatste stap
           handleGenericNextCoregSponsor(sponsorId, coregAnswerKey);
         }
 
@@ -411,24 +425,33 @@ function initGenericCoregSponsorFlow(sponsorId, coregAnswerKey) {
 }
 
 function handleGenericNextCoregSponsor(sponsorId, coregAnswerKey) {
-  // 📋 Alle gegeven antwoorden samenvoegen
+  // 📋 Alle antwoorden samenvoegen
   const combinedAnswer = coregAnswers[sponsorId].join(' - ');
   sessionStorage.setItem(coregAnswerKey, combinedAnswer);
 
-  // ✅ Long-form sponsor detectie en positief-antwoord check
   const campaign = window.sponsorCampaigns[sponsorId];
-  if (campaign && campaign.requiresLongForm) {
-    const lowerAnswer = combinedAnswer.toLowerCase();
-    const positiveWords = ["ja", "yes", "akkoord", "zonnepanelen", "warmtepomp", "isolatie"];
 
-    const isPositive = positiveWords.some(word => lowerAnswer.includes(word));
-    if (isPositive) {
-      if (!window.longFormCampaigns.find(c => c.cid === campaign.cid)) {
-        window.longFormCampaigns.push(campaign);
-        console.log("✅ Long-form sponsor toegevoegd:", sponsorId, campaign);
+  // ✅ Alleen bij long form sponsors controleren op positief antwoord
+  if (campaign && campaign.requiresLongForm) {
+    // Controle: is dit de laatste stap van deze coreg-sponsor?
+    const lastStepId = `campaign-${sponsorId}-step2`;
+    const lastStepEl = document.getElementById(lastStepId);
+    const isLastStep = !lastStepEl || window.getComputedStyle(lastStepEl).display === 'none';
+
+    // Alleen toevoegen na de laatste stap (bijv. Groene Vrienden stap 2)
+    if (isLastStep) {
+      const clickedHasPositiveId = coregAnswers[sponsorId].some(answer =>
+        answer.toLowerCase().includes(sponsorId.toLowerCase())
+      );
+
+      if (clickedHasPositiveId) {
+        if (!window.longFormCampaigns.find(c => c.cid === campaign.cid)) {
+          window.longFormCampaigns.push(campaign);
+          console.log("✅ Long-form sponsor toegevoegd via button-ID:", sponsorId);
+        }
+      } else {
+        console.log("⛔️ Geen positief antwoord (geen ID-match) voor", sponsorId);
       }
-    } else {
-      console.log("⛔️ Geen positief antwoord voor long form bij", sponsorId, "→", combinedAnswer);
     }
   }
 
@@ -437,7 +460,7 @@ function handleGenericNextCoregSponsor(sponsorId, coregAnswerKey) {
   const flowNextBtn = currentCoregSection?.querySelector('.flow-next');
   flowNextBtn?.click();
 
-  // 🧠 Check na een fractie van een seconde of het long form moet worden getoond
+  // 🧠 Check na korte delay of long form moet verschijnen
   setTimeout(() => checkIfLongFormShouldBeShown(), 100);
 }
 
