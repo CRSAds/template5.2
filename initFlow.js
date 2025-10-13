@@ -411,13 +411,33 @@ function initGenericCoregSponsorFlow(sponsorId, coregAnswerKey) {
 }
 
 function handleGenericNextCoregSponsor(sponsorId, coregAnswerKey) {
+  // 📋 Alle gegeven antwoorden samenvoegen
   const combinedAnswer = coregAnswers[sponsorId].join(' - ');
   sessionStorage.setItem(coregAnswerKey, combinedAnswer);
 
+  // ✅ Long-form sponsor detectie en positief-antwoord check
+  const campaign = window.sponsorCampaigns[sponsorId];
+  if (campaign && campaign.requiresLongForm) {
+    const lowerAnswer = combinedAnswer.toLowerCase();
+    const positiveWords = ["ja", "yes", "akkoord", "zonnepanelen", "warmtepomp", "isolatie"];
+
+    const isPositive = positiveWords.some(word => lowerAnswer.includes(word));
+    if (isPositive) {
+      if (!window.longFormCampaigns.find(c => c.cid === campaign.cid)) {
+        window.longFormCampaigns.push(campaign);
+        console.log("✅ Long-form sponsor toegevoegd:", sponsorId, campaign);
+      }
+    } else {
+      console.log("⛔️ Geen positief antwoord voor long form bij", sponsorId, "→", combinedAnswer);
+    }
+  }
+
+  // 🔄 Automatisch doorgaan naar de volgende coreg-sectie
   const currentCoregSection = document.querySelector(`.coreg-section[style*="display: block"]`);
   const flowNextBtn = currentCoregSection?.querySelector('.flow-next');
   flowNextBtn?.click();
 
+  // 🧠 Check na een fractie van een seconde of het long form moet worden getoond
   setTimeout(() => checkIfLongFormShouldBeShown(), 100);
 }
 
