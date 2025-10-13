@@ -374,7 +374,7 @@ window.coregAnswers = coregAnswers;
 function initGenericCoregSponsorFlow(sponsorId, coregAnswerKey) {
   coregAnswers[sponsorId] = [];
 
-  const allSections = document.querySelectorAll(`[id^="campaign-${sponsorId}"]`);
+  const allSections = document.querySelectorAll(`[id^="${sponsorId}"]`);
   allSections.forEach(section => {
     const buttons = section.querySelectorAll('.flow-next');
     buttons.forEach(button => {
