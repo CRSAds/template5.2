@@ -120,7 +120,7 @@ const sponsorCampaigns = {
     requiresLongForm: true,
     coregAnswerKey: "coreg_answer_campaign-groenevrienden",
     hasCoregFlow: true,
-    answerFieldKey: "f_2014_coreg_answer"
+    answerFieldKey: "f_2674_Type_Huis"
   },
     "campaign-vastelasten": {
     cid: 4951,
