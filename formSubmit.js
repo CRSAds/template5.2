@@ -178,7 +178,7 @@ export function setupFormSubmit() {
     const form = section.querySelector('form');
     if (!validateLongForm(form)) return;
 
-    // 🧾 Form waarden opslaan in sessionStorage
+    // 🧾 Formgegevens opslaan
     ['postcode', 'straat', 'huisnummer', 'woonplaats', 'telefoon'].forEach(id => {
       const val = document.getElementById(id)?.value.trim();
       if (val) sessionStorage.setItem(id, val);
@@ -191,7 +191,7 @@ export function setupFormSubmit() {
 
         let sendLead = false;
 
-        // 1️⃣ Dropdown-coregs (zoals Trefzeker)
+        // 1️⃣ Dropdown-campagnes (zoals Trefzeker)
         if (campaign.answerFieldKey) {
           const campaignKey =
             campaign.campaignId ||
@@ -199,20 +199,21 @@ export function setupFormSubmit() {
           const dropdownValue = sessionStorage.getItem(`dropdown_answer_${campaignKey}`);
           sendLead = !!dropdownValue;
         } else {
-          // 2️⃣ Standaard ja/nee-coregs
-          const answer =
-            (sessionStorage.getItem(campaign.coregAnswerKey || '') || '').toLowerCase();
+          // 2️⃣ ID-gebaseerde check (stabieler dan tekst)
+          const answer = (sessionStorage.getItem(campaign.coregAnswerKey || '') || '').toLowerCase();
 
-          // leestekens weghalen en normaliseren
-          const normalizedAnswer = answer.replace(/[^a-z0-9\s]/g, '').trim();
-          sendLead =
-            normalizedAnswer.startsWith('ja') ||
-            ['yes', 'akkoord'].some(word => normalizedAnswer.includes(word));
+          // Vind de juiste campaign-key (zoals "campaign-groenevrienden")
+          const campaignKey = Object.keys(sponsorCampaigns).find(
+            key => sponsorCampaigns[key].cid === campaign.cid
+          );
 
-          console.log(`🔎 Normalized answer check voor ${campaign.cid}:`, normalizedAnswer, '→ sendLead:', sendLead);
+          // Controleer of het antwoord deze ID bevat
+          const isPositiveById = answer.includes(`[${campaignKey}]`);
+          sendLead = isPositiveById;
+
+          console.log(`🔎 ID-gebaseerde check voor ${campaign.cid}:`, isPositiveById, '→', answer);
         }
 
-        // ✅ Lead versturen als positief
         if (sendLead) {
           const payload = buildPayload(campaign);
           fetchLead(payload);
@@ -249,6 +250,7 @@ export function setupFormSubmit() {
     }
   });
 }
+
     // === [GEEN AANPASSING, tmc optin] ===
     const tmcosponsors = Object.values(sponsorCampaigns).filter(c => c.tmcosponsor);
     const sponsorOptin = sessionStorage.getItem('sponsor_optin') || '';
