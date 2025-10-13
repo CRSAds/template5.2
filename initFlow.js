@@ -425,43 +425,73 @@ function initGenericCoregSponsorFlow(sponsorId, coregAnswerKey) {
 }
 
 function handleGenericNextCoregSponsor(sponsorId, coregAnswerKey) {
+  console.log("▶️ handleGenericNextCoregSponsor gestart voor:", sponsorId);
+
   // 📋 Alle antwoorden samenvoegen
-  const combinedAnswer = coregAnswers[sponsorId].join(' - ');
+  const combinedAnswer = coregAnswers[sponsorId]?.join(' - ') || '';
+  console.log("🧾 Combined answer:", combinedAnswer);
   sessionStorage.setItem(coregAnswerKey, combinedAnswer);
 
   const campaign = window.sponsorCampaigns[sponsorId];
+  if (!campaign) {
+    console.warn("⚠️ Geen campaign-config gevonden voor:", sponsorId);
+  } else {
+    console.log("📣 Campaign gevonden:", campaign);
+  }
 
   // ✅ Alleen bij long form sponsors controleren op positief antwoord
   if (campaign && campaign.requiresLongForm) {
-    // Controle: is dit de laatste stap van deze coreg-sponsor?
+    console.log("🧠 Long form vereist voor:", sponsorId);
+
+    // Check of dit de laatste stap is (bijv. step2 bij GroeneVrienden)
     const lastStepId = `campaign-${sponsorId}-step2`;
     const lastStepEl = document.getElementById(lastStepId);
     const isLastStep = !lastStepEl || window.getComputedStyle(lastStepEl).display === 'none';
+    console.log("📍 Is laatste stap?", isLastStep, "→", lastStepId);
 
-    // Alleen toevoegen na de laatste stap (bijv. Groene Vrienden stap 2)
     if (isLastStep) {
+      // Controleer of één van de antwoorden een button-ID bevat die overeenkomt met sponsorId
       const clickedHasPositiveId = coregAnswers[sponsorId].some(answer =>
         answer.toLowerCase().includes(sponsorId.toLowerCase())
       );
+      console.log("🔍 ID-match gevonden?", clickedHasPositiveId);
 
       if (clickedHasPositiveId) {
         if (!window.longFormCampaigns.find(c => c.cid === campaign.cid)) {
           window.longFormCampaigns.push(campaign);
-          console.log("✅ Long-form sponsor toegevoegd via button-ID:", sponsorId);
+          console.log("✅ Long-form sponsor toegevoegd aan longFormCampaigns:", sponsorId);
+        } else {
+          console.log("ℹ️ Campaign stond al in longFormCampaigns:", sponsorId);
         }
       } else {
-        console.log("⛔️ Geen positief antwoord (geen ID-match) voor", sponsorId);
+        console.log("⛔️ Geen positief antwoord voor", sponsorId, "→", combinedAnswer);
       }
+    } else {
+      console.log("⏸️ Nog niet laatste stap, long form skippen voorlopig");
     }
+  } else {
+    console.log("ℹ️ Geen long form nodig of campaign onbekend:", sponsorId);
   }
 
-  // 🔄 Automatisch doorgaan naar de volgende coreg-sectie
-  const currentCoregSection = document.querySelector(`.coreg-section[style*="display: block"]`);
-  const flowNextBtn = currentCoregSection?.querySelector('.flow-next');
-  flowNextBtn?.click();
+  // 🔄 Doorgaan naar de volgende coreg-sectie
+  const currentCoregSection = Array.from(document.querySelectorAll('.coreg-section'))
+    .find(s => window.getComputedStyle(s).display !== 'none');
+  console.log("📦 Huidige coreg sectie:", currentCoregSection?.id);
 
-  // 🧠 Check na korte delay of long form moet verschijnen
-  setTimeout(() => checkIfLongFormShouldBeShown(), 100);
+  const flowNextBtn = currentCoregSection?.querySelector('.flow-next');
+  if (flowNextBtn) {
+    console.log("👉 Klik volgende flow-next om door te gaan");
+    flowNextBtn.click();
+  } else {
+    console.warn("⚠️ Geen flow-next knop gevonden om door te klikken");
+  }
+
+  // 🧠 Check of long form moet worden getoond
+  console.log("🧩 checkIfLongFormShouldBeShown() wordt nu uitgevoerd");
+  setTimeout(() => {
+    console.log("📦 LongFormCampaigns (nu):", window.longFormCampaigns);
+    checkIfLongFormShouldBeShown();
+  }, 100);
 }
 
 function checkIfLongFormShouldBeShown() {
