@@ -178,29 +178,41 @@ export function setupFormSubmit() {
     const form = section.querySelector('form');
     if (!validateLongForm(form)) return;
 
+    // 🧾 Form waarden opslaan in sessionStorage
     ['postcode', 'straat', 'huisnummer', 'woonplaats', 'telefoon'].forEach(id => {
       const val = document.getElementById(id)?.value.trim();
       if (val) sessionStorage.setItem(id, val);
     });
 
-    // === [UK DROPDOWN SUPPORT - Toegevoegd blok] ===
+    // === LONG FORM LEADS ===
     if (Array.isArray(window.longFormCampaigns)) {
       window.longFormCampaigns.forEach(campaign => {
         if (campaign.tmcosponsor) return;
 
         let sendLead = false;
-        // 1. Voor campaigns met answerFieldKey (dropdown)
+
+        // 1️⃣ Dropdown-coregs (zoals Trefzeker)
         if (campaign.answerFieldKey) {
-          const campaignKey = campaign.campaignId || Object.keys(sponsorCampaigns).find(key => sponsorCampaigns[key].cid === campaign.cid);
+          const campaignKey =
+            campaign.campaignId ||
+            Object.keys(sponsorCampaigns).find(key => sponsorCampaigns[key].cid === campaign.cid);
           const dropdownValue = sessionStorage.getItem(`dropdown_answer_${campaignKey}`);
           sendLead = !!dropdownValue;
         } else {
-          // 2. Standaard Ja/Nee check
-          const answer = (sessionStorage.getItem(campaign.coregAnswerKey || '') || '').toLowerCase();
-          sendLead = answer.startsWith('ja') || // vangt 'Ja, ...' of 'Ja graag'
-          ['yes', 'akkoord'].some(word => answer.includes(word));
-          console.log(`Antwoord voor campaign ${campaign.cid}:`, answer);
+          // 2️⃣ Standaard ja/nee-coregs
+          const answer =
+            (sessionStorage.getItem(campaign.coregAnswerKey || '') || '').toLowerCase();
+
+          // leestekens weghalen en normaliseren
+          const normalizedAnswer = answer.replace(/[^a-z0-9\s]/g, '').trim();
+          sendLead =
+            normalizedAnswer.startsWith('ja') ||
+            ['yes', 'akkoord'].some(word => normalizedAnswer.includes(word));
+
+          console.log(`🔎 Normalized answer check voor ${campaign.cid}:`, normalizedAnswer, '→ sendLead:', sendLead);
         }
+
+        // ✅ Lead versturen als positief
         if (sendLead) {
           const payload = buildPayload(campaign);
           fetchLead(payload);
@@ -210,6 +222,33 @@ export function setupFormSubmit() {
       });
     }
 
+    // === TMCO sponsors ===
+    const tmcosponsors = Object.values(sponsorCampaigns).filter(c => c.tmcosponsor);
+    const sponsorOptin = sessionStorage.getItem('sponsor_optin') || '';
+
+    if (sponsorOptin) {
+      tmcosponsors.forEach(campaign => {
+        const payload = buildPayload(campaign, { includeSponsors: false });
+        fetchLead(payload);
+      });
+    } else {
+      console.log("⛔️ Geen sponsor_optin, tmcosponsors worden niet verstuurd");
+    }
+
+    // === NAVIGEER NAAR VOLGENDE SECTIE ===
+    section.style.display = 'none';
+    const steps = Array.from(document.querySelectorAll('.flow-section, .coreg-section'));
+    const idx = steps.findIndex(s => s.id === 'long-form-section');
+    const next = steps[idx + 1];
+
+    if (next) {
+      next.classList.remove('hide-on-live');
+      next.style.removeProperty('display');
+      reloadImages(next);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  });
+}
     // === [GEEN AANPASSING, tmc optin] ===
     const tmcosponsors = Object.values(sponsorCampaigns).filter(c => c.tmcosponsor);
     const sponsorOptin = sessionStorage.getItem('sponsor_optin') || '';
