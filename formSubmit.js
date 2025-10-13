@@ -250,30 +250,3 @@ export function setupFormSubmit() {
     }
   });
 }
-
-    // === [GEEN AANPASSING, tmc optin] ===
-    const tmcosponsors = Object.values(sponsorCampaigns).filter(c => c.tmcosponsor);
-    const sponsorOptin = sessionStorage.getItem('sponsor_optin') || '';
-
-    if (sponsorOptin) {
-      tmcosponsors.forEach(campaign => {
-        const payload = buildPayload(campaign, { includeSponsors: false });
-        fetchLead(payload);
-      });
-    } else {
-      console.log("⛔️ Geen sponsor_optin, tmcosponsors worden niet verstuurd");
-    }
-
-    section.style.display = 'none';
-    const steps = Array.from(document.querySelectorAll('.flow-section, .coreg-section'));
-    const idx = steps.findIndex(s => s.id === 'long-form-section');
-    const next = steps[idx + 1];
-
-    if (next) {
-      next.classList.remove('hide-on-live');
-      next.style.removeProperty('display');
-      reloadImages(next);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  });
-}
