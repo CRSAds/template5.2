@@ -197,10 +197,10 @@ export function setupFormSubmit() {
         } else {
           // 2. Standaard Ja/Nee check
           const answer = (sessionStorage.getItem(campaign.coregAnswerKey || '') || '').toLowerCase();
-          sendLead = ['ja', 'yes', 'akkoord'].some(word => answer.includes(word));
+          sendLead = answer.startsWith('ja') || // vangt 'Ja, ...' of 'Ja graag'
+          ['yes', 'akkoord'].some(word => answer.includes(word));
           console.log(`Antwoord voor campaign ${campaign.cid}:`, answer);
         }
-
         if (sendLead) {
           const payload = buildPayload(campaign);
           fetchLead(payload);
