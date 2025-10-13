@@ -2,6 +2,9 @@
 import { reloadImages } from './imageFix.js';
 import sponsorCampaigns from './sponsorCampaigns.js';
 
+// ✅ Gebruik bestaande campaign-set als initFlow.js die al heeft gezet
+// (voorkomt dat de actieve runtime-campagnes worden overschreven)
+window.sponsorCampaigns = window.sponsorCampaigns || sponsorCampaigns;
 window.submittedCampaigns = window.submittedCampaigns || new Set();
 
 const sponsorOptinText = `spaaractief_ja snelverdienen_ja brandnewday_ja directdeals_ja clicktobuy_ja directverdiend_ja yuccies_ja qliqs_ja outspot_ja onlineacties_ja betervrouw_ja ipay_ja meevallers_ja cashbackkorting_ja cashhier_ja myclics_ja seniorenvoordeelpas_ja favorieteacties_ja spaaronline_ja cashbackacties_ja woolsocks_ja centmail_ja`;
