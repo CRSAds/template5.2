@@ -430,7 +430,6 @@ function handleGenericNextCoregSponsor(sponsorId, coregAnswerKey) {
   // 📋 Alle antwoorden samenvoegen
   const combinedAnswer = coregAnswers[sponsorId]?.join(' - ') || '';
   console.log("🧾 Combined answer:", combinedAnswer);
-  sessionStorage.setItem(coregAnswerKey, combinedAnswer);
 
   const campaign = window.sponsorCampaigns[sponsorId];
   if (!campaign) {
@@ -449,7 +448,11 @@ function handleGenericNextCoregSponsor(sponsorId, coregAnswerKey) {
     const isLastStep = !lastStepEl || window.getComputedStyle(lastStepEl).display === 'none';
     console.log("📍 Is laatste stap?", isLastStep, "→", lastStepId);
 
+    // ✳️ Alleen na laatste stap opslaan en verder verwerken
     if (isLastStep) {
+      sessionStorage.setItem(coregAnswerKey, combinedAnswer);
+      console.log("💾 Antwoord opgeslagen voor", sponsorId, "→", combinedAnswer);
+
       // Controleer of één van de antwoorden een button-ID bevat die overeenkomt met sponsorId
       const clickedHasPositiveId = coregAnswers[sponsorId].some(answer =>
         answer.toLowerCase().includes(sponsorId.toLowerCase())
@@ -467,7 +470,7 @@ function handleGenericNextCoregSponsor(sponsorId, coregAnswerKey) {
         console.log("⛔️ Geen positief antwoord voor", sponsorId, "→", combinedAnswer);
       }
     } else {
-      console.log("⏸️ Nog niet laatste stap, long form skippen voorlopig");
+      console.log("⏸️ Nog niet laatste stap – antwoorden nog niet opgeslagen");
     }
   } else {
     console.log("ℹ️ Geen long form nodig of campaign onbekend:", sponsorId);
