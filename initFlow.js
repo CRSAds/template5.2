@@ -476,17 +476,26 @@ function handleGenericNextCoregSponsor(sponsorId, coregAnswerKey) {
     console.log("ℹ️ Geen long form nodig of campaign onbekend:", sponsorId);
   }
 
-  // 🔄 Doorgaan naar de volgende coreg-sectie
-  const currentCoregSection = Array.from(document.querySelectorAll('.coreg-section'))
+  // 🔄 Doorgaan naar de volgende zichtbare sectie (flow- of sponsor-step)
+  const currentStep = Array.from(document.querySelectorAll('.flow-section, .sponsor-step'))
     .find(s => window.getComputedStyle(s).display !== 'none');
-  console.log("📦 Huidige coreg sectie:", currentCoregSection?.id);
+  console.log("📦 Huidige stap:", currentStep?.id);
 
-  const flowNextBtn = currentCoregSection?.querySelector('.flow-next');
+  const flowNextBtn = currentStep?.querySelector('.flow-next');
   if (flowNextBtn) {
     console.log("👉 Klik volgende flow-next om door te gaan");
     flowNextBtn.click();
   } else {
-    console.warn("⚠️ Geen flow-next knop gevonden om door te klikken");
+    console.warn("⚠️ Geen flow-next knop gevonden om door te klikken — zoek volgende zichtbare sectie");
+    const allSteps = Array.from(document.querySelectorAll('.flow-section, .sponsor-step'));
+    const currentIndex = allSteps.findIndex(s => s.id === currentStep?.id);
+    const next = allSteps[currentIndex + 1];
+    if (next) {
+      console.log("➡️ Handmatig volgende sectie tonen:", next.id);
+      next.style.display = 'block';
+      reloadImages(next);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }
 
   // 🧠 Check of long form moet worden getoond
