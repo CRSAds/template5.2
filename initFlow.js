@@ -385,15 +385,18 @@ window.coregAnswers = coregAnswers;
 function initGenericCoregSponsorFlow(sponsorId, coregAnswerKey) {
   coregAnswers[sponsorId] = [];
 
-  const allSections = document.querySelectorAll(`[id^="${sponsorId}"]`);
-  allSections.forEach(section => {
-    const buttons = section.querySelectorAll('.flow-next');
-    buttons.forEach(button => {
-      button.addEventListener('click', () => {
-        // 📋 Sla tekst + button-ID op voor latere logica
-        const answerText = button.innerText.trim();
-        const buttonId = button.id || '';
-        coregAnswers[sponsorId].push(buttonId ? `${answerText} [${buttonId}]` : answerText);
+buttons.forEach(button => {
+  button.addEventListener('click', () => {
+    // ⛔️ Stop coreg-logica als dit een skip-next-section knop is
+    if (button.classList.contains('skip-next-section')) {
+      console.log(`⏭️ Skip-button gedetecteerd in ${sponsorId}, coreg-flow niet uitvoeren`);
+      return; // voorkom dat stap2 of handleGenericNextCoregSponsor wordt getriggerd
+    }
+
+    // 📋 Sla tekst + button-ID op voor latere logica
+    const answerText = button.innerText.trim();
+    const buttonId = button.id || '';
+    coregAnswers[sponsorId].push(buttonId ? `${answerText} [${buttonId}]` : answerText);
 
         // ⚙️ Alleen doorgaan naar volgende stap als het een sponsor-next is
         if (!button.classList.contains('sponsor-next')) {
