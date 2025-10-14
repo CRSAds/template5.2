@@ -482,12 +482,30 @@ function handleGenericNextCoregSponsor(sponsorId, coregAnswerKey) {
     .find(s => window.getComputedStyle(s).display !== 'none');
   console.log("📦 Huidige stap:", currentStep?.id);
 
+  // Detecteer of de geklikte knop een skip-next heeft
+  const clickedButton = event?.target || document.activeElement;
+  const skipNext = clickedButton?.classList?.contains('skip-next-section');
+
+  if (skipNext) {
+    console.log("⏭️ Skip-next-section gedetecteerd, sla één sectie over");
+    const allSteps = Array.from(document.querySelectorAll('.flow-section, .sponsor-step'));
+    const currentIndex = allSteps.findIndex(s => s.id === currentStep?.id);
+    const next = allSteps[currentIndex + 2];
+    if (next) {
+      console.log("➡️ Handmatig volgende sectie tonen:", next.id);
+      next.style.display = 'block';
+      reloadImages(next);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    return;
+  }
+
   const flowNextBtn = currentStep?.querySelector('.flow-next');
   if (flowNextBtn) {
     console.log("👉 Klik volgende flow-next om door te gaan");
     flowNextBtn.click();
   } else {
-    console.warn("⚠️ Geen flow-next knop gevonden om door te klikken — zoek volgende zichtbare sectie");
+    console.warn("⚠️ Geen flow-next knop gevonden — zoek volgende zichtbare sectie");
     const allSteps = Array.from(document.querySelectorAll('.flow-section, .sponsor-step'));
     const currentIndex = allSteps.findIndex(s => s.id === currentStep?.id);
     const next = allSteps[currentIndex + 1];
