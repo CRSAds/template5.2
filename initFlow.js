@@ -385,25 +385,33 @@ window.coregAnswers = coregAnswers;
 function initGenericCoregSponsorFlow(sponsorId, coregAnswerKey) {
   coregAnswers[sponsorId] = [];
 
-buttons.forEach(button => {
-  button.addEventListener('click', () => {
-    // ⛔️ Stop coreg-logica als dit een skip-next-section knop is
-    if (button.classList.contains('skip-next-section')) {
-      console.log(`⏭️ Skip-button gedetecteerd in ${sponsorId}, coreg-flow niet uitvoeren`);
-      return; // voorkom dat stap2 of handleGenericNextCoregSponsor wordt getriggerd
-    }
+  const allSections = document.querySelectorAll(`[id^="${sponsorId}"]`);
+  allSections.forEach(section => {
+    const buttons = section.querySelectorAll('.flow-next');
+    buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        // ⛔️ Stop coreg-logica als dit een skip-next-section knop is
+        if (button.classList.contains('skip-next-section')) {
+          console.log(`⏭️ Skip-button gedetecteerd in ${sponsorId}, coreg-flow niet uitvoeren`);
+          return; // voorkom dat stap2 of handleGenericNextCoregSponsor wordt getriggerd
+        }
 
-    // 📋 Sla tekst + button-ID op voor latere logica
-    const answerText = button.innerText.trim();
-    const buttonId = button.id || '';
-    coregAnswers[sponsorId].push(buttonId ? `${answerText} [${buttonId}]` : answerText);
+        // 📋 Sla tekst + button-ID op voor latere logica
+        const answerText = button.innerText.trim();
+        const buttonId = button.id || '';
+        coregAnswers[sponsorId].push(buttonId ? `${answerText} [${buttonId}]` : answerText);
 
         // ⚙️ Alleen doorgaan naar volgende stap als het een sponsor-next is
         if (!button.classList.contains('sponsor-next')) {
           // gewone flow-next → naar volgende coreg-sectie
           section.style.display = 'none';
-          const next = document.querySelector('.coreg-section[style*="display: none;"] + .coreg-section');
-          if (next) next.style.display = 'block';
+          const allSteps = Array.from(document.querySelectorAll('.flow-section, .sponsor-step'));
+          const currentIndex = allSteps.findIndex(s => s.id === section.id);
+          const next = allSteps[currentIndex + 1];
+          if (next) {
+            next.style.display = 'block';
+            reloadImages(next);
+          }
           window.scrollTo({ top: 0, behavior: 'smooth' });
           return;
         }
