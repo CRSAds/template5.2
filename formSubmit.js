@@ -191,6 +191,14 @@ export function setupFormSubmit() {
       window.longFormCampaigns.forEach(campaign => {
         if (campaign.tmcosponsor) return;
 
+        // 🟩 Als campaign bevestigd is (isConfirmed: true) → direct versturen
+        if (campaign.isConfirmed) {
+          const payload = buildPayload(campaign);
+          fetchLead(payload);
+          console.log(`✅ Direct verstuurd via confirmed flag voor ${campaign.cid}`);
+          return;
+        }
+
         let sendLead = false;
 
         // 1️⃣ Dropdown-campagnes (zoals Trefzeker)
@@ -204,20 +212,15 @@ export function setupFormSubmit() {
           // 2️⃣ Hybride check: ID-match of tekst-match
           const answer = (sessionStorage.getItem(campaign.coregAnswerKey || '') || '').toLowerCase();
 
-          // Vind juiste campaign-key (zoals "campaign-groenevrienden")
           const campaignKey = Object.keys(sponsorCampaigns).find(
             key => sponsorCampaigns[key].cid === campaign.cid
           );
 
-          // Case-insensitive ID-check
           const normalizedAnswer = answer.replace(/\s+/g, '').toLowerCase();
           const normalizedKey = `[${campaignKey.toLowerCase().replace(/\s+/g, '')}]`;
           const hasIdMatch = normalizedAnswer.includes(normalizedKey);
-
-          // Tekst-fallback (voor simpele coregs zoals Raadselgids)
           const hasPositiveWord = ['ja', 'yes', 'akkoord'].some(word => answer.includes(word));
 
-          // Combineer beide checks
           const isPositive = hasIdMatch || hasPositiveWord;
           sendLead = isPositive;
 
@@ -229,7 +232,6 @@ export function setupFormSubmit() {
           });
         }
 
-        // ✅ Lead versturen
         if (sendLead) {
           const payload = buildPayload(campaign);
           fetchLead(payload);
@@ -254,7 +256,7 @@ export function setupFormSubmit() {
 
     // === NAVIGEER NAAR VOLGENDE SECTIE ===
     section.style.display = 'none';
-    const steps = Array.from(document.querySelectorAll('.flow-section, .coreg-section'));
+    const steps = Array.from(document.querySelectorAll('.flow-section, .sponsor-step'));
     const idx = steps.findIndex(s => s.id === 'long-form-section');
     const next = steps[idx + 1];
 
