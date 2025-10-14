@@ -146,6 +146,17 @@ export default function initFlow() {
     step.querySelectorAll('.flow-next').forEach(btn => {
       btn.addEventListener('click', () => {
         const skipNext = btn.classList.contains('skip-next-section');
+        if (skipNext && step.id === 'campaign-groenevrienden-step1') {
+            console.log("⏭️ GroeneVrienden stap1 negatief antwoord, sla stap2 over");
+            step.style.display = 'none';
+        const next = steps[stepIndex + 2];
+        if (next) {
+            next.style.display = 'block';
+            reloadImages(next);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        return;
+        }
         const isFinalCoreg = btn.classList.contains('final-coreg');
 
         if (isFinalCoreg && longFormCampaigns.length === 0) {
@@ -483,8 +494,9 @@ function handleGenericNextCoregSponsor(sponsorId, coregAnswerKey) {
   console.log("📦 Huidige stap:", currentStep?.id);
 
   // Detecteer of de geklikte knop een skip-next heeft
-  const clickedButton = event?.target || document.activeElement;
-  const skipNext = clickedButton?.classList?.contains('skip-next-section');
+  // Gebruik alleen skipNext als gebruiker ZELF op een knop met skip-next-section klikte
+  const activeEl = document.activeElement;
+  const skipNext = activeEl && activeEl.classList && activeEl.classList.contains('skip-next-section');
 
   if (skipNext) {
     console.log("⏭️ Skip-next-section gedetecteerd, sla één sectie over");
