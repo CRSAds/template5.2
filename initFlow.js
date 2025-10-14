@@ -461,7 +461,8 @@ function handleGenericNextCoregSponsor(sponsorId, coregAnswerKey) {
 
       if (clickedHasPositiveId) {
         if (!window.longFormCampaigns.find(c => c.cid === campaign.cid)) {
-          window.longFormCampaigns.push(campaign);
+          const confirmedCampaign = { ...campaign, isConfirmed: true };
+          window.longFormCampaigns.push(confirmedCampaign);
           console.log("✅ Long-form sponsor toegevoegd aan longFormCampaigns:", sponsorId);
         } else {
           console.log("ℹ️ Campaign stond al in longFormCampaigns:", sponsorId);
