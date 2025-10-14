@@ -93,10 +93,18 @@ export function buildPayload(campaign, options = { includeSponsors: true }) {
     payload.telefoon = sessionStorage.getItem('telefoon') || '';
   }
 
-  // === [GEEN AANPASSING, bestaande Ja/Nee coreg logica] ===
-  if (campaign.coregAnswerKey) {
-    payload.f_2014_coreg_answer = sessionStorage.getItem(campaign.coregAnswerKey) || '';
+// === [COREG-ANTWOORDEN EN CUSTOM FIELD SUPPORT] ===
+if (campaign.coregAnswerKey) {
+  const answer = sessionStorage.getItem(campaign.coregAnswerKey) || '';
+  payload.f_2014_coreg_answer = answer;
+
+  // ✅ Als deze campagne een eigen answerFieldKey heeft (zoals Type_Huis bij GroeneVrienden)
+  //    sla dan hetzelfde antwoord ook op in dat veld.
+  if (campaign.answerFieldKey) {
+    payload[campaign.answerFieldKey] = answer;
+    console.log(`📨 Custom field ${campaign.answerFieldKey} gevuld voor ${campaign.cid}:`, answer);
   }
+}
 
   // === [UK DROPDOWN SUPPORT - Toegevoegd blok] ===
   // Alleen voor campagnes met answerFieldKey (tweede stap/dropdown)
