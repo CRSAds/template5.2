@@ -201,23 +201,35 @@ export function setupFormSubmit() {
           const dropdownValue = sessionStorage.getItem(`dropdown_answer_${campaignKey}`);
           sendLead = !!dropdownValue;
         } else {
-          // 2️⃣ ID-gebaseerde check (stabieler dan tekst)
+          // 2️⃣ Hybride check: ID-match of tekst-match
           const answer = (sessionStorage.getItem(campaign.coregAnswerKey || '') || '').toLowerCase();
 
-          // Vind de juiste campaign-key (zoals "campaign-groenevrienden")
+          // Vind juiste campaign-key (zoals "campaign-groenevrienden")
           const campaignKey = Object.keys(sponsorCampaigns).find(
             key => sponsorCampaigns[key].cid === campaign.cid
           );
 
-          // Case-insensitive ID-check zonder leestekengevoeligheid
+          // Case-insensitive ID-check
           const normalizedAnswer = answer.replace(/\s+/g, '').toLowerCase();
           const normalizedKey = `[${campaignKey.toLowerCase().replace(/\s+/g, '')}]`;
-          const isPositiveById = normalizedAnswer.includes(normalizedKey);
-        sendLead = isPositiveById;
+          const hasIdMatch = normalizedAnswer.includes(normalizedKey);
 
-        console.log(`🔎 ID-gebaseerde check voor ${campaign.cid}:`, isPositiveById, '→', normalizedKey, normalizedAnswer);
-          }
+          // Tekst-fallback (voor simpele coregs zoals Raadselgids)
+          const hasPositiveWord = ['ja', 'yes', 'akkoord'].some(word => answer.includes(word));
 
+          // Combineer beide checks
+          const isPositive = hasIdMatch || hasPositiveWord;
+          sendLead = isPositive;
+
+          console.log(`🔎 Hybride check voor ${campaign.cid}:`, {
+            answer,
+            hasIdMatch,
+            hasPositiveWord,
+            sendLead
+          });
+        }
+
+        // ✅ Lead versturen
         if (sendLead) {
           const payload = buildPayload(campaign);
           fetchLead(payload);
