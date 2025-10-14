@@ -98,11 +98,10 @@ if (campaign.coregAnswerKey) {
   const answer = sessionStorage.getItem(campaign.coregAnswerKey) || '';
   payload.f_2014_coreg_answer = answer;
 
-  // ✅ Als deze campagne een eigen answerFieldKey heeft (zoals Type_Huis bij GroeneVrienden)
-  //    sla dan hetzelfde antwoord ook op in dat veld.
-  if (campaign.answerFieldKey) {
+  // ✅ Extra veld voor GroeneVrienden (Type Huis)
+  if (campaign.answerFieldKey && campaign.cid === 5446) {
     payload[campaign.answerFieldKey] = answer;
-    console.log(`📨 Custom field ${campaign.answerFieldKey} gevuld voor ${campaign.cid}:`, answer);
+    console.log(`🏡 Type Huis veld (${campaign.answerFieldKey}) gevuld:`, answer);
   }
 }
 
