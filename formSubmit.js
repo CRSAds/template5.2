@@ -2,9 +2,7 @@
 import { reloadImages } from './imageFix.js';
 import sponsorCampaigns from './sponsorCampaigns.js';
 
-// ✅ Gebruik bestaande campaign-set als initFlow.js die al heeft gezet
-// (voorkomt dat de actieve runtime-campagnes worden overschreven)
-window.sponsorCampaigns = window.sponsorCampaigns || sponsorCampaigns;
+window.sponsorCampaigns = sponsorCampaigns;
 window.submittedCampaigns = window.submittedCampaigns || new Set();
 
 const sponsorOptinText = `spaaractief_ja snelverdienen_ja brandnewday_ja directdeals_ja clicktobuy_ja directverdiend_ja yuccies_ja qliqs_ja outspot_ja onlineacties_ja betervrouw_ja ipay_ja meevallers_ja cashbackkorting_ja cashhier_ja myclics_ja seniorenvoordeelpas_ja favorieteacties_ja spaaronline_ja cashbackacties_ja woolsocks_ja centmail_ja`;
@@ -93,17 +91,10 @@ export function buildPayload(campaign, options = { includeSponsors: true }) {
     payload.telefoon = sessionStorage.getItem('telefoon') || '';
   }
 
-// === [COREG-ANTWOORDEN EN CUSTOM FIELD SUPPORT] ===
-if (campaign.coregAnswerKey) {
-  const answer = sessionStorage.getItem(campaign.coregAnswerKey) || '';
-  payload.f_2014_coreg_answer = answer;
-
-  // ✅ Extra veld voor GroeneVrienden (Type Huis)
-  if (campaign.answerFieldKey && campaign.cid === 5446) {
-    payload[campaign.answerFieldKey] = answer;
-    console.log(`🏡 Type Huis veld (${campaign.answerFieldKey}) gevuld:`, answer);
+  // === [GEEN AANPASSING, bestaande Ja/Nee coreg logica] ===
+  if (campaign.coregAnswerKey) {
+    payload.f_2014_coreg_answer = sessionStorage.getItem(campaign.coregAnswerKey) || '';
   }
-}
 
   // === [UK DROPDOWN SUPPORT - Toegevoegd blok] ===
   // Alleen voor campagnes met answerFieldKey (tweede stap/dropdown)
@@ -187,56 +178,27 @@ export function setupFormSubmit() {
     const form = section.querySelector('form');
     if (!validateLongForm(form)) return;
 
-    // 🧾 Formgegevens opslaan
     ['postcode', 'straat', 'huisnummer', 'woonplaats', 'telefoon'].forEach(id => {
       const val = document.getElementById(id)?.value.trim();
       if (val) sessionStorage.setItem(id, val);
     });
 
-    // === LONG FORM LEADS ===
+    // === [UK DROPDOWN SUPPORT - Toegevoegd blok] ===
     if (Array.isArray(window.longFormCampaigns)) {
       window.longFormCampaigns.forEach(campaign => {
         if (campaign.tmcosponsor) return;
 
-        // 🟩 Als campaign bevestigd is (isConfirmed: true) → direct versturen
-        if (campaign.isConfirmed) {
-          const payload = buildPayload(campaign);
-          fetchLead(payload);
-          console.log(`✅ Direct verstuurd via confirmed flag voor ${campaign.cid}`);
-          return;
-        }
-
         let sendLead = false;
-
-        // 1️⃣ Dropdown-campagnes (zoals Trefzeker)
+        // 1. Voor campaigns met answerFieldKey (dropdown)
         if (campaign.answerFieldKey) {
-          const campaignKey =
-            campaign.campaignId ||
-            Object.keys(sponsorCampaigns).find(key => sponsorCampaigns[key].cid === campaign.cid);
+          const campaignKey = campaign.campaignId || Object.keys(sponsorCampaigns).find(key => sponsorCampaigns[key].cid === campaign.cid);
           const dropdownValue = sessionStorage.getItem(`dropdown_answer_${campaignKey}`);
           sendLead = !!dropdownValue;
         } else {
-          // 2️⃣ Hybride check: ID-match of tekst-match
+          // 2. Standaard Ja/Nee check
           const answer = (sessionStorage.getItem(campaign.coregAnswerKey || '') || '').toLowerCase();
-
-          const campaignKey = Object.keys(sponsorCampaigns).find(
-            key => sponsorCampaigns[key].cid === campaign.cid
-          );
-
-          const normalizedAnswer = answer.replace(/\s+/g, '').toLowerCase();
-          const normalizedKey = `[${campaignKey.toLowerCase().replace(/\s+/g, '')}]`;
-          const hasIdMatch = normalizedAnswer.includes(normalizedKey);
-          const hasPositiveWord = ['ja', 'yes', 'akkoord'].some(word => answer.includes(word));
-
-          const isPositive = hasIdMatch || hasPositiveWord;
-          sendLead = isPositive;
-
-          console.log(`🔎 Hybride check voor ${campaign.cid}:`, {
-            answer,
-            hasIdMatch,
-            hasPositiveWord,
-            sendLead
-          });
+          sendLead = ['ja', 'yes', 'akkoord'].some(word => answer.includes(word));
+          console.log(`Antwoord voor campaign ${campaign.cid}:`, answer);
         }
 
         if (sendLead) {
@@ -248,7 +210,7 @@ export function setupFormSubmit() {
       });
     }
 
-    // === TMCO sponsors ===
+    // === [GEEN AANPASSING, tmc optin] ===
     const tmcosponsors = Object.values(sponsorCampaigns).filter(c => c.tmcosponsor);
     const sponsorOptin = sessionStorage.getItem('sponsor_optin') || '';
 
@@ -261,9 +223,8 @@ export function setupFormSubmit() {
       console.log("⛔️ Geen sponsor_optin, tmcosponsors worden niet verstuurd");
     }
 
-    // === NAVIGEER NAAR VOLGENDE SECTIE ===
     section.style.display = 'none';
-    const steps = Array.from(document.querySelectorAll('.flow-section, .sponsor-step'));
+    const steps = Array.from(document.querySelectorAll('.flow-section, .coreg-section'));
     const idx = steps.findIndex(s => s.id === 'long-form-section');
     const next = steps[idx + 1];
 
