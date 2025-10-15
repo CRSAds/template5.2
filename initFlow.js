@@ -146,17 +146,6 @@ export default function initFlow() {
     step.querySelectorAll('.flow-next').forEach(btn => {
       btn.addEventListener('click', () => {
         const skipNext = btn.classList.contains('skip-next-section');
-        if (skipNext && step.id === 'campaign-groenevrienden-step1') {
-            console.log("⏭️ GroeneVrienden stap1 negatief antwoord, sla stap2 over");
-            step.style.display = 'none';
-        const next = steps[stepIndex + 2];
-        if (next) {
-            next.style.display = 'block';
-            reloadImages(next);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }
-        return;
-        }
         const isFinalCoreg = btn.classList.contains('final-coreg');
 
         if (isFinalCoreg && longFormCampaigns.length === 0) {
@@ -264,8 +253,10 @@ export default function initFlow() {
         const campaign = sponsorCampaigns[campaignId];
         if (!campaign) return;
 
-        const answer = button.innerText.toLowerCase();
-        const isPositive = ['ja', 'yes', 'akkoord'].some(word => answer.includes(word));
+        const buttonId = button.id || '';
+        // Positieve selectie op basis van ID — als de ID in sponsorCampaigns voorkomt, is dit een "JA"
+        const isPositive = !!window.sponsorCampaigns[buttonId];
+        console.log(`🔍 Beoordeling op basis van ID (${buttonId}) → positief:`, isPositive);
 
         let campaignKeys = [campaignId];
         if (isPositive && Array.isArray(campaign.forwardTo)) {
@@ -385,38 +376,16 @@ window.coregAnswers = coregAnswers;
 function initGenericCoregSponsorFlow(sponsorId, coregAnswerKey) {
   coregAnswers[sponsorId] = [];
 
-  const allSections = document.querySelectorAll(`[id^="${sponsorId}"]`);
+  const allSections = document.querySelectorAll(`[id^="campaign-${sponsorId}"]`);
   allSections.forEach(section => {
     const buttons = section.querySelectorAll('.flow-next');
     buttons.forEach(button => {
       button.addEventListener('click', () => {
-        // ⛔️ Stop coreg-logica als dit een skip-next-section knop is
-        if (button.classList.contains('skip-next-section')) {
-          console.log(`⏭️ Skip-button gedetecteerd in ${sponsorId}, coreg-flow niet uitvoeren`);
-          return; // voorkom dat stap2 of handleGenericNextCoregSponsor wordt getriggerd
-        }
-
-        // 📋 Sla tekst + button-ID op voor latere logica
         const answerText = button.innerText.trim();
-        const buttonId = button.id || '';
-        coregAnswers[sponsorId].push(buttonId ? `${answerText} [${buttonId}]` : answerText);
+        coregAnswers[sponsorId].push(answerText);
 
-        // ⚙️ Alleen doorgaan naar volgende stap als het een sponsor-next is
-        if (!button.classList.contains('sponsor-next')) {
-          // gewone flow-next → naar volgende coreg-sectie
-          section.style.display = 'none';
-          const allSteps = Array.from(document.querySelectorAll('.flow-section, .sponsor-step'));
-          const currentIndex = allSteps.findIndex(s => s.id === section.id);
-          const next = allSteps[currentIndex + 1];
-          if (next) {
-            next.style.display = 'block';
-            reloadImages(next);
-          }
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-          return;
-        }
+        if (!button.classList.contains('sponsor-next')) return;
 
-        // ✅ Heeft deze button een next-step verwijzing?
         let nextStepId = '';
         button.classList.forEach(cls => {
           if (cls.startsWith('next-step-')) {
@@ -424,10 +393,8 @@ function initGenericCoregSponsorFlow(sponsorId, coregAnswerKey) {
           }
         });
 
-        // Sluit huidige stap
         section.style.display = 'none';
 
-        // Toon volgende stap (indien aanwezig)
         if (nextStepId) {
           const nextSection = document.getElementById(nextStepId);
           if (nextSection) {
@@ -436,7 +403,6 @@ function initGenericCoregSponsorFlow(sponsorId, coregAnswerKey) {
             handleGenericNextCoregSponsor(sponsorId, coregAnswerKey);
           }
         } else {
-          // Geen next-step → dit was de laatste stap
           handleGenericNextCoregSponsor(sponsorId, coregAnswerKey);
         }
 
@@ -447,105 +413,14 @@ function initGenericCoregSponsorFlow(sponsorId, coregAnswerKey) {
 }
 
 function handleGenericNextCoregSponsor(sponsorId, coregAnswerKey) {
-  console.log("▶️ handleGenericNextCoregSponsor gestart voor:", sponsorId);
+  const combinedAnswer = coregAnswers[sponsorId].join(' - ');
+  sessionStorage.setItem(coregAnswerKey, combinedAnswer);
 
-  // 📋 Alle antwoorden samenvoegen
-  const combinedAnswer = coregAnswers[sponsorId]?.join(' - ') || '';
-  console.log("🧾 Combined answer:", combinedAnswer);
+  const currentCoregSection = document.querySelector(`.coreg-section[style*="display: block"]`);
+  const flowNextBtn = currentCoregSection?.querySelector('.flow-next');
+  flowNextBtn?.click();
 
-  const campaign = window.sponsorCampaigns[sponsorId];
-  if (!campaign) {
-    console.warn("⚠️ Geen campaign-config gevonden voor:", sponsorId);
-  } else {
-    console.log("📣 Campaign gevonden:", campaign);
-  }
-
-  // ✅ Alleen bij long form sponsors controleren op positief antwoord
-  if (campaign && campaign.requiresLongForm) {
-    console.log("🧠 Long form vereist voor:", sponsorId);
-
-    // Check of dit de laatste stap is (bijv. step2 bij GroeneVrienden)
-    const lastStepId = `campaign-${sponsorId}-step2`;
-    const lastStepEl = document.getElementById(lastStepId);
-    const isLastStep = !lastStepEl || window.getComputedStyle(lastStepEl).display === 'none';
-    console.log("📍 Is laatste stap?", isLastStep, "→", lastStepId);
-
-    // ✳️ Alleen na laatste stap opslaan en verder verwerken
-    if (isLastStep) {
-      sessionStorage.setItem(coregAnswerKey, combinedAnswer);
-      console.log("💾 Antwoord opgeslagen voor", sponsorId, "→", combinedAnswer);
-
-      // Controleer of één van de antwoorden een button-ID bevat die overeenkomt met sponsorId
-      const clickedHasPositiveId = coregAnswers[sponsorId].some(answer =>
-        answer.toLowerCase().includes(sponsorId.toLowerCase())
-      );
-      console.log("🔍 ID-match gevonden?", clickedHasPositiveId);
-
-      if (clickedHasPositiveId) {
-        if (!window.longFormCampaigns.find(c => c.cid === campaign.cid)) {
-          const confirmedCampaign = { ...campaign, isConfirmed: true };
-          window.longFormCampaigns.push(confirmedCampaign);
-          console.log("✅ Long-form sponsor toegevoegd aan longFormCampaigns:", sponsorId);
-        } else {
-          console.log("ℹ️ Campaign stond al in longFormCampaigns:", sponsorId);
-        }
-      } else {
-        console.log("⛔️ Geen positief antwoord voor", sponsorId, "→", combinedAnswer);
-      }
-    } else {
-      console.log("⏸️ Nog niet laatste stap – antwoorden nog niet opgeslagen");
-    }
-  } else {
-    console.log("ℹ️ Geen long form nodig of campaign onbekend:", sponsorId);
-  }
-
-  // 🔄 Doorgaan naar de volgende zichtbare sectie (flow- of sponsor-step)
-  const currentStep = Array.from(document.querySelectorAll('.flow-section, .sponsor-step'))
-    .find(s => window.getComputedStyle(s).display !== 'none');
-  console.log("📦 Huidige stap:", currentStep?.id);
-
-  // Detecteer of de geklikte knop een skip-next heeft
-  // Gebruik alleen skipNext als gebruiker ZELF op een knop met skip-next-section klikte
-  const activeEl = document.activeElement;
-  const skipNext = activeEl && activeEl.classList && activeEl.classList.contains('skip-next-section');
-
-  if (skipNext) {
-    console.log("⏭️ Skip-next-section gedetecteerd, sla één sectie over");
-    const allSteps = Array.from(document.querySelectorAll('.flow-section, .sponsor-step'));
-    const currentIndex = allSteps.findIndex(s => s.id === currentStep?.id);
-    const next = allSteps[currentIndex + 2];
-    if (next) {
-      console.log("➡️ Handmatig volgende sectie tonen:", next.id);
-      next.style.display = 'block';
-      reloadImages(next);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-    return;
-  }
-
-  const flowNextBtn = currentStep?.querySelector('.flow-next');
-  if (flowNextBtn) {
-    console.log("👉 Klik volgende flow-next om door te gaan");
-    flowNextBtn.click();
-  } else {
-    console.warn("⚠️ Geen flow-next knop gevonden — zoek volgende zichtbare sectie");
-    const allSteps = Array.from(document.querySelectorAll('.flow-section, .sponsor-step'));
-    const currentIndex = allSteps.findIndex(s => s.id === currentStep?.id);
-    const next = allSteps[currentIndex + 1];
-    if (next) {
-      console.log("➡️ Handmatig volgende sectie tonen:", next.id);
-      next.style.display = 'block';
-      reloadImages(next);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }
-
-  // 🧠 Check of long form moet worden getoond
-  console.log("🧩 checkIfLongFormShouldBeShown() wordt nu uitgevoerd");
-  setTimeout(() => {
-    console.log("📦 LongFormCampaigns (nu):", window.longFormCampaigns);
-    checkIfLongFormShouldBeShown();
-  }, 100);
+  setTimeout(() => checkIfLongFormShouldBeShown(), 100);
 }
 
 function checkIfLongFormShouldBeShown() {
