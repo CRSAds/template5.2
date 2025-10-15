@@ -114,11 +114,11 @@ const sponsorCampaigns = {
     hasCoregFlow: true,
     answerFieldKey: "f_2575_coreg_answer_dropdown"
   },
-    "campaign-groenen": {
+    "campaign-groenevrienden": {
     cid: 5446,
     sid: 34,
     requiresLongForm: true,
-    coregAnswerKey: "coreg_answer_campaign-groenen",
+    coregAnswerKey: "coreg_answer_campaign-groenevrienden",
     hasCoregFlow: false
   },
     "campaign-vastelasten": {
