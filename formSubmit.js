@@ -184,31 +184,35 @@ export function setupFormSubmit() {
     });
 
     // === [UK DROPDOWN SUPPORT - Toegevoegd blok] ===
-    if (Array.isArray(window.longFormCampaigns)) {
-      window.longFormCampaigns.forEach(campaign => {
-        if (campaign.tmcosponsor) return;
+if (Array.isArray(window.longFormCampaigns)) {
+  window.longFormCampaigns.forEach(campaign => {
+    if (campaign.tmcosponsor) return;
 
-        let sendLead = false;
-        // 1. Voor campaigns met answerFieldKey (dropdown)
-        if (campaign.answerFieldKey) {
-          const campaignKey = campaign.campaignId || Object.keys(sponsorCampaigns).find(key => sponsorCampaigns[key].cid === campaign.cid);
-          const dropdownValue = sessionStorage.getItem(`dropdown_answer_${campaignKey}`);
-          sendLead = !!dropdownValue;
-        } else {
-          // 2. Standaard Ja/Nee check
-          const answer = (sessionStorage.getItem(campaign.coregAnswerKey || '') || '').toLowerCase();
-          sendLead = ['ja', 'yes', 'akkoord'].some(word => answer.includes(word));
-          console.log(`Antwoord voor campaign ${campaign.cid}:`, answer);
-        }
+    let sendLead = false;
 
-        if (sendLead) {
-          const payload = buildPayload(campaign);
-          fetchLead(payload);
-        } else {
-          console.log(`⛔️ Lead NIET verstuurd voor ${campaign.cid}`);
-        }
-      });
+    // 1️⃣ Dropdown-campagnes
+    if (campaign.answerFieldKey) {
+      const campaignKey = campaign.campaignId ||
+        Object.keys(sponsorCampaigns).find(key => sponsorCampaigns[key].cid === campaign.cid);
+      const dropdownValue = sessionStorage.getItem(`dropdown_answer_${campaignKey}`);
+      sendLead = !!dropdownValue;
+    } else {
+      // 2️⃣ ID-gebaseerde herkenning
+      const campaignKey = Object.keys(sponsorCampaigns).find(key => sponsorCampaigns[key].cid === campaign.cid);
+      const answer = (sessionStorage.getItem(campaign.coregAnswerKey || '') || '').toLowerCase();
+      const isPositiveById = !!sponsorCampaigns[campaignKey];
+      sendLead = isPositiveById;
+      console.log(`Antwoord voor campaign ${campaign.cid}:`, answer);
     }
+
+    if (sendLead) {
+      const payload = buildPayload(campaign);
+      fetchLead(payload);
+    } else {
+      console.log(`⛔️ Lead NIET verstuurd voor ${campaign.cid}`);
+    }
+  });
+}
 
     // === [GEEN AANPASSING, tmc optin] ===
     const tmcosponsors = Object.values(sponsorCampaigns).filter(c => c.tmcosponsor);
