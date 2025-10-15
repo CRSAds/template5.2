@@ -3,7 +3,7 @@ body {
 }
 
 .game-inner {
-  background: white;
+  background: transparant;
   border-radius: 12px;
   padding: 16px 16px 0 16px;
   max-width: 100%;
