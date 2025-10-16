@@ -219,7 +219,7 @@ form {
   max-width: 480px;
   margin: 0 auto;
   font-family: sans-serif;
-  background-color: #E4F3FF;
+  background-color: transparant;
   padding: 10px;
   border-radius: 10px;
 }
