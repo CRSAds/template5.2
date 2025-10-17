@@ -142,14 +142,6 @@ window.renderSponsorPopup = function (container) {
           checkboxLabel: "Ja. Ik deel mijn gegevens met Beter Vrouw"
         },
         {
-          name: "Meevallers",
-          description: "Meevallers mag u benaderen via email over speciale (voordeel)acties en aanbiedingen om u te helpen besparen.",
-          logo: "meevallers.jpg",
-          address: "Tiengemetenstraat 19\n5628 KM Eindhoven",
-          privacyLink: "https://www.meevallers.nu/privacy-statement/",
-          checkboxLabel: "Ja. Ik deel mijn gegevens met Meevallers"
-        },
-        {
           name: "iPay",
           description: "OrangeBuddies is gespecialiseerd in online cashback & loyalty portals met als doel toegevoegde waarde te bieden voor zowel consumenten als adverteerders.",
           logo: "ipay.png",
