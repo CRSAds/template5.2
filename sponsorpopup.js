@@ -214,29 +214,13 @@ window.renderSponsorPopup = function (container) {
           checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
         },
         {
-          name: "Woolsocks",
-          description: "Woolsocks mag u benaderen via email met informatie en promoties gerelateerd aan de Woolstocks producten en diensten.",
-          logo: "woolsocks.png",
-          address: "Woolsocks AG\nNeustadtstrasse 7\n6003 Luzern\nSwitzerland",
-          privacyLink: "https://woolsocks.eu/privacy-and-cookie-statement/index.html",
-          checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
-        },
-        {
-          name: "Dealdonkey",
-          description: "DealDonkey is het online platform om dagelijks de scherpste dagdeals te scoren. Dealdonkey stuurt een dagelijkse nieuwsbrief met de scherpste en meest voordelige aanbiedingen.",
-          logo: "dealdonkey.png",
-          address: "DealDonkey\nHaverstraat 31\n2153 GB\nNieuw-Vennep\nKvK: 52030873",
-          privacyLink: "https://woolsocks.eu/privacy-and-cookie-statement/index.html",
-          checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
-        },
-        {
-          name: "Yuccies",
-          description: "Yuccies biedt een online spaarprogramma, waarmee Gebruikers geld kunnen verdienen door bijvoorbeeld het lezen van commerciële e-mails of het uitproberen van producten.",
-          logo: "yuccies.png",
-          address: "CY Online B.V.\nH.o.d.n. Yuccies\nPostbus 161\n1440 AD Purmerend",
-          privacyLink: "https://www.yuccies.nl/pages/privacy-policy/",
-          checkboxLabel: "Ja. Ik wil de emailnieuwsbrief ontvangen"
-          }
+          name: "Voordeelvanger",
+          description: "Voordeelvanger is er voor iedereen die graag wat geld bespaart, zonder in te leveren op kwaliteit. Elke dag selecteren en mailen we de beste aanbiedingen – van gadgets tot verzorgingsproducten en van mode tot huishoudelijke spullen.",
+          logo: "Logo_Voordeelvanger.png",
+          address: "International Trade Concepts B.V.\nEemnesserweg 11-3\n1251 NA Laren\nKvK: 60613327NL",
+          privacyLink: "https://www.voordeelvanger.nl/privacy",
+          checkboxLabel: "Ja. Voordeelvanger mag mij via e-mail benaderen met aanbiedingen en acties over uiteenlopende producten en diensten."
+        }
         ]
       }
     ]
