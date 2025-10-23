@@ -116,7 +116,7 @@ const sponsorCampaigns = {
   },
     "campaign-groenevrienden": {
     cid: 5446,
-    sid: 34,
+    sid: 628,
     requiresLongForm: true,
     coregAnswerKey: "coreg_answer_campaign-groenevrienden",
     hasCoregFlow: false
