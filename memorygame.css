@@ -65,6 +65,7 @@ body {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   will-change: transform;
   perspective: 1000px;
+  overflow: hidden;
 }
 
 @media (min-width: 768px) {
@@ -100,12 +101,14 @@ body {
 .card .back {
   background-color: #001f3f;
   transform: rotateY(180deg);
+  overflow: hidden; /* afbeelding blijft binnen kaart */
 }
 
 .card img {
   width: 70%;
   height: auto;
-  object-fit: contain;
+  object-fit: cover;
+  display: block;
 }
 
 .overlay {
