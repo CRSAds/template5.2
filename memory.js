@@ -17,6 +17,14 @@ const iconSets = {
     'shirt.png', 'shirt.png',
     'sun.png', 'sun.png'
   ],
+  ebike: [
+  'ebike1.png', 'ebike1.png',
+  'ebike2.png', 'ebike2.png',
+  'ebike3.png', 'ebike3.png',
+  'ebike4.png', 'ebike4.png',
+  'ebike5.png', 'ebike5.png',
+  'ebike6.png', 'ebike6.png'
+  ],
   travel: [
     'booking.png', 'booking.png',
     'vacation.png', 'vacation.png',
