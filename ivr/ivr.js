@@ -76,7 +76,30 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // ✅ Auto-fetch & show PIN when the IVR section is visible
+  // DTMF activeren op knoppen met class .ivr-call-btn
+  function enableAutoDTMF(pincode) {
+    const callButtons = document.querySelectorAll(".ivr-call-btn");
+
+    callButtons.forEach(btn => {
+      btn.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        const originalHref = btn.getAttribute("href") || "";
+        const cleanNumber = originalHref.replace("tel:", "").trim();
+
+        if (!cleanNumber) {
+          console.warn("⚠ Geen geldig telefoonnummer gevonden op .ivr-call-btn");
+          return;
+        }
+
+        const telLink = `tel:${cleanNumber},,${pincode}#`;
+        console.log("→ Nieuwe tel-link:", telLink);
+
+        window.location.href = telLink;
+      });
+    });
+  }
+
   function waitForIVRSectionAndShowPin() {
     let ivrShown = false;
     const checkInterval = setInterval(() => {
@@ -84,94 +107,34 @@ document.addEventListener("DOMContentLoaded", function () {
       if (!ivrSection) return;
 
       const style = window.getComputedStyle(ivrSection);
-      const isVisible = style && style.display !== "none" && style.opacity !== "0" && ivrSection.offsetHeight > 0;
+      const isVisible =
+        style && style.display !== "none" && style.opacity !== "0" && ivrSection.offsetHeight > 0;
 
       if (isVisible && !ivrShown) {
         ivrShown = true;
         clearInterval(checkInterval);
-        console.log("IVR section visible → showing PIN...");
 
-        if (isMobile) {
-          const containerId = "pin-container-mobile";
-          const spinnerId = "pin-code-spinner-mobile";
-          document.getElementById(containerId).style.display = "block";
+        const containerId = isMobile ? "pin-container-mobile" : "pin-container-desktop";
+        const spinnerId = isMobile ? "pin-code-spinner-mobile" : "pin-code-spinner-desktop";
 
-          visitPromise.then(async (internalVisitId) => {
-            const res = await fetch("https://cdn.909support.com/NL/4.1/stage/assets/php/request_pin.php", {
-              method: "POST",
-              headers: { "Content-Type": "application/x-www-form-urlencoded" },
-              body: new URLSearchParams({
-                clickId: transaction_id,
-                internalVisitId
-              })
-            });
-            const data = await res.json();
+        document.getElementById(containerId).style.display = "block";
 
-            if (data.pincode) {
-              animatePinRevealSpinner(data.pincode, spinnerId);
-
-              // 🔥 NIEUW: AUTO DTMF AANMAKEN UIT BUTTON HREF
-              const callButtons = document.querySelectorAll(".ivr-call-btn");
-              callButtons.forEach(btn => {
-                btn.addEventListener("click", function (e) {
-                  e.preventDefault();
-
-                  // Telefoonnummer uit HTML button halen
-                  const originalHref = btn.getAttribute("href") || "";
-                  const cleanNumber = originalHref.replace("tel:", "").trim();
-
-                  const telLink = `tel:${cleanNumber},,${data.pincode}#`;
-                  window.location.href = telLink;
-                });
-              });
-            }
+        visitPromise.then(async (internalVisitId) => {
+          const res = await fetch("https://cdn.909support.com/NL/4.1/stage/assets/php/request_pin.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({
+              clickId: transaction_id,
+              internalVisitId
+            })
           });
+          const data = await res.json();
 
-        } else {
-          const containerId = "pin-container-desktop";
-          const spinnerId = "pin-code-spinner-desktop";
-          document.getElementById(containerId).style.display = "block";
-
-          visitPromise.then(async (internalVisitId) => {
-            const res = await fetch("https://cdn.909support.com/NL/4.1/stage/assets/php/request_pin.php", {
-              method: "POST",
-              headers: { "Content-Type": "application/x-www-form-urlencoded" },
-              body: new URLSearchParams({
-                clickId: transaction_id,
-                internalVisitId
-              })
-            });
-            const data = await res.json();
-
-            if (data.pincode) {
-              animatePinRevealSpinner(data.pincode, spinnerId);
-
-// 🔥 NIEUW: Auto-DTMF click-to-call op ALLE tel:-links
-const callButtons = document.querySelectorAll('a[href^="tel:"]');
-
-callButtons.forEach(btn => {
-  btn.addEventListener("click", function (e) {
-    e.preventDefault();
-
-    // originele tel: link ophalen
-    const originalHref = btn.getAttribute("href"); 
-    console.log("Originele href:", originalHref);
-
-    // nummer eruit halen
-    const cleanNumber = originalHref.replace("tel:", "").trim();
-    console.log("Gevonden telefoonnummer:", cleanNumber);
-
-    // nieuwe tel-link met PIN
-    const telLink = `tel:${cleanNumber},,${data.pincode}#`;
-    console.log("Nieuwe tel-link (met PIN):", telLink);
-
-    // call starten
-    window.location.href = telLink;
-  });
-});
-            }
-          });
-        }
+          if (data.pincode) {
+            animatePinRevealSpinner(data.pincode, spinnerId);
+            enableAutoDTMF(data.pincode);
+          }
+        });
       }
     }, 200);
   }
