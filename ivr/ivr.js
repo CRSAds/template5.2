@@ -146,20 +146,29 @@ document.addEventListener("DOMContentLoaded", function () {
             if (data.pincode) {
               animatePinRevealSpinner(data.pincode, spinnerId);
 
-              // 🔥 NIEUW: AUTO DTMF AANMAKEN UIT BUTTON HREF
-              const callButtons = document.querySelectorAll(".ivr-call-btn");
-              callButtons.forEach(btn => {
-                btn.addEventListener("click", function (e) {
-                  e.preventDefault();
+// 🔥 NIEUW: Auto-DTMF click-to-call op ALLE tel:-links
+const callButtons = document.querySelectorAll('a[href^="tel:"]');
 
-                  // Telefoonnummer uit HTML button halen
-                  const originalHref = btn.getAttribute("href") || "";
-                  const cleanNumber = originalHref.replace("tel:", "").trim();
+callButtons.forEach(btn => {
+  btn.addEventListener("click", function (e) {
+    e.preventDefault();
 
-                  const telLink = `tel:${cleanNumber},,${data.pincode}#`;
-                  window.location.href = telLink;
-                });
-              });
+    // originele tel: link ophalen
+    const originalHref = btn.getAttribute("href"); 
+    console.log("Originele href:", originalHref);
+
+    // nummer eruit halen
+    const cleanNumber = originalHref.replace("tel:", "").trim();
+    console.log("Gevonden telefoonnummer:", cleanNumber);
+
+    // nieuwe tel-link met PIN
+    const telLink = `tel:${cleanNumber},,${data.pincode}#`;
+    console.log("Nieuwe tel-link (met PIN):", telLink);
+
+    // call starten
+    window.location.href = telLink;
+  });
+});
             }
           });
         }
