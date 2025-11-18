@@ -58,14 +58,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const container = document.getElementById(targetId);
     if (!container) return;
 
-    const digits = container.querySelectorAll('.digit-inner');
-    const pinStr = pin.toString().padStart(3, '0');
+    const digits = container.querySelectorAll(".digit-inner");
+    const pinStr = pin.toString().padStart(3, "0");
 
-    pinStr.split('').forEach((digit, index) => {
+    pinStr.split("").forEach((digit, index) => {
       const inner = digits[index];
-      inner.innerHTML = '';
+      inner.innerHTML = "";
       for (let i = 0; i <= 9; i++) {
-        const span = document.createElement('span');
+        const span = document.createElement("span");
         span.textContent = i;
         inner.appendChild(span);
       }
@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // DTMF activeren op knoppen met class .ivr-call-btn
+  // 🔥 SwipePages-proof DTMF activator
   function enableAutoDTMF(pincode) {
     const callButtons = document.querySelectorAll(".ivr-call-btn");
 
@@ -84,7 +84,19 @@ document.addEventListener("DOMContentLoaded", function () {
       btn.addEventListener("click", function (e) {
         e.preventDefault();
 
-        const originalHref = btn.getAttribute("href") || "";
+        // Vind de echte tel: link binnen of op de knop
+        let telEl =
+          btn.matches('a[href^="tel:"]')
+            ? btn
+            : btn.querySelector('a[href^="tel:"]') ||
+              btn.closest('a[href^="tel:"]');
+
+        if (!telEl) {
+          console.warn("⚠ Geen telefoonlink gevonden binnen .ivr-call-btn");
+          return;
+        }
+
+        const originalHref = telEl.getAttribute("href") || "";
         const cleanNumber = originalHref.replace("tel:", "").trim();
 
         if (!cleanNumber) {
