@@ -76,19 +76,19 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // ✅ Auto-show + fetch PIN → works the same on mobile and desktop
+  // ✅ Auto-fetch & show PIN when the IVR section is visible
   function waitForIVRSectionAndShowPin() {
     let ivrShown = false;
     const checkInterval = setInterval(() => {
       const ivrSection = document.getElementById("ivr-section");
-      if (!ivrSection) return; // nog niet aanwezig in DOM
+      if (!ivrSection) return;
 
       const style = window.getComputedStyle(ivrSection);
       const isVisible = style && style.display !== "none" && style.opacity !== "0" && ivrSection.offsetHeight > 0;
 
       if (isVisible && !ivrShown) {
         ivrShown = true;
-        clearInterval(checkInterval); // stop interval → maar 1x doen!
+        clearInterval(checkInterval);
         console.log("IVR section visible → showing PIN...");
 
         if (isMobile) {
@@ -106,8 +106,24 @@ document.addEventListener("DOMContentLoaded", function () {
               })
             });
             const data = await res.json();
+
             if (data.pincode) {
               animatePinRevealSpinner(data.pincode, spinnerId);
+
+              // 🔥 NIEUW: AUTO DTMF AANMAKEN UIT BUTTON HREF
+              const callButtons = document.querySelectorAll(".ivr-call-btn");
+              callButtons.forEach(btn => {
+                btn.addEventListener("click", function (e) {
+                  e.preventDefault();
+
+                  // Telefoonnummer uit HTML button halen
+                  const originalHref = btn.getAttribute("href") || "";
+                  const cleanNumber = originalHref.replace("tel:", "").trim();
+
+                  const telLink = `tel:${cleanNumber},,${data.pincode}#`;
+                  window.location.href = telLink;
+                });
+              });
             }
           });
 
@@ -126,15 +142,30 @@ document.addEventListener("DOMContentLoaded", function () {
               })
             });
             const data = await res.json();
+
             if (data.pincode) {
               animatePinRevealSpinner(data.pincode, spinnerId);
+
+              // 🔥 NIEUW: AUTO DTMF AANMAKEN UIT BUTTON HREF
+              const callButtons = document.querySelectorAll(".ivr-call-btn");
+              callButtons.forEach(btn => {
+                btn.addEventListener("click", function (e) {
+                  e.preventDefault();
+
+                  // Telefoonnummer uit HTML button halen
+                  const originalHref = btn.getAttribute("href") || "";
+                  const cleanNumber = originalHref.replace("tel:", "").trim();
+
+                  const telLink = `tel:${cleanNumber},,${data.pincode}#`;
+                  window.location.href = telLink;
+                });
+              });
             }
           });
         }
       }
-    }, 200); // check elke 200ms
+    }, 200);
   }
 
-  // Start auto-show logic:
   waitForIVRSectionAndShowPin();
 });
