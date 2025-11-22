@@ -76,6 +76,18 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // ✅ Popup sluiten
+  function closePopup() {
+    const mask = document.querySelector('.popup-mask');
+    if (mask) mask.style.display = 'none';
+
+    const pop = document.querySelector('.tatsu-popup-container, section, .sp-section, .tatsu-section, .popup, .modal');
+    if (pop) pop.style.display = 'none';
+
+    document.documentElement.classList.remove('modal-open');
+    document.body.classList.remove('modal-open');
+  }
+
   // 🔥 SwipePages-proof DTMF activator
   function enableAutoDTMF(pincode) {
     const callButtons = document.querySelectorAll(".ivr-call-btn");
@@ -84,7 +96,6 @@ document.addEventListener("DOMContentLoaded", function () {
       btn.addEventListener("click", function (e) {
         e.preventDefault();
 
-        // Vind de echte tel: link binnen of op de knop
         let telEl =
           btn.matches('a[href^="tel:"]')
             ? btn
@@ -104,10 +115,14 @@ document.addEventListener("DOMContentLoaded", function () {
           return;
         }
 
-        const telLink = `tel:${cleanNumber},${pincode}`;
+        const telLink = `tel:${cleanNumber},,${pincode}#`;
         console.log("→ Nieuwe tel-link:", telLink);
 
+        // Start call
         window.location.href = telLink;
+
+        // ⏳ Popup sluiten na 5 seconden
+        setTimeout(closePopup, 5000);
       });
     });
   }
