@@ -121,8 +121,8 @@ document.addEventListener("DOMContentLoaded", function () {
         // Start call
         window.location.href = telLink;
 
-        // ⏳ Popup sluiten na 5 seconden
-        setTimeout(closePopup, 5000);
+        // ⏳ Popup sluiten na 8 seconden
+        setTimeout(closePopup, 8000);
       });
     });
   }
