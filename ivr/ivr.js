@@ -115,7 +115,7 @@ document.addEventListener("DOMContentLoaded", function () {
           return;
         }
 
-        const telLink = `tel:${cleanNumber},,${pincode}#`;
+        const telLink = `tel:${cleanNumber},${pincode}`;
         console.log("→ Nieuwe tel-link:", telLink);
 
         // Start call
