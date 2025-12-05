@@ -33,6 +33,14 @@ const iconSets = {
     'leave.png', 'leave.png',
     'beach.png', 'beach.png'
   ],
+  christmas: [
+  'bauble.png', 'bauble.png',
+  'snowman.png', 'snowman.png',
+  'gift-box.png', 'gift-box.png',
+  'candy-cane.png', 'candy-cane.png',
+  'hat.png', 'hat.png',
+  'christmas-tree.png', 'christmas-tree.png'
+  ],
   fruits: [
     'grapes.png', 'grapes.png',
     'berries.png', 'berries.png',
