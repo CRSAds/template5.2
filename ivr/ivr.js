@@ -32,17 +32,20 @@ document.addEventListener("DOMContentLoaded", function () {
     if (stored) return stored;
 
     try {
-      const res = await fetch("https://cdn.909support.com/NL/4.1/assets/php/register_visit.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({
-          clickId: transaction_id,
-          affId,
-          offerId,
-          subId,
-          subId2: subId,
-        }),
-      });
+      const res = await fetch(
+        "https://cdn.909support.com/NL/4.1/assets/php/register_visit.php",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({
+            clickId: transaction_id,
+            affId,
+            offerId,
+            subId,
+            subId2: subId,
+          }),
+        }
+      );
       const data = await res.json();
       if (data.internalVisitId) {
         localStorage.setItem("internalVisitId", data.internalVisitId);
@@ -73,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // ---------------------------------------------
-  // ON IVR READY (Wait until #ivr-section is visible)
+  // ON IVR READY (wait until #ivr-section is visible)
   // If #ivr-section doesn't exist → run immediately
   // ---------------------------------------------
   function onIVRReady(callback) {
@@ -101,7 +104,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // ---------------------------------------------
-  // SPINNER ANIMATION (shared by all spinner modes)
+  // SPINNER ANIMATION (shared)
   // ---------------------------------------------
   function animatePinRevealSpinner(pin, targetId) {
     const container = document.getElementById(targetId);
@@ -121,8 +124,7 @@ document.addEventListener("DOMContentLoaded", function () {
         inner.appendChild(span);
       }
 
-      const offset = parseInt(digit) * 64;
-
+      const offset = parseInt(digit, 10) * 64;
       setTimeout(() => {
         inner.style.transform = `translateY(-${offset}px)`;
       }, 100);
@@ -148,7 +150,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (!telEl) return;
 
-        const num = telEl.getAttribute("href").replace("tel:", "").trim();
+        const num = (telEl.getAttribute("href") || "").replace("tel:", "").trim();
         if (!num) return;
 
         const telLink = `tel:${num},${pincode}`;
@@ -160,8 +162,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // =============================================
-  // MODE 1 — NEW SPINNER MODE (#ivr-spinner)
-  // Device-independent spinner + auto DTMF
+  // MODE 1 — NIEUWE SPINNER MODE (#ivr-spinner)
   // =============================================
   function initSpinnerMode() {
     const root = document.getElementById("ivr-spinner");
@@ -189,6 +190,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
           const data = await res.json();
           if (data.pincode) {
+            console.log("Spinner mode pincode:", data.pincode);
             animatePinRevealSpinner(data.pincode, spinnerId);
             enableAutoDTMF(data.pincode, root);
           }
@@ -201,7 +203,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // =============================================
   // MODE 2 — MANUAL PIN ENTRY (#ivr-manual)
-  // Device-independent input + SubmitPin.php
   // =============================================
   function initManualPinMode() {
     const root = document.getElementById("ivr-manual");
@@ -216,6 +217,31 @@ document.addEventListener("DOMContentLoaded", function () {
     onIVRReady(() => {
       root.style.display = "block";
 
+      // Belangrijk: hier ook request_pin aanroepen,
+      // zodat backend een PIN koppelt aan deze visit
+      visitPromise.then(async (internalVisitId) => {
+        try {
+          const res = await fetch(
+            "https://cdn.909support.com/NL/4.1/stage/assets/php/request_pin.php",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/x-www-form-urlencoded" },
+              body: new URLSearchParams({
+                clickId: transaction_id,
+                internalVisitId,
+              }),
+            }
+          );
+          const data = await res.json();
+          console.log("Manual mode request_pin response:", data);
+          // Pincode tonen is hier niet nodig; IVR leest ’m op,
+          // SubmitPin.php controleert hem server-side.
+        } catch (err) {
+          console.error("Manual mode request_pin error:", err);
+        }
+      });
+
+      // Inputgedrag
       pinInputs.forEach((input, index) => {
         const original = input.getAttribute("placeholder") || "";
 
@@ -265,7 +291,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // FIXED FUNCTION — prevents ReferenceError
   function submitManualPin(pinValue, submitBtn, root) {
     if (!/^\d{3}$/.test(pinValue)) return;
 
@@ -286,6 +311,7 @@ document.addEventListener("DOMContentLoaded", function () {
     })
       .then((res) => res.json())
       .then((data) => {
+        console.log("Manual PIN submit response:", data);
 
         if (data.callId) {
           localStorage.setItem("callId", data.callId);
@@ -296,11 +322,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
           submitBtn.classList.add("loading");
           submitBtn.disabled = true;
-        } 
-        
-        else {
-          // FIXED — retrieve inputs from root
-          root.querySelectorAll(".pin-input").forEach(input => input.value = "");
+        } else {
+          // verkeerde pincode
+          root.querySelectorAll(".pin-input").forEach((input) => (input.value = ""));
+          submitBtn.blur();
 
           if (!localStorage.getItem("errorShown")) {
             const grid = root.querySelector(".inputGrid");
@@ -323,7 +348,6 @@ document.addEventListener("DOMContentLoaded", function () {
             `&aff_id=${encodeURIComponent(localStorage.getItem("aff_id") || "")}` +
             `&offer_id=${encodeURIComponent(localStorage.getItem("offer_id") || "")}` +
             `&sub_id=${encodeURIComponent(localStorage.getItem("sub_id") || "")}`;
-
           window.open(url, "_blank");
 
           setTimeout(() => {
@@ -338,9 +362,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // =============================================
-  // MODE 3 — BACKWARDS COMPATIBILITY
-  // Your existing IVR continues to work untouched
-  // (#ivr-section + #ivr-mobile + #ivr-desktop)
+  // MODE 3 — LEGACY (#ivr-section + #ivr-mobile/#ivr-desktop)
   // =============================================
   function initLegacyMode() {
     const mobile = document.getElementById("ivr-mobile");
@@ -375,6 +397,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
           const data = await res.json();
           if (data.pincode) {
+            console.log("Legacy mode pincode:", data.pincode);
             animatePinRevealSpinner(data.pincode, spinnerId);
             enableAutoDTMF(data.pincode);
           }
