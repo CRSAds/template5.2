@@ -265,6 +265,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // FIXED FUNCTION — prevents ReferenceError
   function submitManualPin(pinValue, submitBtn, root) {
     if (!/^\d{3}$/.test(pinValue)) return;
 
@@ -285,24 +286,32 @@ document.addEventListener("DOMContentLoaded", function () {
     })
       .then((res) => res.json())
       .then((data) => {
+
         if (data.callId) {
           localStorage.setItem("callId", data.callId);
+
           const err = root.querySelector(".error-input");
           if (err) err.remove();
           localStorage.removeItem("errorShown");
 
           submitBtn.classList.add("loading");
           submitBtn.disabled = true;
-        } else {
-          const grid = root.querySelector(".inputGrid");
-          if (!localStorage.getItem("errorShown") && grid) {
-            const div = document.createElement("div");
-            div.className = "error-input";
-            div.textContent = "Onjuiste pincode";
-            grid.insertAdjacentElement("afterend", div);
+        } 
+        
+        else {
+          // FIXED — retrieve inputs from root
+          root.querySelectorAll(".pin-input").forEach(input => input.value = "");
+
+          if (!localStorage.getItem("errorShown")) {
+            const grid = root.querySelector(".inputGrid");
+            if (grid) {
+              const div = document.createElement("div");
+              div.className = "error-input";
+              div.textContent = "Onjuiste pincode";
+              grid.insertAdjacentElement("afterend", div);
+            }
             localStorage.setItem("errorShown", "true");
           }
-          pinInputs.forEach((input) => (input.value = ""));
         }
 
         if (data.returnUrl) {
@@ -314,6 +323,7 @@ document.addEventListener("DOMContentLoaded", function () {
             `&aff_id=${encodeURIComponent(localStorage.getItem("aff_id") || "")}` +
             `&offer_id=${encodeURIComponent(localStorage.getItem("offer_id") || "")}` +
             `&sub_id=${encodeURIComponent(localStorage.getItem("sub_id") || "")}`;
+
           window.open(url, "_blank");
 
           setTimeout(() => {
