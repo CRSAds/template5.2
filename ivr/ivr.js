@@ -76,8 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // ---------------------------------------------
-  // ON IVR READY (wait until #ivr-section is visible)
-  // If #ivr-section doesn't exist → run immediately
+  // ON IVR READY
   // ---------------------------------------------
   function onIVRReady(callback) {
     const ivrSection = document.getElementById("ivr-section");
@@ -104,7 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // ---------------------------------------------
-  // SPINNER ANIMATION (shared)
+  // SPINNER ANIMATION
   // ---------------------------------------------
   function animatePinRevealSpinner(pin, targetId) {
     const container = document.getElementById(targetId);
@@ -132,7 +131,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // ---------------------------------------------
-  // AUTO-DTMF — adds ,PIN to tel link
+  // AUTO-DTMF
   // ---------------------------------------------
   function enableAutoDTMF(pincode, scope) {
     const root = scope || document;
@@ -162,7 +161,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // =============================================
-  // MODE 1 — NIEUWE SPINNER MODE (#ivr-spinner)
+  // MODE 1 — NEW SPINNER (#ivr-spinner)
   // =============================================
   function initSpinnerMode() {
     const root = document.getElementById("ivr-spinner");
@@ -202,7 +201,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // =============================================
-  // MODE 2 — MANUAL PIN ENTRY (#ivr-manual)
+  // MODE 2 — MANUAL ENTRY (#ivr-manual)
   // =============================================
   function initManualPinMode() {
     const root = document.getElementById("ivr-manual");
@@ -217,8 +216,6 @@ document.addEventListener("DOMContentLoaded", function () {
     onIVRReady(() => {
       root.style.display = "block";
 
-      // Belangrijk: hier ook request_pin aanroepen,
-      // zodat backend een PIN koppelt aan deze visit
       visitPromise.then(async (internalVisitId) => {
         try {
           const res = await fetch(
@@ -234,14 +231,11 @@ document.addEventListener("DOMContentLoaded", function () {
           );
           const data = await res.json();
           console.log("Manual mode request_pin response:", data);
-          // Pincode tonen is hier niet nodig; IVR leest ’m op,
-          // SubmitPin.php controleert hem server-side.
         } catch (err) {
           console.error("Manual mode request_pin error:", err);
         }
       });
 
-      // Inputgedrag
       pinInputs.forEach((input, index) => {
         const original = input.getAttribute("placeholder") || "";
 
@@ -261,9 +255,8 @@ document.addEventListener("DOMContentLoaded", function () {
           if (err) err.remove();
           localStorage.removeItem("errorShown");
 
-          if (input.value && index < pinInputs.length - 1) {
+          if (input.value && index < pinInputs.length - 1)
             pinInputs[index + 1].focus();
-          }
 
           updateCombined();
         });
@@ -275,13 +268,11 @@ document.addEventListener("DOMContentLoaded", function () {
         const v3 = root.querySelector("#input3")?.value || "";
         combinedPin.value = v1 + v2 + v3;
 
-        const evt = new Event("input", { bubbles: true });
-        combinedPin.dispatchEvent(evt);
+        combinedPin.dispatchEvent(new Event("input", { bubbles: true }));
       }
 
       combinedPin.addEventListener("input", () => {
-        const valid = /^\d{3}$/.test(combinedPin.value);
-        submitBtn.disabled = !valid;
+        submitBtn.disabled = !/^\d{3}$/.test(combinedPin.value);
       });
 
       submitBtn.addEventListener("click", (e) => {
@@ -323,8 +314,7 @@ document.addEventListener("DOMContentLoaded", function () {
           submitBtn.classList.add("loading");
           submitBtn.disabled = true;
         } else {
-          // verkeerde pincode
-          root.querySelectorAll(".pin-input").forEach((input) => (input.value = ""));
+          root.querySelectorAll(".pin-input").forEach((i) => (i.value = ""));
           submitBtn.blur();
 
           if (!localStorage.getItem("errorShown")) {
@@ -341,13 +331,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (data.returnUrl) {
           const url =
-            `${data.returnUrl}?call_id=${encodeURIComponent(
-              data.callId || ""
-            )}` +
+            `${data.returnUrl}?call_id=${encodeURIComponent(data.callId || "")}` +
             `&t_id=${encodeURIComponent(localStorage.getItem("t_id") || "")}` +
             `&aff_id=${encodeURIComponent(localStorage.getItem("aff_id") || "")}` +
             `&offer_id=${encodeURIComponent(localStorage.getItem("offer_id") || "")}` +
             `&sub_id=${encodeURIComponent(localStorage.getItem("sub_id") || "")}`;
+
           window.open(url, "_blank");
 
           setTimeout(() => {
@@ -356,13 +345,11 @@ document.addEventListener("DOMContentLoaded", function () {
           }, 7500);
         }
       })
-      .catch((err) => {
-        console.error("Manual PIN submit error:", err);
-      });
+      .catch((err) => console.error("Manual PIN submit error:", err));
   }
 
   // =============================================
-  // MODE 3 — LEGACY (#ivr-section + #ivr-mobile/#ivr-desktop)
+  // MODE 3 — LEGACY (#ivr-section)
   // =============================================
   function initLegacyMode() {
     const mobile = document.getElementById("ivr-mobile");
@@ -414,103 +401,102 @@ document.addEventListener("DOMContentLoaded", function () {
   if (document.getElementById("ivr-spinner")) initSpinnerMode();
   if (document.getElementById("ivr-manual")) initManualPinMode();
   if (document.getElementById("ivr-section")) initLegacyMode();
-});
 
-// ===========================================================
-// 📞 IVR DIAGNOSTIC LOGGING
-// (Geen side effects — alleen meten & loggen)
-// ===========================================================
-(function () {
-  const logEndpoint = "https://globalcoregflow-nl.vercel.app/api/ivr-log.js";
+  // ===========================================================
+  // 📞 IVR DIAGNOSTIC LOGGING — CORRECTLY PLACED INSIDE WRAPPER
+  // ===========================================================
+  (function () {
+    const logEndpoint = "https://globalcoregflow-nl.vercel.app/api/ivr-log.js";
 
-  function ivrLog(event, data = {}) {
-    try {
-      fetch(logEndpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ts: Date.now(),
-          url: location.href,
-          ua: navigator.userAgent,
-          event,
-          ...data
-        })
-      });
-    } catch (e) {
-      console.warn("IVR log send failed:", e);
-    }
-  }
-
-  // 1️⃣ DOM ready
-  ivrLog("ivr_dom_ready", { hasIvr: !!document.getElementById("ivr-section") });
-
-  // 2️⃣ IVR zichtbaarheid detecteren
-  const ivrEl = document.getElementById("ivr-section") ||
-                document.getElementById("ivr-spinner") ||
-                document.getElementById("ivr-manual");
-
-  if (ivrEl) {
-    const obs = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting) {
-        ivrLog("ivr_visible");
-        obs.disconnect();
-      }
-    });
-    obs.observe(ivrEl);
-  }
-
-  // 3️⃣ Wrap request_pin fetch
-  const originalFetch = window.fetch;
-  window.fetch = async function (...args) {
-    const url = args[0];
-
-    // Alleen PIN endpoint meten
-    if (typeof url === "string" && url.includes("request_pin.php")) {
-      const start = performance.now();
-      ivrLog("pin_request_start");
-
+    function ivrLog(event, data = {}) {
       try {
-        const response = await originalFetch.apply(this, args);
-        const duration = Math.round(performance.now() - start);
-
-        ivrLog("pin_request_ok", { duration });
-
-        return response;
+        fetch(logEndpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ts: Date.now(),
+            url: location.href,
+            ua: navigator.userAgent,
+            event,
+            ...data
+          })
+        });
       } catch (e) {
-        ivrLog("pin_request_error", { error: e.message });
-        throw e;
+        console.warn("IVR log send failed:", e);
       }
     }
 
-    return originalFetch.apply(this, args);
-  };
+    // 1️⃣ DOM Ready
+    ivrLog("ivr_dom_ready", {
+      hasLegacy: !!document.getElementById("ivr-section"),
+      hasSpinner: !!document.getElementById("ivr-spinner"),
+      hasManual: !!document.getElementById("ivr-manual")
+    });
 
-  // 4️⃣ Wrap animatie-start
-  if (typeof window.animatePinRevealSpinner === "function") {
-    const originalAnim = window.animatePinRevealSpinner;
+    // 2️⃣ Visibility detection
+    const ivrEl =
+      document.getElementById("ivr-section") ||
+      document.getElementById("ivr-spinner") ||
+      document.getElementById("ivr-manual");
 
-    window.animatePinRevealSpinner = function (pin, targetId) {
-      const start = performance.now();
-      ivrLog("ivr_anim_start", { pin, targetId });
+    if (ivrEl) {
+      const obs = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          ivrLog("ivr_visible");
+          obs.disconnect();
+        }
+      });
+      obs.observe(ivrEl);
+    }
 
-      const out = originalAnim.call(this, pin, targetId);
+    // 3️⃣ Wrap request_pin fetch
+    const originalFetch = window.fetch;
+    window.fetch = async function (...args) {
+      const url = args[0];
 
-      // na 300ms → animatie bezig
-      setTimeout(() => {
-        ivrLog("ivr_anim_progress", {
-          elapsed: Math.round(performance.now() - start)
-        });
-      }, 300);
+      if (typeof url === "string" && url.includes("request_pin.php")) {
+        const start = performance.now();
+        ivrLog("pin_request_start");
 
-      // na 600ms → animatie klaar (regelmatig)
-      setTimeout(() => {
-        ivrLog("ivr_anim_end", {
-          elapsed: Math.round(performance.now() - start)
-        });
-      }, 600);
+        try {
+          const response = await originalFetch.apply(this, args);
+          const duration = Math.round(performance.now() - start);
+          ivrLog("pin_request_ok", { duration });
+          return response;
+        } catch (e) {
+          ivrLog("pin_request_error", { error: e.message });
+          throw e;
+        }
+      }
 
-      return out;
+      return originalFetch.apply(this, args);
     };
-  }
 
-})();
+    // 4️⃣ Wrap animation timing
+    if (typeof window.animatePinRevealSpinner === "function") {
+      const originalAnim = window.animatePinRevealSpinner;
+
+      window.animatePinRevealSpinner = function (pin, targetId) {
+        const start = performance.now();
+        ivrLog("ivr_anim_start", { pin, targetId });
+
+        const out = originalAnim.call(this, pin, targetId);
+
+        setTimeout(() => {
+          ivrLog("ivr_anim_progress", {
+            elapsed: Math.round(performance.now() - start),
+          });
+        }, 300);
+
+        setTimeout(() => {
+          ivrLog("ivr_anim_end", {
+            elapsed: Math.round(performance.now() - start),
+          });
+        }, 600);
+
+        return out;
+      };
+    }
+  })();
+
+}); // END DOMContentLoaded
