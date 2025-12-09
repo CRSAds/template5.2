@@ -4,6 +4,43 @@ import originalSponsorCampaigns from './sponsorCampaigns.js';
 import setupSovendus from './setupSovendus.js';
 import { fireFacebookLeadEventIfNeeded } from './facebookpixel.js';
 
+// ===== FLOW LOGGING: centraal endpoint =====
+const FLOW_LOG_ENDPOINT =
+  window.FLOW_LOG_ENDPOINT ||
+  "https://globalcoregflow-nl.vercel.app/api/flow-log.js";
+
+function sendFlowLog(event, extra = {}) {
+  try {
+    const payload = {
+      event,
+      ts: Date.now(),
+      url: window.location.href,
+      ua: navigator.userAgent,
+      ...extra,
+    };
+
+    // fire-and-forget
+    fetch(FLOW_LOG_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      keepalive: true,
+    }).catch(() => {});
+  } catch (e) {
+    console.warn("Flow log failed:", e);
+  }
+}
+
+function logSectionVisible(section, index) {
+  if (!section) return;
+  sendFlowLog("flow_section_visible", {
+    template: "template5.2",
+    sectionId: section.id || null,
+    index,
+    classList: Array.from(section.classList || []),
+  });
+}
+
 // ===== NIEUW: splitPercentage ondersteuning =====
 function selectSplitCampaigns(campaigns) {
   const groups = {};
@@ -115,6 +152,8 @@ function validateForm(form) {
 }
 
 export default function initFlow() {
+  sendFlowLog("flow_start", { template: "template5.2" });
+
   const params = new URLSearchParams(window.location.search);
   const statusParam = params.get('status');
 
@@ -136,7 +175,12 @@ export default function initFlow() {
   longFormCampaigns.length = 0;
 
   if (!window.location.hostname.includes("swipepages.com")) {
-    steps.forEach((el, i) => el.style.display = i === 0 ? 'block' : 'none');
+    steps.forEach((el, i) => {
+      el.style.display = i === 0 ? 'block' : 'none';
+      if (i === 0) {
+        logSectionVisible(el, 0);
+      }
+    });
     document.querySelectorAll('.hide-on-live, #long-form-section').forEach(el => {
       el.style.display = 'none';
     });
@@ -155,6 +199,7 @@ export default function initFlow() {
           if (next) {
             next.style.display = 'block';
             reloadImages(next);
+            logSectionVisible(next, stepIndex + 2);
           }
           window.scrollTo({ top: 0, behavior: 'smooth' });
           return;
@@ -215,6 +260,7 @@ export default function initFlow() {
               if (next) {
                 next.style.display = 'block';
                 reloadImages(next);
+                logSectionVisible(next, steps.indexOf(next));
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }
               return;
@@ -227,6 +273,7 @@ export default function initFlow() {
               if (next) {
                 next.style.display = 'block';
                 reloadImages(next);
+                logSectionVisible(next, steps.indexOf(next));
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }
             });
@@ -243,6 +290,7 @@ export default function initFlow() {
         if (next) {
           next.style.display = 'block';
           reloadImages(next);
+          logSectionVisible(next, steps.indexOf(next));
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }
       });
@@ -256,7 +304,6 @@ export default function initFlow() {
         if (!campaign) return;
 
         const buttonId = button.id || '';
-        // ✅ Positieve herkenning op basis van ID (niet meer op tekst)
         const isPositive = !!window.sponsorCampaigns[buttonId];
         console.log(`🔍 Beoordeling op basis van ID (${buttonId}) → positief:`, isPositive);
 
@@ -295,6 +342,7 @@ export default function initFlow() {
         if (next) {
           next.style.display = 'block';
           reloadImages(next);
+          logSectionVisible(next, steps.indexOf(next));
         }
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -317,6 +365,7 @@ export default function initFlow() {
           if (next) {
             next.style.display = 'block';
             reloadImages(next);
+            logSectionVisible(next, steps.indexOf(next));
           }
           window.scrollTo({ top: 0, behavior: 'smooth' });
           return;
@@ -338,6 +387,7 @@ export default function initFlow() {
           if (next) {
             next.style.display = 'block';
             reloadImages(next);
+            logSectionVisible(next, steps.indexOf(next));
           }
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -361,6 +411,7 @@ export default function initFlow() {
             sovendusSection.style.display = 'none';
             nextAfterSovendus.style.display = 'block';
             reloadImages(nextAfterSovendus);
+            logSectionVisible(nextAfterSovendus, -1);
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }, 10000);
         }
