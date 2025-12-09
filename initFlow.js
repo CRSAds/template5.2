@@ -161,8 +161,7 @@ function validateForm(form) {
 // =============================================================
 
 export default function initFlow() {
-  sendFlowLog("flow_start");
-
+  
   const params = new URLSearchParams(window.location.search);
   const statusParam = params.get('status');
 
