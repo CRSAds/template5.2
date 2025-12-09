@@ -415,3 +415,102 @@ document.addEventListener("DOMContentLoaded", function () {
   if (document.getElementById("ivr-manual")) initManualPinMode();
   if (document.getElementById("ivr-section")) initLegacyMode();
 });
+
+// ===========================================================
+// 📞 IVR DIAGNOSTIC LOGGING
+// (Geen side effects — alleen meten & loggen)
+// ===========================================================
+(function () {
+  const logEndpoint = "https://globalcoregflow-nl.vercel.app/api/ivr-log.js";
+
+  function ivrLog(event, data = {}) {
+    try {
+      fetch(logEndpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ts: Date.now(),
+          url: location.href,
+          ua: navigator.userAgent,
+          event,
+          ...data
+        })
+      });
+    } catch (e) {
+      console.warn("IVR log send failed:", e);
+    }
+  }
+
+  // 1️⃣ DOM ready
+  ivrLog("ivr_dom_ready", { hasIvr: !!document.getElementById("ivr-section") });
+
+  // 2️⃣ IVR zichtbaarheid detecteren
+  const ivrEl = document.getElementById("ivr-section") ||
+                document.getElementById("ivr-spinner") ||
+                document.getElementById("ivr-manual");
+
+  if (ivrEl) {
+    const obs = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        ivrLog("ivr_visible");
+        obs.disconnect();
+      }
+    });
+    obs.observe(ivrEl);
+  }
+
+  // 3️⃣ Wrap request_pin fetch
+  const originalFetch = window.fetch;
+  window.fetch = async function (...args) {
+    const url = args[0];
+
+    // Alleen PIN endpoint meten
+    if (typeof url === "string" && url.includes("request_pin.php")) {
+      const start = performance.now();
+      ivrLog("pin_request_start");
+
+      try {
+        const response = await originalFetch.apply(this, args);
+        const duration = Math.round(performance.now() - start);
+
+        ivrLog("pin_request_ok", { duration });
+
+        return response;
+      } catch (e) {
+        ivrLog("pin_request_error", { error: e.message });
+        throw e;
+      }
+    }
+
+    return originalFetch.apply(this, args);
+  };
+
+  // 4️⃣ Wrap animatie-start
+  if (typeof window.animatePinRevealSpinner === "function") {
+    const originalAnim = window.animatePinRevealSpinner;
+
+    window.animatePinRevealSpinner = function (pin, targetId) {
+      const start = performance.now();
+      ivrLog("ivr_anim_start", { pin, targetId });
+
+      const out = originalAnim.call(this, pin, targetId);
+
+      // na 300ms → animatie bezig
+      setTimeout(() => {
+        ivrLog("ivr_anim_progress", {
+          elapsed: Math.round(performance.now() - start)
+        });
+      }, 300);
+
+      // na 600ms → animatie klaar (regelmatig)
+      setTimeout(() => {
+        ivrLog("ivr_anim_end", {
+          elapsed: Math.round(performance.now() - start)
+        });
+      }, 600);
+
+      return out;
+    };
+  }
+
+})();
