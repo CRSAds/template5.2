@@ -5,43 +5,6 @@ import setupSovendus from './setupSovendus.js';
 import { fireFacebookLeadEventIfNeeded } from './facebookpixel.js';
 
 // =============================================================
-// ✅ FLOW LOGGING (vereenvoudigd + sectie-class based)
-// =============================================================
-
-const FLOW_LOG_ENDPOINT =
-  window.FLOW_LOG_ENDPOINT ||
-  "https://globalcoregflow-nl.vercel.app/api/flow-log.js";
-
-function sendFlowLog(event) {
-  try {
-    fetch(FLOW_LOG_ENDPOINT, {
-      method: "POST",
-      keepalive: true,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        event,
-        ts: Date.now(),
-        url: window.location.href,
-        ua: navigator.userAgent
-      })
-    });
-  } catch (e) {}
-}
-
-// 🔥 NIEUW: log sectiezichtbaarheid op basis van class `log-*`
-function logSectionVisible(section) {
-  if (!section) return;
-
-  const cls = Array.from(section.classList).find(c => c.startsWith("log-"));
-  if (!cls) return; // geen logging voor deze sectie
-
-  const clean = cls.replace("log-", "");       // log-coreg → coreg
-  const eventName = `${clean}_visible`;        // → coreg_visible
-
-  sendFlowLog(eventName);
-}
-
-// =============================================================
 // Split-campagnes (originele code)
 // =============================================================
 
