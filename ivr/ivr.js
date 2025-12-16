@@ -5,6 +5,13 @@ document.addEventListener("DOMContentLoaded", function () {
   const subId = urlParams.get("sub_id") || "345";
 
   // ---------------------------------------------
+  // IVR CONFIG
+  // ---------------------------------------------
+  const IVR_CONFIG = {
+    autoDTMF: false // ← zet op true om weer te activeren
+  };
+
+  // ---------------------------------------------
   // TRANSACTION ID + STORAGE
   // ---------------------------------------------
   function getTransactionId() {
@@ -134,27 +141,35 @@ document.addEventListener("DOMContentLoaded", function () {
   // AUTO-DTMF
   // ---------------------------------------------
   function enableAutoDTMF(pincode, scope) {
+    // ⛔ Auto-DTMF uitgeschakeld via config
+    if (!IVR_CONFIG.autoDTMF) {
+      console.log("🔕 Auto-DTMF is uitgeschakeld");
+      return;
+    }
+  
     const root = scope || document;
     const callButtons = root.querySelectorAll(".ivr-call-btn");
-
+  
     callButtons.forEach((btn) => {
       btn.addEventListener("click", function (e) {
         e.preventDefault();
-
+  
         let telEl =
           btn.matches('a[href^="tel:"]')
             ? btn
             : btn.querySelector('a[href^="tel:"]') ||
               btn.closest('a[href^="tel:"]');
-
+  
         if (!telEl) return;
-
-        const num = (telEl.getAttribute("href") || "").replace("tel:", "").trim();
+  
+        const num = (telEl.getAttribute("href") || "")
+          .replace("tel:", "")
+          .trim();
         if (!num) return;
-
+  
         const telLink = `tel:${num},${pincode}`;
         window.location.href = telLink;
-
+  
         setTimeout(closePopup, 8000);
       });
     });
