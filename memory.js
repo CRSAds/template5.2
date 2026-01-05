@@ -25,6 +25,14 @@ const iconSets = {
   'ebike5.png', 'ebike5.png',
   'ebike6.png', 'ebike6.png'
   ],
+  energy: [
+  'battery.png', 'battery.png',
+  'energy-saving.png', 'energy-saving.png',
+  'energy.png', 'energy.png',
+  'lighting.png', 'lighting.png',
+  'sun-energy.png', 'sun-energy.png',
+  'windmill.png', 'windmill.png'
+],
   travel: [
     'booking.png', 'booking.png',
     'vacation.png', 'vacation.png',
