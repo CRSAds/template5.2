@@ -416,5 +416,30 @@ document.addEventListener("DOMContentLoaded", function () {
   if (document.getElementById("ivr-spinner")) initSpinnerMode();
   if (document.getElementById("ivr-manual")) initManualPinMode();
   if (document.getElementById("ivr-section")) initLegacyMode();
+
+/**
+ * Automatische timer om de IVR pop-up te sluiten na een klik op de call-button.
+ * Werkt via event delegation zodat het ook op dynamisch geladen pop-ups reageert.
+ */
+$(document).on("click", ".ivr-call-btn", function() {
+  const closeAfterMs = 10000; // 10 seconden
+  
+  // Log voor debugging (optioneel)
+  if (window.DEBUG_MODE) {
+    console.log("[IVR] Gebruiker start gesprek. Pop-up sluit over 10s.");
+  }
+
+  setTimeout(function() {
+    // Probeer de standaard Swipepages sluitknop te vinden
+    const closeBtn = document.querySelector(".close-icon");
+    if (closeBtn) {
+      closeBtn.click();
+    } else {
+      // Harde fallback als de knop niet gevonden wordt
+      $(".call-pop-up-desktop, .memory-pop-up").hide();
+      $("html, body").removeClass("modal-open");
+    }
+  }, closeAfterMs);
+});
   
 }); // END DOMContentLoaded
