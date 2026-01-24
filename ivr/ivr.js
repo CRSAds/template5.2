@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // IVR CONFIG
   // ---------------------------------------------
   const IVR_CONFIG = {
-    autoDTMF: false // ← zet op true om weer te activeren
+    autoDTMF: true // ← zet op true om weer te activeren
   };
 
   // ---------------------------------------------
